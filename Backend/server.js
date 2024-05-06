@@ -29,7 +29,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "Frontend", "dist", "index.html"))
 })
 
-app.listen(PORT, () => {
+app.listen(2000, () => {
     connectDB();
-    console.log(`connect server : ${PORT}`)
+    console.log(`connect server : ${2000}`)
 })
