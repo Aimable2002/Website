@@ -35,6 +35,7 @@ export const Signup = async(req, res) => {
         const newUser = new User({
             fullName,
             userName,
+            email,
             age,
             gender,
             password: harshPassword,
