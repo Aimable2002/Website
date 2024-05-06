@@ -43,12 +43,14 @@ export const Signup = async(req, res) => {
 
         if(newUser){
             const token = jwt.sign({userId: newUser._id}, process.env.SECRET, {expiresIn: '10d'})
-
+            await newUser.save();
+            
             res.status(201).json({
                 _id: newUser._id,
                 userName: newUser.userName,
                 token
             })
+            
         }
     }catch(error){
         console.log("internal server sign error", error.message)
@@ -91,7 +93,7 @@ export const login = async(req, res) => {
 export const logout = (req, res) => {
     try{
         res.cookie("jwt", "",  {maxAge: '0'});
-        res.status(200).json("successfully logout", {maxAge: '0'})
+        res.status(200).json("successfully logout")
     }catch(error){
         console.log("internal server logout error", error.message)
         res.status(500).json({error: "internal server logout error"})

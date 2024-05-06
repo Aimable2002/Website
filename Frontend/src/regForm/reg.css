@@ -1,0 +1,54 @@
+.pt{
+    /* background-color: blueviolet; */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+.pt-one{
+    /* background-color: aqua; */
+    width: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pt-two{
+    /* background-color: cadetblue; */
+    width: 45%;
+    display: flex;
+    align-items: center;
+}
+
+h1{
+    font-size: 30px;
+}
+.form-prt{
+    width: 100%;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+input{
+    width: 100%;
+    background-color: transparent;
+    padding: 40px;
+    padding-left: 10px;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+}
+label{
+    text-transform: uppercase;
+    transform: translateY(5px);
+    transition: all 0.5s;
+    cursor: text;
+    padding-left: 10px;
+    font-size: 12px;
+}
+
+form{
+    width: 100%;
+
+}
