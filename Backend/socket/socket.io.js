@@ -1,8 +1,6 @@
 import express from 'express';
-import { server } from 'socket.io';
+import { Server } from 'socket.io';
 import http from 'https';
-import { METHODS, Server } from 'http';
-import { Socket } from 'dgram';
 
 
 const app = express();
@@ -41,4 +39,4 @@ io.on("connection", (socket) => {
 })
 
 
-export default {app, server, io}
+export {app, server, io}

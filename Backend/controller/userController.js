@@ -1,5 +1,5 @@
 import express from 'express'
-import User from '../Model/userModel';
+import User from '../Model/userModel.js';
 
 
 export const popUser = async(req, res) => {
