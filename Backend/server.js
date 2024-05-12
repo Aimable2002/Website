@@ -10,10 +10,10 @@ import uploadRoute from './router/uploadRoute.js'
 import messageRoute from './router/messageRoute.js'
 import userRoute from './router/userRoute.js'
 
-//import {server, app} from './socket/socket.io.js';
+import {server, app} from './socket/socket.io.js';
 
 
-const app = express();
+//const app = express();
 
 const __dirname = path.resolve();
 
@@ -37,7 +37,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "Frontend", "dist", "index.html"))
 })
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDB();
     console.log(`connect server : ${PORT}`)
 })
