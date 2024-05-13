@@ -1,0 +1,13 @@
+.ftr{
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+    justify-content: space-around;
+    width: calc(100% - 50%);
+}
+.frm-div{
+    border-radius: 10px;
+    width: calc(100% - 40%);
+}
