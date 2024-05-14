@@ -12,7 +12,7 @@ const useGetUser = () => {
         try{
         const token = localStorage.getItem('online-user')
         //console.log('token :', token)
-        const res = await axios.get('https://website-s9ue.onrender.com/api/users/users/allUser', {
+        const res = await axios.get('https://website-s9ue.onrender.com/api/users/allUser', {
             headers: {
                 Authorization: `${JSON.parse(token).token}`,   
             }

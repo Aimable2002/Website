@@ -26,7 +26,7 @@ import ChatCont from './chatCont.jsx';
 import useLogout from '../../hook/useLogout.js';
 import usegetLoggedIn from '../../hook/usegetLoggedIn.js';
 
-const home = ({conversation}) => {
+const home = () => {
 
   const {loading, users} = useGetUser();
   const {onlineUser} = useSocketContext();
