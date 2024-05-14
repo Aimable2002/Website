@@ -38,7 +38,7 @@ const poster = () => {
         <div className='flex relative w-full mb-10'>
             <div className='fixed h-5 w-full flex flex-row'>
                 <div style={{width: 'calc(100% - 91%', color: '#00FFF5'}}>ChatApp</div>
-                <div className='flex flex-row bg-base-100 justify-around' style={{width: 'calc(100% - 60%)'}}>
+                <div className='flex flex-row  justify-around' style={{width: 'calc(100% - 60%)'}}>
                     <div className='cursor-pointer'><HomeIcon /></div>
                     <div className='cursor-pointer' onClick={()=>document.getElementById('my_modal_3').showModal()}>
                       <SearchIcon />
