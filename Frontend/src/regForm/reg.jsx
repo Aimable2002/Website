@@ -49,7 +49,7 @@ const handleSubmit2 = async(e) => {
 }
   return (
     <div className='w-screen h-screen'>
-      <div className='pt bg-slate-500'>
+      <div className='pt '>
         <div className='pt-one'>
           <div className='pt-dtl'>
             <h1 className='flex justify-center align-middle py-3 font-serif'>
