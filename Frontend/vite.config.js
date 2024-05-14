@@ -8,7 +8,7 @@ export default defineConfig({
     port: 2000,
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'https://website-s9ue.onrender.com',
         changeOrigin: true
       }
     }

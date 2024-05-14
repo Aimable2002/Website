@@ -6,7 +6,7 @@ const useSignup = () => {
   const signup = async ({ fullName, userName, age, gender, email, password, confirmPassword }) => {
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:4000/api/auth/signup', {
+      const res = await axios.post('https://website-s9ue.onrender.com/api/auth/signup', {
         fullName,
         userName,
         age,
