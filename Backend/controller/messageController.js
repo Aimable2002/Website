@@ -7,8 +7,11 @@ import { getRecievedSocketId } from '../socket/socket.io.js';
 export const sendMessages = async (req, res) => {
     try{
         const {message} = req.body;
-        const {_id: senderId} = req.user;
-        const {recieverId} = req.params;
+        console.log('messages :', message)
+        const {id: senderId} = req.user;
+        console.log('senderId :', senderId)
+        const {id: recieverId} = req.params;
+        console.log('recieverId :', recieverId)
 
         if(!message || !senderId || !recieverId){
             return res.status(409).json('no data presented')
@@ -59,9 +62,12 @@ export const sendMessages = async (req, res) => {
 
 export const getMessages = async(req, res) => {
     try{
-        const {senderId} = req.user;
+        const {_id: senderId} = req.user;
+        console.log('senderId :', senderId)
         const {_id: userToChat} = req.params;
+        console.log('userToChat :', userToChat)
         const {message} = req.body
+        console.log('message :', message)
 
 
         if(!senderId || !userToChat || !message){
@@ -80,7 +86,7 @@ export const getMessages = async(req, res) => {
 
         if(!existConversation){
             const noChatYet = 'start conversation'
-            return res.status(301).json(noChatYet)
+            return res.status(301).json([])
         }
 
         const messages = existConversation.messages

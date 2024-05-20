@@ -1,0 +1,9 @@
+
+.drop-ctnt{
+    width: 300px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    left: -120px;
+    transform: translate(-50%);
+}

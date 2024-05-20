@@ -7,7 +7,7 @@ const useLogout = () => {
   const logout = async () => {
     setLoading(true)
     try{
-        const res = await axios.post('https://website-s9ue.onrender.com/api/auth/logout')
+        const res = await axios.post('http://localhost:4000/api/auth/logout')
 
     const data = res.data;
 
@@ -17,6 +17,7 @@ const useLogout = () => {
 
     console.log('logout posted successfully')
     localStorage.removeItem('online-user')
+    window.location = '/sign'
     }catch(error){
         console.log('data logout has issue')
     }finally{

@@ -4,33 +4,39 @@ import './home.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import Conversation from '../zustand/zustand';
-import Message from './Message';
+import Messages from './messages.jsx';
 import ChatInput from './ChatInput';
+import { useSocketContext } from '../../context/socketContext.jsx'
 
 const chatCont = () => {
 
     const [isRest, setIsRest] = useState();
-    const {setUser} = Conversation();
-
+    const {selectedUser, setUser} = Conversation();
+  const {onlineUser} = useSocketContext();
+  const isOnline = onlineUser.includes(selectedUser?._id)
   const resetBack = (e) => {
     e.preventDefault();
     localStorage.removeItem("selectedUser")
     setUser(null);
   }
 
+  const getProfileImageUrl = (selectedUser) => {
+    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+  };
+
   return (
-    <div className='flex w-full flex-col bg-slate-600'>
+    <div className='flex w-full flex-col'>
         <div className='header'>
           <div className='header-content px-2'>
             <div className='w-3/12 flex align-middle py-1 gap-2 flex-row'>
                 <div className="avatar">
                     <div className="w-8 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        <img src={getProfileImageUrl(selectedUser)} />
                     </div>
                 </div>
                 <div className='flex align-middle flex-col'>
-                    <div>username</div>
-                    <div className=''>online</div>
+                    <div>{selectedUser.userName}</div>
+                    <div className=''>{isOnline ? 'online' : 'offline'}</div>
                 </div>
             </div>
             <div className='flex flex-row align-middle justify-between w-2/4'>
@@ -42,8 +48,8 @@ const chatCont = () => {
         </div>
         {/* <div className='' style={{borderBottom: '1px solid #ccc'}}></div> */}
         <div>
-            <Message />
-            <ChatInput />
+          <Messages />
+          <ChatInput />
         </div>
     </div>
   )

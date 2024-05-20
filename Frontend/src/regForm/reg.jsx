@@ -150,10 +150,11 @@ const handleSubmit2 = async(e) => {
                     }}
                     value={input.gender}
                     onChange={(e) => setInput({...input, gender: e.target.value})}>
-                    <option disabled selected style={{background: 'black'}}>select gender</option>
+                    <option value='' style={{background: 'black'}}>select gender</option>
                     <option value="Male" style={{background: 'black'}}>Male</option>
                     <option value="Female" style={{background: 'black'}}>Female</option>
                   </select>
+                  
                   </div>
                   <div className='btn flex align-middle justify-center mt-8 bg-slate-500 w-2/4'>
                     <Button type='submit' radius='full'>Sign up</Button>

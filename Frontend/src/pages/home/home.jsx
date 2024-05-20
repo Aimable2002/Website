@@ -25,8 +25,11 @@ import Poster from './poster.jsx';
 import ChatCont from './chatCont.jsx';
 import useLogout from '../../hook/useLogout.js';
 import usegetLoggedIn from '../../hook/usegetLoggedIn.js';
+import uploadRequest from '../../hook/uploadRequest.js';
+import { useRef } from 'react';
+import { user } from '@nextui-org/react';
 
-const home = () => {
+const home = ({user}) => {
 
   const {loading, users} = useGetUser();
   const {onlineUser} = useSocketContext();
@@ -63,9 +66,26 @@ const home = () => {
   const {logout} = useLogout();
 
   const {logUser} = usegetLoggedIn();
+  const {uploadProfile} = uploadRequest();
+  const addProfile = useRef();
+
+  const handleFileRef = () => {
+    addProfile.current.click();
+  }
+
+const[fileChange, setFileChange] = useState();
+  const handleFileChange = async(e) => {
+    setFileChange(e.target.files[0]);
+    await uploadProfile(e.target.files[0]);
+    setFileChange('')
+  }
+
+  const getProfileImageUrl = (selectedUser) => {
+    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+  };
 
   return (
-    <div className='flex flex-row w-screen h-screen' style={{fontSize: '12px'}}>
+    <div className='flex flex-row w-screen h-screen overflow-y-auto' style={{fontSize: '12px'}}>
       <div className='flex flex-col w-3/12 overflow-y-auto'>
         <div className='header'>
           <div className='header-content px-2'>
@@ -105,12 +125,12 @@ const home = () => {
         <div className='flex flex-col w-full overflow-y-auto'>
           {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-          .map((user) => (
-          <div className='flex flex-row w-full bg-base-100  gap-3 py-1 mb-1 cursor-pointer'>
+          .map((user, index) => (<>
+          <div key={index} className='flex flex-row w-full bg-base-100  gap-3 py-1 mb-1 cursor-pointer'>
             <div className='flex py-2 px-2 justify-center align-middle'>
               <div className={`avatar ${user.isOnline ? 'online' : 'offline'}`}>
                 <div className="w-12 rounded-full">
-                  <img src={user.avatar} />
+                  <img src={getProfileImageUrl(user)} />
                 </div>
               </div>
             </div>
@@ -120,7 +140,10 @@ const home = () => {
               <div>you have message</div>
             </div>
           </div>
+        </>
           ))}
+          
+        <div className='flex justify-center align-middle'>Share your friend the app</div>
         </div>
       </div>
       {/**post area */}
@@ -146,18 +169,21 @@ const home = () => {
         </div>
         {isAcount ? (
           <>
-          {logUser.map((log, idx) => (
+          {logUser.map((user, idx) => (
         <div className='flex flex-col w-full overflow-y-auto'>
           <div className='flex flex-col py-4 align-middle justify-center self-center'>
-            <div className="avatar">
+            <div className="avatar" onClick={handleFileRef}>
               <div className="w-24 rounded-full">
-                <img src={log.avatar} />
+                <img src={getProfileImageUrl(user)} />
               </div>
             </div>
+            <input type="file" style={{display: 'none'}}
+            ref={addProfile}
+            onChange={handleFileChange} />
           </div>
           <div className='flex flex-col w-full'>
-            <div className='flex align-middle justify-center'>{log.fullName}</div>
-            <div className='flex align-middle justify-center'>{log.userName}</div>
+            <div className='flex align-middle justify-center'>{user.fullName}</div>
+            <div className='flex align-middle justify-center'>{user.userName}</div>
           </div>
           <div className='flex flex-row align-middle justify-around mt-8'>
             <div className='flex flex-col w-full align-middle justify-center'>
@@ -212,14 +238,14 @@ const home = () => {
             <div className='flex flex-row px-5 justify-between  py-3 cursor-pointer'>
               <div className='flex w-3/4 gap-4'>
                 <div><LogoutIcon /></div>
-                <div style={{color: 'red', fontSize: '18px'}} onClick={logout}>Logout</div>
+                <div style={{color: 'red'}} onClick={logout}>Logout</div>
               </div>
               <div></div>
             </div>
             <div className='flex flex-row px-5 justify-between py-3  cursor-pointer'>
               <div className='flex w-3/4 gap-4'>
                 <div><DangerousIcon /></div>
-                <div style={{color: 'red', fontSize: '18px'}}>Delete Account</div>
+                <div style={{color: 'red'}}>Delete Account</div>
               </div>
               <div><KeyboardArrowRightIcon /></div>
             </div>
@@ -232,20 +258,23 @@ const home = () => {
         <div className='flex flex-col w-full overflow-y-auto'>
           {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-          .map((user) => (
-          <div className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer'>
+          .map((user, index) => (
+          <div key={index} className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer'>
             <div className='flex py-2 px-2 justify-center align-middle'>
+              {user.status === 0 ? '' : (
               <div className="avatar ">
                 <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <img src={user.avatar} />
+                  <video src={user.status}/>
                 </div>
-              </div>
+              
+              </div>)}
             </div>
-            <div className='flex flex-col align-middle justify-center'>
+            <div className='flex flex-col align-middle justify-center'
+            onClick={() => setUser(user)}>
               <div>{user.userName}</div>
               <div>you have message</div>
             </div>
-          </div>
+            </div>
           ))}
         </div>
         )}

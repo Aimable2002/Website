@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         require: true,
-        enum: ["Male", "Female"]
+        enum: ["Male", "Female"],
     },
     password: {
         type: String,
@@ -35,7 +35,17 @@ const userSchema = new mongoose.Schema({
     profile: {
         type: String,
         default: ''
-    }
+    },
+    post: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+        default: ''
+    }],
+    status: [{
+        type: String,
+        default: '',
+    }]
+
 
 },{timestamps: true})
 

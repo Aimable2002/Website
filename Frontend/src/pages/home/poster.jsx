@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -10,8 +10,32 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 import useGetUser from '../../hook/useGetUser';
 import Conversation from '../zustand/zustand';
+import postRequest from '../../hook/postRequest';
+import useGetPost from '../../hook/useGetPost';
 
-const poster = () => {
+
+// Helper function to get image dimensions
+const getImageDimensions = (url) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.src = url;
+  });
+};
+
+const determineGridStyle = (dimensions) => {
+  if (dimensions.width > dimensions.height) {
+    return "row-span-1 col-span-2";
+  } else if (dimensions.width < dimensions.height) {
+    return "row-span-2 col-span-1";
+  } else {
+    return "row-span-2 col-span-2";
+  }
+};
+
+const poster = ({user}) => {
 
   const {loading, users} = useGetUser();
 
@@ -32,6 +56,40 @@ const poster = () => {
       console.log('no search found')
     }
   }
+  const addPost = useRef();
+
+  const handleRefPost = () => {
+    addPost.current.click();
+  }
+  const {upload} = postRequest();
+
+const [postChange, setPostChange] = useState();
+const handlePost = async (e) => {
+  setPostChange(e.target.files[0]);
+  await upload(e.target.files[0])
+}
+
+const {post} = useGetPost();
+
+const [imageStyles, setImageStyles] = useState([]);
+
+  useEffect(() => {
+    const fetchImageStyles = async () => {
+      const styles = await Promise.all(
+        users.map(async (user) => {
+          const dimensions = await getImageDimensions(user.profile);
+          return determineGridStyle(dimensions);
+        })
+      );
+      setImageStyles(styles);
+    };
+
+    fetchImageStyles();
+  }, [users]);
+
+  const getProfileImageUrl = (selectedUser) => {
+    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+  };
 
   return (
     <div className='w-full flex flex-col overflow-auto'>
@@ -59,22 +117,34 @@ const poster = () => {
                       </div>
                     </dialog>
                     </div>
-                    <div className='cursor-pointer'><AddCircleOutlineIcon /></div>
+                    <div className='cursor-pointer' onClick={handleRefPost}><AddCircleOutlineIcon /></div>
+                    <input type="file"
+                    style={{display: 'none'}}
+                    ref={addPost}
+                    onChange={handlePost} />
                     <div className='cursor-pointer'><MonetizationOnIcon /></div>
                 </div>
             </div>
         </div>
-      <div className='flex overflow-y-auto flex-wrap align-middle justify-center gap-3'>
+      <div className='overflow-y-auto flex flex-wrap  align-middle justify-center gap-3'>
         {users
         .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-        .map((user, idx) => (
-        <div className="card w-96 bg-base-100 shadow-xl">
-            <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+        .map((user, index) => (
+          <div className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
+          position: 'relative' }}>
+        <div className="card w-96 bg-base-100 shadow-xl"> 
+
+          <div className='grid grid-cols-1'>
+            <figure>
+              <img src={getProfileImageUrl(user)} alt="" />
+            </figure>
+          </div>
+  
           <div className="card-body align-middle">
             <div className='flex flex-row w-full align-middle gap-3'>
               <div className="avatar">
                 <div className="w-8 rounded-full">
-                  <img src={user.avatar} />
+                  <img src={getProfileImageUrl(user)} />
                 </div>
               </div>
               <div className='flex self-center w-3/6'>{user.userName}</div>
@@ -99,12 +169,16 @@ const poster = () => {
               
           </div>
           </div>
+          </div>
         ))}
         
-        
+        <div className='mb-10'></div>
       </div>
+      
     </div>
   )
 }
 
 export default poster
+
+
