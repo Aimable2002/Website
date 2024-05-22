@@ -126,10 +126,18 @@ const handleRefProfile = () => {
     return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
   };
 
-  const getPostImageUrl = (user) => {
-    return user.profile && user.profile.trim() !== '' ? user.profile : '';
-  };
   const {posts} = useGetPost();
+
+  const getUserById = (userId) => {
+    return users.find((user) => user._id === userId)
+  }
+  const filterPost = posts.filter((post) => {
+    const user = getUserById(post.userId)
+  })
+const [count, setCount] = useState('');
+  const handleLike = () => {
+    let count = 100
+  }
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -312,9 +320,14 @@ const handleRefProfile = () => {
             </div>
         </div>
         <div className='w-full relative flex overflow-y-auto flex-col' style={{zIndex: '-1'}}>
-            {users
+            {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-            .map((user, idx) => (
+            .map((user, idx) => ( */}
+            {posts.map((post, idx) => {
+                const user = getUserById(post.userId);
+                if (!user) return null; // Ensure user exists
+                return (
+
             <div className='crd-area w-full flex  gap-1 flex-col px-2 bg-base-100'>
                 <div className=' crd w-full relative flex align-middle py-2'>
                     <div className=' crd-hd w-full flex flex-row justify-between align-middle'>
@@ -333,26 +346,26 @@ const handleRefProfile = () => {
                             <div className='ml-4'>Subscribe</div>
                         </div>
                     </div>
-                </div>{posts.map((user) => (
+                </div>
                 <div className='w-full flex justify-center align-middle'>
                     <figure>
-                        <img src={user.imageURL} alt="" />
+                        <img src={post.imageURL} alt="" />
                     </figure>
-                </div>))}
+                </div>
                 <div className='flex flex-col align-middle py-2'>
                     <div className='ftr-hd flex flex-row  w-full justify-between'>
                         <div className='ft-lft flex flex-row  w-3/5 gap-4'>
                             <div className='flex flex-row gap-2 align-middle'>
-                                <div>views</div>
                                 <div>100</div>
+                                <div>views</div>
                             </div>
                             <div className='flex flex-row gap-2 align-middle'>
-                                <div><FavoriteBorderIcon /></div>
-                                <div>10</div>
+                                <div>999</div>
+                                <div onClick={handleLike}><FavoriteBorderIcon /></div>
                             </div>
                             <div className='flex flex-row gap-2 align-middle'>
-                                <div><ChatBubbleOutlineIcon /></div>
                                 <div>20</div>
+                                <div><ChatBubbleOutlineIcon /></div>
                             </div>
                         </div>
                         <div className='ft-rgt flex self-end  w-2/6 justify-around align-middle'>
@@ -365,15 +378,10 @@ const handleRefProfile = () => {
                     </div>
                 </div>
             </div>
-            ))}
+                )
+            })}
         </div>
-        <div className='mb-40'>
-            {posts.map((user) => (
-                <figure>
-                    <img src={user.imageURL} alt="" />
-                </figure>
-            ))}
-        </div>
+        <div className='mb-40'></div>
     </div>
   )
 }

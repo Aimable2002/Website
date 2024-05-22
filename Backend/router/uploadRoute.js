@@ -114,8 +114,10 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
 router.get('/getPost', protectRoute, async(req, res) => {
     try{
         const userReqId = req.user._id;
-        const filterPost = await Post.find(userReqId);
-        res.status(200).json(filterPost)
+        console.log('userReq :', userReqId);
+        const allPost = await Post.find();
+        console.log('allPost: ', allPost)
+        res.status(200).json(allPost)
     }catch(error){
         console.log('internal server get post error', error.message);
         res.status(500).json({error: 'internal server post error'})

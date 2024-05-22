@@ -90,7 +90,11 @@ const [imageStyles, setImageStyles] = useState([]);
   const getProfileImageUrl = (selectedUser) => {
     return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
   };
-
+  const {posts} = useGetPost();
+  
+  const getUserById = (userId) => {
+    return users.find((user) => user._id === userId)
+  }
   return (
     <div className='w-full flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10'>
@@ -127,16 +131,20 @@ const [imageStyles, setImageStyles] = useState([]);
             </div>
         </div>
       <div className='overflow-y-auto flex flex-wrap  align-middle justify-center gap-3'>
-        {users
+        {/* {users
         .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-        .map((user, index) => (
+        .map((user, index) => ( */}
+        {posts.map((post, idx) => {
+            const user = getUserById(post.userId);
+            if (!user) return null; // Ensure user exists
+            return (
           <div className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
           position: 'relative' }}>
         <div className="card w-96 bg-base-100 shadow-xl"> 
 
           <div className='grid grid-cols-1'>
             <figure>
-              <img src={getProfileImageUrl(user)} alt="" />
+              <img src={post.imageURL} alt="" />
             </figure>
           </div>
   
@@ -170,7 +178,8 @@ const [imageStyles, setImageStyles] = useState([]);
           </div>
           </div>
           </div>
-        ))}
+            )
+        })}
         
         <div className='mb-10'></div>
       </div>

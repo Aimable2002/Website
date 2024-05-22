@@ -1,3 +1,16 @@
 ::-webkit-scrollbar{
     display: none;
 }
+
+/* In your CSS file, e.g., index.css */
+@media (max-width: 768px) {
+    .large-screen-only {
+      display: none;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .small-screen-only {
+      display: none;
+    }
+  }

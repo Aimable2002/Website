@@ -163,7 +163,7 @@ const smReg = () => {
                         type="text" 
                         placeholder='userName'
                         className='text-center py-1' 
-                        value={input.userName}
+                        value={inputs.userName}
                         onChange={(e) => setInputs({...inputs, userName: e.target.value})}/>
                     </div>
                     <div>
@@ -171,7 +171,7 @@ const smReg = () => {
                         type="password" 
                         placeholder='Password'
                         className='text-center'
-                        value={input.password}
+                        value={inputs.password}
                         onChange={(e) => setInputs({...inputs, password: e.target.value})} />
                     </div>
                     <div className='btn flex justify-center mt-5'>
