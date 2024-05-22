@@ -59,7 +59,6 @@ router.post('/profile', protectRoute, upload.single("file"), async(req, res) => 
     }
 })
 
-
 router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
     try{
         if(!req.file){
@@ -68,27 +67,18 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
         const userId = req.user._id
         const imageUrl = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
 
-        const user = await User.findById(userId);
+        let user = await Post.findById(userId);
         if(!user){
-            return res.status(400).json('user not found')
-        }
-        let existPost = await User.findOne({_id: userId})
-        if(!existPost){
-            existPost = await User.create({
-                post: [],
+            user = await Post.create({
+                userId: userId,
+                imageURL: imageUrl,
             })
-            console.log('post created')
+            await user.save();
+        }else{
+            user.imageURL = imageUrl
+            await user.save();
         }
-        const newPost = await Post({
-            imageURL:  imageUrl,
-        })
-        if(newPost){
-            existPost.post.push(newPost._id)
-        }
-
-        await Promise.all([newPost.save(), existPost.save()]) 
-        // user.post = imageUrl;
-        // await user.save();
+        
         console.log('upload complete :', req.file);
         res.status(201).json('upload complete')
     }catch(error){
@@ -96,6 +86,7 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
         res.status(500).json({error: 'fail to upload'})
     }
 })
+
 
 // router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
 //     try{
@@ -123,7 +114,7 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
 router.get('/getPost', protectRoute, async(req, res) => {
     try{
         const userReqId = req.user._id;
-        const filterPost = await Post.find(userReqId).select('-userId');
+        const filterPost = await Post.find(userReqId);
         res.status(200).json(filterPost)
     }catch(error){
         console.log('internal server get post error', error.message);

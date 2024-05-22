@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const useGetPost = () => {
   const [loading, setLoading] = useState(false)
-  const [post, setPost] = useState([])
+  const [posts, setPost] = useState([])
 
   useEffect(() => {
     const getPost = async() => {
@@ -30,7 +30,7 @@ const useGetPost = () => {
     }
     getPost();
   },[])
-  return {loading, post}
+  return {loading, posts}
 }
 
 export default useGetPost

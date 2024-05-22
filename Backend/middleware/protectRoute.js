@@ -7,8 +7,9 @@ const protectRoute = async(req, res, next) => {
     try{
         const result = req.headers.authorization;
         //console.log('result :', result)
-        const token = result.slice(' tokenpart :'); // Split the token string by space
+        const token = result.slice(' tokenpart :'); //Split the token string by space
         //console.log(token);
+
 
         if(!token){
             return res.status(401).json({error: "Not token found"})   

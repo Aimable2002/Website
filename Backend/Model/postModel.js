@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-    userId: {
+    userId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true,
+        required: true,
     },
-    likes: [],
-    created_at: {
+    likes: {
+        type: 'Number',
+        default: '',
+    },
+    created_at: [{
         type: Date,
         default: new Date(),
-    },
+    }],
     imageURL: {
         type: String,
     }

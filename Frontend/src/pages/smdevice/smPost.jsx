@@ -33,6 +33,7 @@ import { Button } from '@nextui-org/react';
 import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
+import useGetPost from '../../hook/useGetPost';
 
 const smPost = ({user}) => {
 
@@ -128,7 +129,7 @@ const handleRefProfile = () => {
   const getPostImageUrl = (user) => {
     return user.profile && user.profile.trim() !== '' ? user.profile : '';
   };
-  
+  const {posts} = useGetPost();
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -332,12 +333,12 @@ const handleRefProfile = () => {
                             <div className='ml-4'>Subscribe</div>
                         </div>
                     </div>
-                </div>
+                </div>{posts.map((user) => (
                 <div className='w-full flex justify-center align-middle'>
                     <figure>
-                        <img src={getProfileImageUrl(user)} alt="" />
+                        <img src={user.imageURL} alt="" />
                     </figure>
-                </div>
+                </div>))}
                 <div className='flex flex-col align-middle py-2'>
                     <div className='ftr-hd flex flex-row  w-full justify-between'>
                         <div className='ft-lft flex flex-row  w-3/5 gap-4'>
@@ -366,7 +367,13 @@ const handleRefProfile = () => {
             </div>
             ))}
         </div>
-        <div className='mb-40'></div>
+        <div className='mb-40'>
+            {posts.map((user) => (
+                <figure>
+                    <img src={user.imageURL} alt="" />
+                </figure>
+            ))}
+        </div>
     </div>
   )
 }
