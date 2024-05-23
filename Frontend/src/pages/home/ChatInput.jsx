@@ -29,9 +29,9 @@ const ChatInput = () => {
 
   return (
     <>
-    <div className='ftr align-middle'>
+    <div className='ftr align-middle bg-base-300'>
         <div className='flex align-middle'><AddIcon /></div>
-        <div className=' px-2 frm-div bg-slate-400'>
+        <div className=' px-2 frm-div bg-base-100'>
         <form className='flex flex-row align-middle w-full' onSubmit={handleSubmit}> 
             <div className=' w-full flex align-middle'>
                 <textarea 
@@ -40,13 +40,13 @@ const ChatInput = () => {
                 cols='100' 
                 rows="2" 
                 placeholder='Type...'
-                className='border-none outline-none bg-transparent'
+                className='border-none outline-none bg-transparent px-4'
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onClick={handleInput}
                 ></textarea>
             </div>{isClick && (
-            <button className='flex align-middle ml-7'><SendIcon /></button>)}
+            <button type='submit' className='flex align-middle ml-7'><SendIcon /></button>)}
         </form> 
         </div>{!isClick && (<>
             <div className='flex align-middle'><DuoIcon /></div>

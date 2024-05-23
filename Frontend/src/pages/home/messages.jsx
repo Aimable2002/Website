@@ -26,8 +26,10 @@
 
 import React from 'react'
 import Message from './Message'
+import useListenMessage from '../../hook/useListenMessage'
 
 const messages = () => {
+  useListenMessage()
 
   return (
     <div>

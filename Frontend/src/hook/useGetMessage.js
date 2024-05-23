@@ -12,15 +12,16 @@ const useGetMessage = () => {
         setLoading(true);
         try{
             const token = localStorage.getItem('online-user');
-            console.table('selectedUser :', selectedUser._id)
+            console.log('selectedUser :', selectedUser._id)
             const res = await axios.get(`http://localhost:4000/api/message/${selectedUser._id}`, {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }
             });
             const data = res.data;
-            if(data){
-                throw new Error('data error :', + error.message)
+            console.table('data fetched :', data)
+            if(!data){
+                throw new Error('data error ')
             }
             setMessages(data)
         }catch(error){
@@ -29,7 +30,11 @@ const useGetMessage = () => {
             setLoading(false)
         }
       }
-        if(selectedUser?._id) getMessages();
+      if (selectedUser?._id) {
+        getMessages();
+      } else {
+        setMessages([]); // Clear messages when selectedUser changes
+      }
   },[selectedUser?._id, setMessages])
   return { loading, messages }
 }

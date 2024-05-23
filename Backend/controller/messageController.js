@@ -1,7 +1,7 @@
 import express from 'express';
 import Conversation from '../Model/conversationModel.js';
 import Message from '../Model/messageModel.js';
-import { getRecievedSocketId } from '../socket/socket.io.js';
+import { getRecievedSocketId, io } from '../socket/socket.io.js';
 
 
 export const sendMessages = async (req, res) => {
@@ -64,13 +64,14 @@ export const getMessages = async(req, res) => {
     try{
         const {_id: senderId} = req.user;
         console.log('senderId :', senderId)
-        const {_id: userToChat} = req.params;
+        // const {_id: userToChat} = req.params;
+        const userToChat = req.params.id
         console.log('userToChat :', userToChat)
-        const {message} = req.body
-        console.log('message :', message)
+        // const {message} = req.body
+        // console.log('message :', message)
 
 
-        if(!senderId || !userToChat || !message){
+        if(!senderId || !userToChat){
             return res.status(409).json('please provide data')
         }
         if(!senderId){
@@ -81,12 +82,11 @@ export const getMessages = async(req, res) => {
         }
 
         const existConversation = await Conversation.findOne({participants: {$all: [
-            senderId, recieverId
+            senderId, userToChat
         ]}}).populate('messages')
 
         if(!existConversation){
-            const noChatYet = 'start conversation'
-            return res.status(301).json([])
+            return res.status(200).json([]);
         }
 
         const messages = existConversation.messages

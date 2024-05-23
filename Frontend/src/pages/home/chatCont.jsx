@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './home.css';
+import './chatCount.css'
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -25,29 +26,31 @@ const chatCont = () => {
   };
 
   return (
-    <div className='flex w-full flex-col'>
-        <div className='header'>
-          <div className='header-content px-2'>
+    <div className='flex w-full flex-col overflow-y-auto'>
+        <div className='header' style={{zIndex: '1'}}>
+          <div className='header-content2 px-2 bg-base-100' style={{width: 'calc(100% - 50%)'}}>
             <div className='w-3/12 flex align-middle py-1 gap-2 flex-row'>
-                <div className="avatar">
-                    <div className="w-8 rounded-full">
-                        <img src={getProfileImageUrl(selectedUser)} />
-                    </div>
+              <div className="avatar">
+                <div className="w-8 rounded-full">
+                  <img src={getProfileImageUrl(selectedUser)} />
                 </div>
+              </div>
+              <div className='flex flex-row w-2/5'>
                 <div className='flex align-middle flex-col'>
-                    <div>{selectedUser.userName}</div>
-                    <div className=''>{isOnline ? 'online' : 'offline'}</div>
+                  <div>{selectedUser.userName}</div>
+                  <div className=''>{isOnline ? 'online' : 'offline'}</div>
                 </div>
+              </div>
             </div>
             <div className='flex flex-row align-middle justify-between w-2/4'>
               <div></div>
               <div></div>
-              <div onClick={resetBack}><ArrowForwardIcon /></div>
+              <div className='cursor-pointer' onClick={resetBack}><ArrowForwardIcon /></div>
             </div>
           </div>
         </div>
         {/* <div className='' style={{borderBottom: '1px solid #ccc'}}></div> */}
-        <div>
+        <div className='mb-20 mt-10'>
           <Messages />
           <ChatInput />
         </div>

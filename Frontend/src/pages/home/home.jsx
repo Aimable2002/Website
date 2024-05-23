@@ -20,6 +20,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import useGetUser from '../../hook/useGetUser';
 import { useSocketContext } from '../../context/socketContext.jsx';
 import Conversation from '../zustand/zustand.jsx';
+import useGetPost from '../../hook/useGetPost.js';
 
 import Poster from './poster.jsx';
 import ChatCont from './chatCont.jsx';
@@ -83,6 +84,15 @@ const[fileChange, setFileChange] = useState();
   const getProfileImageUrl = (selectedUser) => {
     return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
   };
+
+  const {posts} = useGetPost();
+
+  const getUserById = (userId) => {
+    return users.find((user) => user._id === userId)
+  }
+  const filterPost = posts.filter((post) => {
+    const user = getUserById(post.userId)
+  })
 
   return (
     <div className='flex flex-row w-screen h-screen overflow-y-auto' style={{fontSize: '12px'}}>
@@ -256,18 +266,20 @@ const[fileChange, setFileChange] = useState();
         </>
         ) : (
         <div className='flex flex-col w-full overflow-y-auto'>
-          {userWithOnlineStatus
+          {/* {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-          .map((user, index) => (
-          <div key={index} className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer'>
+          .map((user, index) => (  */}
+          {posts.map((post, idx) => {
+                const user = getUserById(post.userId);
+                if (!user) return null; // Ensure user exists
+                return (
+          <div key={idx} className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer bg-base-100'>
             <div className='flex py-2 px-2 justify-center align-middle'>
-              {user.status === 0 ? '' : (
               <div className="avatar ">
                 <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <video src={user.status}/>
+                  <img src={post.imageURL}/>
                 </div>
-              
-              </div>)}
+              </div>
             </div>
             <div className='flex flex-col align-middle justify-center'
             onClick={() => setUser(user)}>
@@ -275,7 +287,8 @@ const[fileChange, setFileChange] = useState();
               <div>you have message</div>
             </div>
             </div>
-          ))}
+                )
+          })}
         </div>
         )}
       </div>
