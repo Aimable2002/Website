@@ -24,7 +24,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-// import { IoChatbubbleEllipses } from "react-icons/io5";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import useGetUser from '../../hook/useGetUser';
 import Conversation from '../zustand/zustand';
@@ -34,6 +34,8 @@ import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
 import useGetPost from '../../hook/useGetPost';
+import useToggleLike from '../../hook/useToggleLike';
+import useFollow from '../../hook/useFollow';
 
 const smPost = ({user}) => {
 
@@ -134,9 +136,26 @@ const handleRefProfile = () => {
   const filterPost = posts.filter((post) => {
     const user = getUserById(post.userId)
   })
-const [count, setCount] = useState('');
-  const handleLike = () => {
-    let count = 100
+  const {isLike, likesCount, toggleLike} = useToggleLike();
+  const handleToggleLike = async (postId) => {
+    await toggleLike(postId)
+  }
+  const [isLikeClicked, setIsLikeClicked] = useState(false);
+
+  const handlelikeClickedToggle = (e) => {
+    e.preventDefault()
+    setIsLikeClicked(!isLikeClicked)
+  }
+  const {isFollow, isFollowCount, postFollow} = useFollow();
+  const handleFollowClick = async(userId) => {
+    await postFollow(userId)
+  }
+
+  const [isButton, setIsButton] = useState(false)
+
+  const handleButtonFollow = (e) => {
+    e.preventDefault();
+    setIsButton(!isButton)
   }
   return (
     <div className=' w-screen overflow-auto'>
@@ -168,7 +187,7 @@ const [count, setCount] = useState('');
                         ref={addPost}
                         onChange={handlePost}/>
                     
-                    <Link to='/smHome'><div><ChatBubbleOutlineIcon /></div></Link> 
+                    <Link to='/'><div><ChatBubbleOutlineIcon /></div></Link> 
                     <div className='drop-menu relative inline-block'>
                         <div onClick={handleMenu}>{isMenu ? <ClearIcon /> : <MenuIcon />}</div>
                         {isMenu && (<>
@@ -342,7 +361,12 @@ const [count, setCount] = useState('');
                             </div>
                         </div>
                         <div className='crd-rgt flex self-center justify-around '>
-                            <div>Follow</div>
+                            {user.totalFollowing > 0 ? (
+                                <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                                    onClick={() => handleFollowClick(user)}>Following</div> 
+                                ) : (
+                                <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
+                            )}
                             <div className='ml-4'>Subscribe</div>
                         </div>
                     </div>
@@ -359,9 +383,12 @@ const [count, setCount] = useState('');
                                 <div>100</div>
                                 <div>views</div>
                             </div>
-                            <div className='flex flex-row gap-2 align-middle'>
-                                <div>999</div>
-                                <div onClick={handleLike}><FavoriteBorderIcon /></div>
+                            <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike(post)}>
+                                {post.totalLikes > 0 ? (<>
+                                <span className='flex self-center'>{post.totalLikes}</span>
+                                <span><FavoriteIcon /></span>
+                                </>
+                                ) : (<span onClick={handlelikeClickedToggle}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
                             </div>
                             <div className='flex flex-row gap-2 align-middle'>
                                 <div>20</div>

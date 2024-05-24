@@ -44,13 +44,13 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
         <Routes>
           <Route path='sign' element={AuthUser ? <Navigate to='/' /> : <SmReg />} />
           <Route path='/' element={AuthUser ? <SmHome /> : <Navigate to='sign' />} />
-          <Route path='/home' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} />
+          {/* <Route path='/home' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} /> */}
           <Route path='account' element={AuthUser ? <Account /> : <Navigate to='sign' />} />
           <Route path='/upload' element={AuthUser ? <Upload /> : <Navigate to='sign' />} />
-          <Route path='/smHome' element={AuthUser ? <SmHome /> : <Navigate to='sign' />} />
+          {/* <Route path='/smHome' element={AuthUser ? <SmHome /> : <Navigate to='sign' />} /> */}
           <Route path='/smPost' element={AuthUser ? <SmPost /> : <Navigate to='sign' />} />
           <Route path='/smChat/:id' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} />
-          <Route path='/smReg' element={AuthUser ? <Navigate to='/' /> : <SmReg />} />
+          {/* <Route path='/smReg' element={AuthUser ? <Navigate to='/' /> : <SmReg />} /> */}
         </Routes>
       ) : (
         <Routes>

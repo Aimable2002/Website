@@ -7,11 +7,14 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import useGetUser from '../../hook/useGetUser';
 import Conversation from '../zustand/zustand';
 import postRequest from '../../hook/postRequest';
 import useGetPost from '../../hook/useGetPost';
+import useToggleLike from '../../hook/useToggleLike';
+import useFollow from '../../hook/useFollow';
 
 
 // Helper function to get image dimensions
@@ -35,7 +38,7 @@ const determineGridStyle = (dimensions) => {
   }
 };
 
-const poster = ({user}) => {
+const poster = ({user, postId}) => {
 
   const {loading, users} = useGetUser();
 
@@ -95,6 +98,27 @@ const [imageStyles, setImageStyles] = useState([]);
   const getUserById = (userId) => {
     return users.find((user) => user._id === userId)
   }
+  const {isLike, likesCount, toggleLike} = useToggleLike();
+  const handleToggleLike = async (postId) => {
+    await toggleLike(postId)
+  }
+  const [isLikeClicked, setIsLikeClicked] = useState(false);
+
+  const handlelikeClickedToggle = (e) => {
+    e.preventDefault()
+    setIsLikeClicked(!isLikeClicked)
+  }
+  const {isFollow, isFollowCount, postFollow} = useFollow();
+  const handleFollowClick = async(userId) => {
+    await postFollow(userId)
+  }
+
+  const [isButton, setIsButton] = useState(false)
+
+  const handleButtonFollow = (e) => {
+    e.preventDefault();
+    setIsButton(!isButton)
+  }
   return (
     <div className='w-full flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10'>
@@ -136,9 +160,9 @@ const [imageStyles, setImageStyles] = useState([]);
         .map((user, index) => ( */}
         {posts.map((post, idx) => {
             const user = getUserById(post.userId);
-            if (!user) return null; // Ensure user exists
+            if (!user) return null; 
             return (
-          <div className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
+          <div key={idx} className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
           position: 'relative' }}>
         <div className="card w-96 bg-base-100 shadow-xl"> 
 
@@ -159,9 +183,12 @@ const [imageStyles, setImageStyles] = useState([]);
               <div className='flex self-center gap-1'>1M 
                 <span className='flex self-center'>views</span>
               </div>
-              <div className='flex self-center cursor-pointer gap-1'>
-                <span className='flex self-center'>120K</span>
-                <FavoriteBorderIcon />
+              <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike(post)}>
+                {post.totalLikes > 0 ? (<>
+                  <span className='flex self-center'>{post.totalLikes}</span>
+                  <span><FavoriteIcon /></span>
+                  </>
+                ) : (<span onClick={handlelikeClickedToggle}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
               </div>
                <div className='flex self-center cursor-pointer gap-1'>
                 <span className='flex self-center'>45</span>
@@ -171,7 +198,12 @@ const [imageStyles, setImageStyles] = useState([]);
             <p>thats the cmt there...</p>
             
               <div className="card-actions justify-end">
-                <div className="badge badge-outline cursor-pointer">Follow</div> 
+                {user.totalFollowing > 0 ? (
+                  <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                    onClick={() => handleFollowClick(user)}>Following</div> 
+                ) : (
+                <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
+              )}
                 <div className="badge badge-outline cursor-pointer">Subscribe</div>
               </div>
               

@@ -10,7 +10,7 @@ import uploadRoute from './router/uploadRoute.js'
 import messageRoute from './router/messageRoute.js'
 import userRoute from './router/userRoute.js'
 import storyRoute from './router/storyRoute.js'
-
+import actionRoute from './router/actionRoute.js'
 import {server, app} from './socket/socket.io.js';
 
 
@@ -31,6 +31,7 @@ app.use('/api/upload', uploadRoute);
 app.use('/api/uploadStory', storyRoute);
 app.use('/api/message', messageRoute);
 app.use('/api/users', userRoute)
+app.use('/api/action', actionRoute)
 
 
 // app.use(express.static(path.join(__dirname, "/Frontend/dist")));

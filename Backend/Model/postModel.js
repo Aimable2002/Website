@@ -7,13 +7,20 @@ const postSchema = new mongoose.Schema({
         required: true,
     },
     likes: {
-        type: 'Number',
-        default: '',
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        default: [], // Set default value as an empty array
     },
-    created_at: [{
+    totalLikes: {
+        type: Number,
+        default: 0, // Default value is 0
+    },
+    created_at: {
         type: Date,
         default: new Date(),
-    }],
+    },
     imageURL: {
         type: String,
     }

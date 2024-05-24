@@ -36,12 +36,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    post: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Post'
-        }
-    ]
+    totalFollower: {
+        type: Number,
+        default: 0
+    },
+    totalFollowing: {
+        type: Number,
+        default: 0
+    },
 },{timestamps: true})
 
 
