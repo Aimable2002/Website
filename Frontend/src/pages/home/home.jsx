@@ -94,6 +94,7 @@ const[fileChange, setFileChange] = useState();
     const user = getUserById(post.userId)
   })
 
+
   return (
     <div className='flex flex-row w-screen h-screen overflow-y-auto' style={{fontSize: '12px'}}>
       <div className='flex flex-col w-3/12 overflow-y-auto'>
@@ -201,11 +202,11 @@ const[fileChange, setFileChange] = useState();
               <div className='flex align-middle justify-center'>post</div>
             </div>
             <div className='flex flex-col w-full align-middle justify-center'>
-              <div className='flex align-middle justify-center'>46M</div>
+              <div className='flex align-middle justify-center'>{user.totalFollower}</div>
               <div className='flex align-middle justify-center'>Follower</div>
             </div>
             <div className='flex flex-col w-full align-middle justify-center'>
-              <div className='flex align-middle justify-center'>46K</div>
+              <div className='flex align-middle justify-center'>{user.totalFollowing}</div>
               <div className='flex align-middle justify-center'>Following</div>
             </div>
           </div>

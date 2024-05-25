@@ -59,16 +59,17 @@ export const follow = async (req, res) => {
             return res.status(400).json('user not found')
         }
         const follow = await Follow.findOne({ follower: userId, following: userToFollow })
+        console.log('follow : ', follow)
         if(follow){
             return res.status(400).json('already following')
         }
         const newFollow = new Follow({follower: userId, following: userToFollow })
-        //console.log('newFollow :', newFollow)
+        console.log('newFollow :', newFollow)
         await newFollow.save();
 
-        await User.findByIdAndUpdate(userId, {$inc: {totalFollowing: 1}})
-        await User.findByIdAndUpdate(userToFollow, {$inc: {totalFollower: 1}})
-
+        await User.findByIdAndUpdate(userId, {$inc: {totalFollowing: 1}, $push: {following: userToFollow}})
+        await User.findByIdAndUpdate(userToFollow, {$inc: {totalFollower: 1}, $push: {follower: userId}})
+        //console.log('newFollow : ', newFollow)
         res.status(200).json(newFollow)
 
     }catch(error){

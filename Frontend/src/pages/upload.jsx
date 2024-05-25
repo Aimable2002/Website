@@ -97,18 +97,19 @@
 import React from 'react'
 import useGetPost from '../hook/useGetPost';
 import useGetUser from '../hook/useGetUser';
+import useGetFollowing from '../hook/useGetFollowing';
 
 const upload = () => {
 
   const  {loading, posts} = useGetPost();
   const {users} = useGetUser();
 
+  const {following} = useGetFollowing();
+
   return (
     <div>
-      {posts.map((post) => (
-      <figure>
-        <img src={post.imageURL} alt="" />
-      </figure>
+      {following.map((user) => (
+      <div>{user.following}</div>
       ))}
     </div>
   )

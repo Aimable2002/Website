@@ -14,12 +14,27 @@ router.delete('/unfollow/:id', protectRoute, unFollow)
 router.get('/followers/:id', protectRoute, async(req, res) => {
     try{
         const userId = req.params.id;
-        //const followers = await Follow.find({following: userId}).populate('follower')
-        const followers = await Follow.countDocuments({following: userId})
+        const followers = await Follow.find({following: userId}).populate('follower')
+        // const followers = await Follow.countDocuments({following: userId})
         res.status(201).json(followers)
     }catch(error){
         console.log('internal server get Follower error :', error.message)
         res.status(500).json({error: 'internal server get follower error'})
+    }
+})
+
+
+router.get('/following/:id', protectRoute, async(req, res) => {
+    try{
+        const userId = req.params.id;
+        console.log('userId :', userId)
+        const user = req.user._id
+        const following = await User.find({partcipant: {$all: [user, userId]}}).populate('following')
+        // const followers = await Follow.countDocuments({following: userId})
+        res.status(201).json(following)
+    }catch(error){
+        console.log('internal server get Following error :', error.message)
+        res.status(500).json({error: 'internal server get following error'})
     }
 })
 

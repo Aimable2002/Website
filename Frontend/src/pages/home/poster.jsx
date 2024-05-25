@@ -15,6 +15,9 @@ import postRequest from '../../hook/postRequest';
 import useGetPost from '../../hook/useGetPost';
 import useToggleLike from '../../hook/useToggleLike';
 import useFollow from '../../hook/useFollow';
+import useGetFollow  from '../../hook/useGetFollow';
+import useGetFollowing from '../../hook/useGetFollowing';
+import { useAuthContext } from '../../context/authContext';
 
 
 // Helper function to get image dimensions
@@ -41,22 +44,26 @@ const determineGridStyle = (dimensions) => {
 const poster = ({user, postId}) => {
 
   const {loading, users} = useGetUser();
+const {AuthUser} = useAuthContext();
+  
 
   const [search, setSearch] = useState('')
 
   const{selectedUser, setUser} = Conversation();
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    if(!search)return;
+    if(e.key === 'Enter'){
+        e.preventDefault();
+      if(!search)return;
 
-    const result = users.find((any) => any.userName.toLowerCase().includes(search.toLowerCase()))
+      const result = users.find((any) => any.userName.toLowerCase().includes(search.toLowerCase()))
 
-    if(result){
-      setUser(result);
-      setSearch('')
-    }else{
-      console.log('no search found')
+      if(result){
+        setUser(result)
+        setSearch('')
+      }else{
+        return console.log('no user found')
+      }
     }
   }
   const addPost = useRef();
@@ -96,7 +103,7 @@ const [imageStyles, setImageStyles] = useState([]);
   const {posts} = useGetPost();
   
   const getUserById = (userId) => {
-    return users.find((user) => user._id === userId)
+    return users.find((user) =>  user._id === userId)
   }
   const {isLike, likesCount, toggleLike} = useToggleLike();
   const handleToggleLike = async (postId) => {
@@ -119,6 +126,13 @@ const [imageStyles, setImageStyles] = useState([]);
     e.preventDefault();
     setIsButton(!isButton)
   }
+  const {follower} = useGetFollow();
+  const {following} =useGetFollowing();
+
+  const isUserFollowing = (userId) => {
+    return following.includes(follow => follow.following._id === userId);
+  };
+  const filteredUsers = users.filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()));
   return (
     <div className='w-full flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10'>
@@ -160,7 +174,12 @@ const [imageStyles, setImageStyles] = useState([]);
         .map((user, index) => ( */}
         {posts.map((post, idx) => {
             const user = getUserById(post.userId);
+            const isFollowing = isUserFollowing(user);
+            //const isuser = user.following.includes(user._id)
+            //console.log('isUser :', isuser)
+            //console.log('user :', user)
             if (!user) return null; 
+            
             return (
           <div key={idx} className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
           position: 'relative' }}>
@@ -197,15 +216,25 @@ const [imageStyles, setImageStyles] = useState([]);
             </div>
             <p>thats the cmt there...</p>
             
-              <div className="card-actions justify-end">
-                {user.totalFollowing > 0 ? (
-                  <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+              {/* <div className="card-actions justify-end">
+                {user.totalFollower > 0 ? (
+                  <div className="badge badge-outline border-none cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white  shadow-lg" 
                     onClick={() => handleFollowClick(user)}>Following</div> 
                 ) : (
-                <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
+                <div className=" border-none  badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
               )}
-                <div className="badge badge-outline cursor-pointer">Subscribe</div>
-              </div>
+                <div className="badge border-none badge-outline cursor-pointer">Subscribe</div>
+              </div> */}
+
+                <div className="card-actions justify-end">
+                    {isFollowing ? (
+                      <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                        onClick={() => handleFollowClick(user)}>Following</div>
+                    ) : (
+                      <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div>
+                    )}
+                    <div className="badge badge-outline cursor-pointer">Subscribe</div>
+                  </div>
               
           </div>
           </div>

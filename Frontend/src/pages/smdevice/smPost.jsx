@@ -347,12 +347,12 @@ const handleRefProfile = () => {
                 if (!user) return null; // Ensure user exists
                 return (
 
-            <div className='crd-area w-full flex  gap-1 flex-col px-2 bg-base-100'>
+            <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                 <div className=' crd w-full relative flex align-middle py-2'>
-                    <div className=' crd-hd w-full flex flex-row justify-between align-middle'>
+                    <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
                         <div className='crd-prof flex flex-row gap-4'>
                             <div className="avatar">
-                                <div className="w-12 rounded-full">
+                                <div className="w-11 rounded-full">
                                     <img src={getProfileImageUrl(user)} />
                                 </div>
                             </div>
