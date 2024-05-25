@@ -12,7 +12,7 @@ const useToggleLike = () => {
         const token = localStorage.getItem('online-user');
         //console.log('token :', JSON.parse(token).token)
 
-        const res = await axios.post(`http://localhost:2000/api/action/like/${postId._id}`, {}, {
+        const res = await axios.post(`https://website-s9ue.onrender.com/api/action/like/${postId._id}`, {}, {
             headers: {
                 Authorization: `${JSON.parse(token).token}`
             }

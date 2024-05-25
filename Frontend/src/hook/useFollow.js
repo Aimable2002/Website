@@ -9,7 +9,7 @@ const useFollow = () => {
     try{
         console.log('userId: ', userId)
         const token = localStorage.getItem('online-user');
-        const res = await axios.post(`http://localhost:2000/api/action/follow/${userId._id}`, {}, {
+        const res = await axios.post(`https://website-s9ue.onrender.com/api/action/follow/${userId._id}`, {}, {
             headers: {
                 Authorization: `${JSON.parse(token).token}`
             }
