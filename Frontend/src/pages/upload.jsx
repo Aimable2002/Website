@@ -98,6 +98,7 @@ import React from 'react'
 import useGetPost from '../hook/useGetPost';
 import useGetUser from '../hook/useGetUser';
 import useGetFollowing from '../hook/useGetFollowing';
+import useGetFollow from '../hook/useGetFollow.js';
 
 const upload = () => {
 
@@ -105,11 +106,16 @@ const upload = () => {
   const {users} = useGetUser();
 
   const {following} = useGetFollowing();
+  const {follower} = useGetFollow()
 
   return (
     <div>
-      {following.map((user) => (
-      <div>{user.following}</div>
+      {posts.map((post) => (
+      <div>
+        <img src={post.user.profile} alt="" />
+        <div>{post.user.userName}</div>
+        <img src={post.imageURL} alt="" />
+      </div>
       ))}
     </div>
   )

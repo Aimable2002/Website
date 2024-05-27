@@ -3,6 +3,8 @@ import Post from '../Model/postModel.js';
 import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js';
 
+import mongoose from 'mongoose';
+
 
 export const likesCount = async (req, res) => {
     try{
@@ -51,17 +53,19 @@ export const follow = async (req, res) => {
         const userToFollow = req.params.id;
         console.log('userToFollow :', userToFollow)
 
-        if(userToFollow === userId.toString()){
+        if(userToFollow.toString() === userId.toString()){
             return res.status(409).json('cant follow yrself')
         }
+
         const user = await User.findById(userToFollow)
+        //console.log('user :', user)
         if(!user){
-            return res.status(400).json('user not found')
+            return res.status(404).json('user not found')
         }
         const follow = await Follow.findOne({ follower: userId, following: userToFollow })
         console.log('follow : ', follow)
         if(follow){
-            return res.status(400).json('already following')
+            return res.status(401).json('already following')
         }
         const newFollow = new Follow({follower: userId, following: userToFollow })
         console.log('newFollow :', newFollow)
@@ -69,9 +73,9 @@ export const follow = async (req, res) => {
 
         await User.findByIdAndUpdate(userId, {$inc: {totalFollowing: 1}, $push: {following: userToFollow}})
         await User.findByIdAndUpdate(userToFollow, {$inc: {totalFollower: 1}, $push: {follower: userId}})
-        //console.log('newFollow : ', newFollow)
-        res.status(200).json(newFollow)
-
+        console.log('newFollow : ', newFollow)
+        res.status(201).json(newFollow)
+ 
     }catch(error){
         console.log('internal server Follow error :', error.message)
         res.status(500).json({error: 'internal server Follow error '})

@@ -29,8 +29,10 @@ router.get('/following/:id', protectRoute, async(req, res) => {
         const userId = req.params.id;
         console.log('userId :', userId)
         const user = req.user._id
-        const following = await User.find({partcipant: {$all: [user, userId]}}).populate('following')
+        const following = await Follow.find({follower: userId }).populate('following')
+        //const following = await Follow.find({partcipant: {$all: [user, userId]}}).populate('following')
         // const followers = await Follow.countDocuments({following: userId})
+        console.log('following :', following)
         res.status(201).json(following)
     }catch(error){
         console.log('internal server get Following error :', error.message)

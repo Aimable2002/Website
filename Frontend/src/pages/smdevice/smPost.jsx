@@ -37,7 +37,7 @@ import useGetPost from '../../hook/useGetPost';
 import useToggleLike from '../../hook/useToggleLike';
 import useFollow from '../../hook/useFollow';
 
-const smPost = ({user}) => {
+const smPost = ({user, post}) => {
 
     const {loading, users} = useGetUser();
   
@@ -75,7 +75,7 @@ const handlePost = async (e) => {
 }
 
 const [activeButton, setActiveButton] = useState('All');
-  const navigate = useNavigate(); // For navigation
+const navigate = useNavigate(); // For navigation
 
   const handleButtonClick = (button) => {
     setActiveButton(button);
@@ -136,27 +136,44 @@ const handleRefProfile = () => {
   const filterPost = posts.filter((post) => {
     const user = getUserById(post.userId)
   })
-  const {isLike, likesCount, toggleLike} = useToggleLike();
-  const handleToggleLike = async (postId) => {
-    await toggleLike(postId)
-  }
+  
   const [isLikeClicked, setIsLikeClicked] = useState(false);
 
-  const handlelikeClickedToggle = (e) => {
+
+  const {isLike, likesCount, toggleLike} = useToggleLike();
+  const {isFollow, isFollowCount, postFollow} = useFollow();
+
+  const handleToggleLike2 = async (post) => {
+    console.log('post liked :')
+    await toggleLike(post)
+  }
+
+
+  const handlelikeClickedToggle2 = (e) => {
     e.preventDefault()
+    console.log('like is clicked')
     setIsLikeClicked(!isLikeClicked)
   }
-  const {isFollow, isFollowCount, postFollow} = useFollow();
+
   const handleFollowClick = async(userId) => {
+    console.log('follow clicked')
     await postFollow(userId)
   }
-
-  const [isButton, setIsButton] = useState(false)
-
-  const handleButtonFollow = (e) => {
-    e.preventDefault();
-    setIsButton(!isButton)
-  }
+  const [view, setView] = useState(false)
+const handleView = () => {
+    console.log('view is clicked')
+    setView(!view)
+}
+const [test, setTest] = useState(false)
+const handleTest = () => {
+    console.log('handle test clicked')
+    setTest(!test)
+}
+const [test1, setTest1] = useState(false)
+const handleTest1 = () => {
+    console.log('handle test 1 clicked')
+    setTest1(!test1)
+}
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -338,73 +355,76 @@ const handleRefProfile = () => {
                 </Button>
             </div>
         </div>
-        <div className='w-full relative flex overflow-y-auto flex-col' style={{zIndex: '-1'}}>
+        <div className='w-full relative flex overflow-y-auto flex-col'>
             {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
             {posts.map((post, idx) => {
-                const user = getUserById(post.userId);
-                if (!user) return null; // Ensure user exists
-                return (
-
-            <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
-                <div className=' crd w-full relative flex align-middle py-2'>
-                    <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
-                        <div className='crd-prof flex flex-row gap-4'>
-                            <div className="avatar">
-                                <div className="w-11 rounded-full">
-                                    <img src={getProfileImageUrl(user)} />
+                // const user = getUserById(post.userId);
+                // if (!user) return null; // Ensure user exists
+                //console.log('userId :', post.userId)
+                const userId = post.userId
+                //console.log('post :', post._id)
+                return (                   
+                    <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
+                        <div className=' crd w-full relative flex align-middle py-2'>
+                            <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
+                                <div className='crd-prof flex flex-row gap-4'>
+                                    <div className="avatar">
+                                        <div className="w-11 rounded-full">
+                                            <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.avatar} />
+                                        </div>
+                                    </div>
+                                    <div className='dtl flex align-middle self-center'>
+                                        <div className='username flex align-middle'>{post.user.userName}</div>
+                                    </div>
+                                </div>
+                                <div className='crd-rgt flex self-center justify-around '>
+                                    {post.isFollowing ? (
+                                        <div className="badge badge-outline border-none cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                                        onClick={() => handleFollowClick(userId)}>Following</div> 
+                                        ) : (
+                                        <div className="badge badge-outline border-none cursor-pointer" onClick={() => handleFollowClick(userId)}>Follow</div> 
+                                    )}
+                                    <div className='ml-4 badge badge-outline border-none cursor-pointer'>Subscribe</div>
                                 </div>
                             </div>
-                            <div className='dtl flex align-middle self-center'>
-                                <div className='username flex align-middle'>{user.userName}</div>
-                            </div>
                         </div>
-                        <div className='crd-rgt flex self-center justify-around '>
-                            {user.totalFollowing > 0 ? (
-                                <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
-                                    onClick={() => handleFollowClick(user)}>Following</div> 
-                                ) : (
-                                <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
-                            )}
-                            <div className='ml-4'>Subscribe</div>
+                        <div className='w-full flex justify-center align-middle'>
+                            <figure>
+                                <img src={post.imageURL} alt="" />
+                            </figure>
+                        </div>
+                        <div className='flex flex-col align-middle py-2'>
+                            <div className='ftr-hd flex flex-row  w-full justify-between'>
+                                <div className='ft-lft flex flex-row  w-3/5 gap-4'>
+                                    <div className='flex flex-row gap-2 align-middle'>
+                                        <div>100</div>
+                                        <div onClick={() => handleView(post)}>{!view ? 'view' : 'viewsss'}</div>
+                                    </div>
+                                    <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike2(post)}>
+                                        {post.totalLikes > 0 ? (
+                                        <>
+                                        <span className='flex self-center'>{post.totalLikes}</span>
+                                        <span><FavoriteIcon /></span>
+                                        </>
+                                        ) : (<span onClick={handlelikeClickedToggle2}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
+                                    </div>
+                                    <div className='flex flex-row gap-2 align-middle'>
+                                        <div>20</div>
+                                        <div><ChatBubbleOutlineIcon /></div>
+                                    </div>
+                                </div>
+                                <div className='ft-rgt flex self-end  w-2/6 justify-around align-middle'>
+                                    <div><ShareIcon /></div>
+                                    <div>DM</div>
+                                </div>
+                            </div>
+                            <div className='ft-ftr flex flex-row w-full  align-middle'>
+                                <div>cmt content</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='w-full flex justify-center align-middle'>
-                    <figure>
-                        <img src={post.imageURL} alt="" />
-                    </figure>
-                </div>
-                <div className='flex flex-col align-middle py-2'>
-                    <div className='ftr-hd flex flex-row  w-full justify-between'>
-                        <div className='ft-lft flex flex-row  w-3/5 gap-4'>
-                            <div className='flex flex-row gap-2 align-middle'>
-                                <div>100</div>
-                                <div>views</div>
-                            </div>
-                            <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike(post)}>
-                                {post.totalLikes > 0 ? (<>
-                                <span className='flex self-center'>{post.totalLikes}</span>
-                                <span><FavoriteIcon /></span>
-                                </>
-                                ) : (<span onClick={handlelikeClickedToggle}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
-                            </div>
-                            <div className='flex flex-row gap-2 align-middle'>
-                                <div>20</div>
-                                <div><ChatBubbleOutlineIcon /></div>
-                            </div>
-                        </div>
-                        <div className='ft-rgt flex self-end  w-2/6 justify-around align-middle'>
-                            <div><ShareIcon /></div>
-                            <div>DM</div>
-                        </div>
-                    </div>
-                    <div className='ft-ftr flex flex-row w-full  align-middle'>
-                        <div>cmt content</div>
-                    </div>
-                </div>
-            </div>
                 )
             })}
         </div>
@@ -414,6 +434,11 @@ const handleRefProfile = () => {
 }
 
 export default smPost
+
+
+
+
+
 
 
 

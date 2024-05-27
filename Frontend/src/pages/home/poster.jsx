@@ -41,6 +41,7 @@ const determineGridStyle = (dimensions) => {
   }
 };
 
+
 const poster = ({user, postId}) => {
 
   const {loading, users} = useGetUser();
@@ -97,9 +98,7 @@ const [imageStyles, setImageStyles] = useState([]);
     fetchImageStyles();
   }, [users]);
 
-  const getProfileImageUrl = (selectedUser) => {
-    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
-  };
+  
   const {posts} = useGetPost();
   
   const getUserById = (userId) => {
@@ -116,6 +115,7 @@ const [imageStyles, setImageStyles] = useState([]);
     setIsLikeClicked(!isLikeClicked)
   }
   const {isFollow, isFollowCount, postFollow} = useFollow();
+
   const handleFollowClick = async(userId) => {
     await postFollow(userId)
   }
@@ -128,9 +128,16 @@ const [imageStyles, setImageStyles] = useState([]);
   }
   const {follower} = useGetFollow();
   const {following} =useGetFollowing();
+  // const getProfileImageUrl = (selectedUser) => {
+  //   if(!selectedUser) return '';
+  //   return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+  // };
 
+  const getProfileImageUrl = (post) => {
+    return post.profile && post.profile.trim() !== '' ? post.profile : post.avatar;
+  };
   const isUserFollowing = (userId) => {
-    return following.includes(follow => follow.following._id === userId);
+    return following.includes((follow) => follow.following._id === userId);
   };
   const filteredUsers = users.filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()));
   return (
@@ -173,13 +180,7 @@ const [imageStyles, setImageStyles] = useState([]);
         .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
         .map((user, index) => ( */}
         {posts.map((post, idx) => {
-            const user = getUserById(post.userId);
-            const isFollowing = isUserFollowing(user);
-            //const isuser = user.following.includes(user._id)
-            //console.log('isUser :', isuser)
-            //console.log('user :', user)
-            if (!user) return null; 
-            
+            const userId = post.userId
             return (
           <div key={idx} className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
           position: 'relative' }}>
@@ -195,18 +196,20 @@ const [imageStyles, setImageStyles] = useState([]);
             <div className='flex flex-row w-full align-middle gap-3'>
               <div className="avatar">
                 <div className="w-8 rounded-full">
-                  <img src={getProfileImageUrl(user)} />
+                  {/* <img src={getProfileImageUrl(user)} /> */}
+                  <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.avatar} alt="" />
                 </div>
               </div>
-              <div className='flex self-center w-3/6'>{user.userName}</div>
+              <div className='flex self-center w-3/6'>{post.user.userName}</div>
               <div className='flex self-center gap-1'>1M 
                 <span className='flex self-center'>views</span>
               </div>
               <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike(post)}>
-                {post.totalLikes > 0 ? (<>
+                {post.totalLikes > 0 ? (
+                <>
                   <span className='flex self-center'>{post.totalLikes}</span>
                   <span><FavoriteIcon /></span>
-                  </>
+                </>
                 ) : (<span onClick={handlelikeClickedToggle}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
               </div>
                <div className='flex self-center cursor-pointer gap-1'>
@@ -215,26 +218,16 @@ const [imageStyles, setImageStyles] = useState([]);
               <div className='flex self-center cursor-pointer'><ShareIcon /></div>
             </div>
             <p>thats the cmt there...</p>
-            
-              {/* <div className="card-actions justify-end">
-                {user.totalFollower > 0 ? (
-                  <div className="badge badge-outline border-none cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white  shadow-lg" 
-                    onClick={() => handleFollowClick(user)}>Following</div> 
-                ) : (
-                <div className=" border-none  badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div> 
-              )}
-                <div className="badge border-none badge-outline cursor-pointer">Subscribe</div>
-              </div> */}
 
                 <div className="card-actions justify-end">
-                    {isFollowing ? (
-                      <div className="badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
-                        onClick={() => handleFollowClick(user)}>Following</div>
+                    {post.isFollowing ? (
+                      <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                      onClick={() => handleFollowClick(userId)}>following</div>
                     ) : (
-                      <div className="badge badge-outline cursor-pointer" onClick={() => handleFollowClick(user)}>Follow</div>
+                      <div className="border-none badge badge-outline cursor-pointer"onClick={() => handleFollowClick(userId)}>Follow</div>
                     )}
-                    <div className="badge badge-outline cursor-pointer">Subscribe</div>
-                  </div>
+                    <div className="border-none badge badge-outline cursor-pointer">Subscribe</div>
+                </div>
               
           </div>
           </div>

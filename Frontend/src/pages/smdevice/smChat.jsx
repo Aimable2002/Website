@@ -31,7 +31,7 @@ const navigate = useNavigate();
   const handleReset = (selectedUser) => {
     setUser(null);
     localStorage.removeItem('selectedUser');
-    navigate('/smHome')
+    navigate('/')
   }
   const { loading, messages } = useGetMessage();
   const {AuthUser} = useAuthContext();

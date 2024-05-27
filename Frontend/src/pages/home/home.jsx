@@ -28,10 +28,24 @@ import useLogout from '../../hook/useLogout.js';
 import usegetLoggedIn from '../../hook/usegetLoggedIn.js';
 import uploadRequest from '../../hook/uploadRequest.js';
 import { useRef } from 'react';
-import { user } from '@nextui-org/react';
+
+import useGetConversations from '../../hook/useGetAllConversation.js';
+import useListenMessage from '../../hook/useListenMessage.js';
+import useGetMessage from '../../hook/useGetMessage.js';
+//import { text } from 'express';
+
+
+// const getLastMessage = (conversation) => {
+//   if (!conversation.messages || conversation.messages.length === 0) {
+//     return { text: 'No messages', timestamp: '' };
+//   }
+
+//   const lastMessage = conversation.messages[conversation.messages.length - 1];
+//   return lastMessage;
+// };
 
 const home = ({user}) => {
-
+  //const { loading: convLoading, conversations } = useGetConversations();
   const {loading, users} = useGetUser();
   const {onlineUser} = useSocketContext();
   const userWithOnlineStatus = users.map(user => ({
@@ -41,7 +55,17 @@ const home = ({user}) => {
   const {selectedUser, setUser} = Conversation();
 
   const [search, setSearch] = useState('')
+//useListenMessage();
 
+const {messages} = useGetMessage();
+const getLatestMessage = (message) => {
+  if(!message.messages || message.messages === 0) {
+    return {text: 'no message', timestamp: ''}
+  }
+
+  const latestmessage = message.messages[message.messages.length -1]
+  return latestmessage
+}
   const handleSearch = (e) => {
     if(e.key === 'Enter'){
         e.preventDefault();
@@ -136,7 +160,9 @@ const[fileChange, setFileChange] = useState();
         <div className='flex flex-col w-full overflow-y-auto'>
           {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-          .map((user, index) => (<>
+          .map((user, index) => {
+            const lastMessage = getLatestMessage(messages[user._id] || { messages: [] });
+            return(
           <div key={index} className='flex flex-row w-full bg-base-100  gap-3 py-1 mb-1 cursor-pointer'>
             <div className='flex py-2 px-2 justify-center align-middle'>
               <div className={`avatar ${user.isOnline ? 'online' : 'offline'}`}>
@@ -148,11 +174,11 @@ const[fileChange, setFileChange] = useState();
             <div className='flex flex-col align-middle justify-center'
             onClick={() => setUser(user)}>
               <div>{user.userName}</div>
-              <div>you have message</div>
+              <div>{lastMessage}</div>
             </div>
           </div>
-        </>
-          ))}
+            )
+          })}
           
         <div className='flex justify-center align-middle'>Share your friend the app</div>
         </div>
@@ -271,8 +297,9 @@ const[fileChange, setFileChange] = useState();
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
           .map((user, index) => (  */}
           {posts.map((post, idx) => {
-                const user = getUserById(post.userId);
-                if (!user) return null; // Ensure user exists
+                // const user = getUserById(post.userId);
+                // if (!user) return null; // Ensure user exists
+                //console.log('home post.user :', post.user)
                 return (
           <div key={idx} className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer bg-base-100'>
             <div className='flex py-2 px-2 justify-center align-middle'>
@@ -284,7 +311,7 @@ const[fileChange, setFileChange] = useState();
             </div>
             <div className='flex flex-col align-middle justify-center'
             onClick={() => setUser(user)}>
-              <div>{user.userName}</div>
+              <div>{post.user.userName}</div>
               <div>you have message</div>
             </div>
             </div>
