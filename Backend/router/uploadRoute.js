@@ -114,25 +114,13 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
 
 router.get('/getPost', protectRoute, async(req, res) => {
     try{
-        // const userReqId = req.user._id;
-        // const allPost = await Post.find();
-        // res.status(200).json(allPost)
-
-
         const currentUserId = req.user._id;
 
-        //console.log('currentUserId :', currentUserId)
-
-        // Fetch posts along with their user details
         const posts = await Post.find().populate('userId').lean();
 
-        //console.log('post :', posts)
-
-        // Fetch following information for the current user
         const following = await Follow.find({ follower: currentUserId }).lean();
         const followingSet = new Set(following.map(f => f.following.toString()));
 
-        // Combine the post, user, and follow information
         const postsWithFollowInfo = posts.map(post => {
             const user = post.userId;
             const isFollowing = followingSet.has(user._id.toString());
@@ -149,6 +137,7 @@ router.get('/getPost', protectRoute, async(req, res) => {
         res.status(500).json({error: 'internal server post error'})
     }
 })
+
 
 
 export default router

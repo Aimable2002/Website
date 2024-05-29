@@ -6,14 +6,14 @@ import Conversation from '../zustand/zustand.jsx';
 const Message = () => {
   const { loading, messages } = useGetMessage();
   const {AuthUser} = useAuthContext();
-  const {selectedUser} = Conversation
+
 
   if (loading) {
     return <div>Loading...</div>;
   }
 console.log('authUser :', AuthUser._id)
   return (
-    <div className='relative flex flex-col overflow-y-auto'>
+    <div className='relative flex flex-col overflow-y-auto w-full'>
         {messages.length === 0 ? (
             <div>start conversation</div>
         ) : (

@@ -13,7 +13,7 @@ const useListenMessage = () => {
         // sound.play();
         setMessages([...messages, newMessage]);
     });
-
+    
     return () => socket?.off("newMessage");
   },[socket, setMessages, messages, selectedUser?._id])
 }

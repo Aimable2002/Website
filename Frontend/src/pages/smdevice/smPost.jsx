@@ -4,10 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import './sm.css';
 
-import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -164,16 +162,6 @@ const handleView = () => {
     console.log('view is clicked')
     setView(!view)
 }
-const [test, setTest] = useState(false)
-const handleTest = () => {
-    console.log('handle test clicked')
-    setTest(!test)
-}
-const [test1, setTest1] = useState(false)
-const handleTest1 = () => {
-    console.log('handle test 1 clicked')
-    setTest1(!test1)
-}
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -236,7 +224,7 @@ const handleTest1 = () => {
                                     <div className='div flex flex-row  w-full justify-between'>
                                         <div className='div-ct flex flex-row gap-4'>
                                             <div><VerifiedIcon /></div>
-                                            <div>Pro Account</div>
+                                            <Link to='/account'><div>Go Account</div></Link>
                                         </div>
                                         <div><KeyboardArrowRightIcon /></div>
                                     </div>

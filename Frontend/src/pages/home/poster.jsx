@@ -18,6 +18,7 @@ import useFollow from '../../hook/useFollow';
 import useGetFollow  from '../../hook/useGetFollow';
 import useGetFollowing from '../../hook/useGetFollowing';
 import { useAuthContext } from '../../context/authContext';
+import useGetLikes from '../../hook/useGetLikes';
 
 
 // Helper function to get image dimensions
@@ -80,7 +81,6 @@ const handlePost = async (e) => {
   await upload(e.target.files[0])
 }
 
-const {post} = useGetPost();
 
 const [imageStyles, setImageStyles] = useState([]);
 
@@ -98,12 +98,7 @@ const [imageStyles, setImageStyles] = useState([]);
     fetchImageStyles();
   }, [users]);
 
-  
-  const {posts} = useGetPost();
-  
-  const getUserById = (userId) => {
-    return users.find((user) =>  user._id === userId)
-  }
+
   const {isLike, likesCount, toggleLike} = useToggleLike();
   const handleToggleLike = async (postId) => {
     await toggleLike(postId)
@@ -114,32 +109,17 @@ const [imageStyles, setImageStyles] = useState([]);
     e.preventDefault()
     setIsLikeClicked(!isLikeClicked)
   }
-  const {isFollow, isFollowCount, postFollow} = useFollow();
+  const {postFollow} = useFollow();
+  //const {likes} = useGetLikes();
 
   const handleFollowClick = async(userId) => {
     await postFollow(userId)
   }
 
-  const [isButton, setIsButton] = useState(false)
-
-  const handleButtonFollow = (e) => {
-    e.preventDefault();
-    setIsButton(!isButton)
-  }
   const {follower} = useGetFollow();
   const {following} =useGetFollowing();
-  // const getProfileImageUrl = (selectedUser) => {
-  //   if(!selectedUser) return '';
-  //   return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
-  // };
-
-  const getProfileImageUrl = (post) => {
-    return post.profile && post.profile.trim() !== '' ? post.profile : post.avatar;
-  };
-  const isUserFollowing = (userId) => {
-    return following.includes((follow) => follow.following._id === userId);
-  };
-  const filteredUsers = users.filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()));
+  const { posts } = useGetPost();
+  
   return (
     <div className='w-full flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10'>
@@ -176,11 +156,8 @@ const [imageStyles, setImageStyles] = useState([]);
             </div>
         </div>
       <div className='overflow-y-auto flex flex-wrap  align-middle justify-center gap-3'>
-        {/* {users
-        .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-        .map((user, index) => ( */}
         {posts.map((post, idx) => {
-            const userId = post.userId
+            const userId = post.user
             return (
           <div key={idx} className=' flex align-middle justify-center' style={{width: '100%',  gap: '4px', 
           position: 'relative' }}>

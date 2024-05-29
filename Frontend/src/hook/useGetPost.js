@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const useGetPost = () => {
   const [loading, setLoading] = useState(false)
-  const [posts, setPost] = useState([])
+  const [posts, setPosts] = useState([])
 
   useEffect(() => {
     const getPost = async() => {
@@ -18,11 +18,12 @@ const useGetPost = () => {
             }
         });
         const data = res.data;
-        //console.log('data :', data)
+        
         if(data.error){
             throw new Error('data has issue' + error.message)
         }
-        setPost(data)
+        setPosts(data)
+        console.log('data :', data)
         }catch(error){
             console.log('error :', error.message)
         }finally{
@@ -35,3 +36,7 @@ const useGetPost = () => {
 }
 
 export default useGetPost
+
+
+
+

@@ -25,6 +25,15 @@ import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
 
+const truncateString = (str, maxLength) => {
+  if(str.length <= maxLength ){
+    return str;
+  }else{
+    const truncatedString = str.slice(0, maxLength);
+    return truncatedString + (truncatedString.endsWith('') ? '' : '...');
+  }
+}
+
 const smHome = ({user}) => {
 
   const {loading, users} = useGetUser();
@@ -144,7 +153,7 @@ const navigate = useNavigate();
                                     <div className='div flex flex-row  w-full justify-between'>
                                         <div className='div-ct flex flex-row gap-4'>
                                             <div><VerifiedIcon /></div>
-                                            <div>Pro Account</div>
+                                            <Link to='/account'><div>Go Account</div></Link>
                                         </div>
                                         <div><KeyboardArrowRightIcon /></div>
                                     </div>
@@ -221,13 +230,13 @@ const navigate = useNavigate();
         </div>
         <div className='stry-row  py-2 px-2' style={{zIndex: '-1'}}>
           {users.map((user, idx) => (
-          <div className='flex py-2 px-2 justify-center align-middle flex-col'>
-            <div className="avatar">
+          <div className='flex py-2 px-2 justify-center align-middle flex-col self-center'>
+            <div className="avatar flex self-center">
               <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img src={getProfileImageUrl(user)} />
               </div>
             </div>
-              <div>{user.userName}</div>
+              <div className='flex self-center'>{truncateString(user.userName, 7)}</div>
           </div>))}
         </div>
         <div className='flex flex-row w-full justify-between align-middle'>

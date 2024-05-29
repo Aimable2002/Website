@@ -17,6 +17,9 @@ import ContrastIcon from '@mui/icons-material/Contrast';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PaidIcon from '@mui/icons-material/Paid';
 
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import ShareIcon from '@mui/icons-material/Share';
+
 import useGetUser from '../../hook/useGetUser';
 import { useSocketContext } from '../../context/socketContext.jsx';
 import Conversation from '../zustand/zustand.jsx';
@@ -32,20 +35,11 @@ import { useRef } from 'react';
 import useGetConversations from '../../hook/useGetAllConversation.js';
 import useListenMessage from '../../hook/useListenMessage.js';
 import useGetMessage from '../../hook/useGetMessage.js';
-//import { text } from 'express';
+import storyRequest from '../../hook/storyRequest.js';
 
 
-// const getLastMessage = (conversation) => {
-//   if (!conversation.messages || conversation.messages.length === 0) {
-//     return { text: 'No messages', timestamp: '' };
-//   }
-
-//   const lastMessage = conversation.messages[conversation.messages.length - 1];
-//   return lastMessage;
-// };
 
 const home = ({user}) => {
-  //const { loading: convLoading, conversations } = useGetConversations();
   const {loading, users} = useGetUser();
   const {onlineUser} = useSocketContext();
   const userWithOnlineStatus = users.map(user => ({
@@ -97,6 +91,18 @@ const getLatestMessage = (message) => {
   const handleFileRef = () => {
     addProfile.current.click();
   }
+  const addStatus = useRef()
+const handleFileStatusRef = () => {
+  addStatus.current.click();
+}
+
+const {upload} = storyRequest();
+const [statusChange, setStatusChange] = useState()
+const handelStatusChange = async (e) => {
+  setStatusChange(e.target.files[0]);
+  await upload(e.target.files[0]);
+  setStatusChange('')
+}
 
 const[fileChange, setFileChange] = useState();
   const handleFileChange = async(e) => {
@@ -109,6 +115,9 @@ const[fileChange, setFileChange] = useState();
     return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
   };
 
+  const getStatus = (logUser) => {
+    return logUser.status && logUser.status.trim() !== '' ? logUser.status : logUser.profile
+  }
   const {posts} = useGetPost();
 
   const getUserById = (userId) => {
@@ -293,9 +302,32 @@ const[fileChange, setFileChange] = useState();
         </>
         ) : (
         <div className='flex flex-col w-full overflow-y-auto'>
-          {/* {userWithOnlineStatus
-          .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
-          .map((user, index) => (  */}
+          {logUser.map((user, idx) => (
+          <div className='w-full flex  py-2'>
+            <div className='w-3/12 flex self-center justify-center'>
+              <div className="avatar" onClick={handleFileStatusRef}>
+                <div className="w-10 rounded-full">
+                  <img src={getStatus(user)} />
+                </div>
+              </div>
+            </div>
+            <input 
+            type="file"
+            style={{display: 'none'}}
+            ref={addStatus}
+            onChange={handelStatusChange} />
+            <div className='w-3/4 flex flex-row gap-1'>
+              <div className='w-3/5 flex flex-col self-center'>
+                <div>{user.userName}</div>
+                <div>am available for chat</div>
+              </div>
+              <div className='w-2/5 flex flex-row self-center justify-end gap-1'>
+                <div className='cursor-pointer'><CameraAltIcon /></div>
+                <div className='cursor-pointer'><ShareIcon /></div>
+              </div>
+            </div>
+          </div>
+          ))}
           {posts.map((post, idx) => {
                 // const user = getUserById(post.userId);
                 // if (!user) return null; // Ensure user exists
@@ -312,7 +344,7 @@ const[fileChange, setFileChange] = useState();
             <div className='flex flex-col align-middle justify-center'
             onClick={() => setUser(user)}>
               <div>{post.user.userName}</div>
-              <div>you have message</div>
+              <div>status context</div>
             </div>
             </div>
                 )

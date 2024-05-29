@@ -73,7 +73,7 @@ const navigate = useNavigate();
                 </div>
             </div>
         </div>
-        <div className='relative flex overflow-y-auto' style={{marginTop: '9vh', marginBottom: '14vh'}}>
+        <div className='relative flex overflow-y-auto w-full' style={{marginTop: '9vh', marginBottom: '14vh'}}>
           <Messages />
           <SmInput />
         </div>

@@ -12,7 +12,6 @@ const useGetMessage = () => {
         setLoading(true);
         try{
             const token = localStorage.getItem('online-user');
-            console.log('selectedUser :', selectedUser._id)
             const res = await axios.get(`http://localhost:4000/api/message/${selectedUser._id}`, {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
@@ -24,6 +23,7 @@ const useGetMessage = () => {
                 throw new Error('data error ')
             }
             setMessages(data)
+            console.log('data :', data)
         }catch(error){
             console.log('error in get message', error.message)
         }finally{

@@ -1,6 +1,6 @@
 import express from 'express';
 import protectRoute from '../middleware/protectRoute.js';
-import { follow, likesCount, unFollow } from '../controller/actionController.js';
+import { follow, likesCount, unFollow, updateLike } from '../controller/actionController.js';
 import Follow from '../Model/followModel.js';
 import User from '../Model/userModel.js';
 
@@ -8,6 +8,7 @@ const router = express.Router();
 
 
 router.post('/like/:id', protectRoute, likesCount);
+router.get('/updateLike/:id', protectRoute, updateLike)
 router.post('/follow/:id', protectRoute, follow);
 router.delete('/unfollow/:id', protectRoute, unFollow)
 

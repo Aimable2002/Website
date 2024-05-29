@@ -3,8 +3,6 @@ import Post from '../Model/postModel.js';
 import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js';
 
-import mongoose from 'mongoose';
-
 
 export const likesCount = async (req, res) => {
     try{
@@ -44,7 +42,17 @@ export const likesCount = async (req, res) => {
     }
 }
 
+export const updateLike = async (req, res) => {
+    try{
+        const userId = req.user._id;
+        console.log('userId in update Like :', userId)
 
+        const filterLike = await Post.find({userId})
+    }catch(error){
+        console.log('internal server update like error :', error.message)
+        res.status(500).json({error: 'internal server update like error'})
+    }
+}
 
 export const follow = async (req, res) => {
     try{
