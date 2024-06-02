@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
-import relationShip from '../pages/zustand/allZustand';
 
 const useGetPost = () => {
   const [loading, setLoading] = useState(false)
 const [posts, setPosts] = useState([]);
-//   const {follow, setFollow, posts, setPosts} = relationShip();
 
   useEffect(() => {
     const getPost = async() => {
@@ -14,7 +12,7 @@ const [posts, setPosts] = useState([]);
         try{
         const token = localStorage.getItem('online-user')
         //console.log('token :', token)
-        const res = await axios.get('http://localhost:4000/api/upload/getPost', {
+        const res = await axios.get('https://website-s9ue.onrender.com/api/upload/getPost', {
             headers: {
                 Authorization: `${JSON.parse(token).token}`,   
             }

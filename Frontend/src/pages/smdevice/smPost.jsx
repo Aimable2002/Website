@@ -32,8 +32,9 @@ import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
 import useGetPost from '../../hook/useGetPost';
-import useToggleLike from '../../hook/useToggleLike';
-import useFollow from '../../hook/useFollow';
+
+import SmFollow from '../../compound/smFollow';
+import Like from '../../compound/like';
 
 const smPost = ({user, post}) => {
 
@@ -135,27 +136,6 @@ const handleRefProfile = () => {
     const user = getUserById(post.userId)
   })
   
-  const [isLikeClicked, setIsLikeClicked] = useState(false);
-
-
-  const {isLike, likesCount, toggleLike} = useToggleLike();
-  const {isFollow, isFollowCount, postFollow} = useFollow();
-
-  const handleToggleLike2 = async (post) => {
-    await toggleLike(post)
-  }
-
-
-  const handlelikeClickedToggle2 = (e) => {
-    e.preventDefault()
-    console.log('like is clicked')
-    setIsLikeClicked(!isLikeClicked)
-  }
-
-  const handleFollowClick = async(userId) => {
-    console.log('follow clicked')
-    await postFollow(userId)
-  }
   const [view, setView] = useState(false)
 const handleView = () => {
     console.log('view is clicked')
@@ -347,20 +327,6 @@ const handleView = () => {
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
             {initialValue.map((post, idx) => {
-                // const user = getUserById(post.userId);
-                // if (!user) return null; // Ensure user exists
-                //console.log('userId :', post.userId)
-                const userId = post.userId
-                //console.log('post :', post._id)
-                const like = localStorage.getItem('like')
-            
-                console.log('like :', like)
-                const likeIn = `${JSON.parse(like)?.postLiked ?? null}`
-                console.log('likeedId :', likeIn)
-                const currentLike = `${JSON.parse(like)?.likes ?? null}`
-                const checkPost = post._id === likeIn ? currentLike : post.totalLikes
-                console.log('checkPost :', checkPost)
-                console.log('available post used :', post._id)
                 return (                   
                     <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                         <div className=' crd w-full relative flex align-middle py-2'>
@@ -375,15 +341,7 @@ const handleView = () => {
                                         <div className='username flex align-middle'>{post.user.userName}</div>
                                     </div>
                                 </div>
-                                <div className='crd-rgt flex self-center justify-around '>
-                                    {post.isFollowing ? (
-                                        <div className="badge badge-outline border-none cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
-                                        onClick={() => handleFollowClick(userId)}>Following</div> 
-                                        ) : (
-                                        <div className="badge badge-outline border-none cursor-pointer" onClick={() => handleFollowClick(userId)}>Follow</div> 
-                                    )}
-                                    <div className='ml-4 badge badge-outline border-none cursor-pointer'>Subscribe</div>
-                                </div>
+                                <SmFollow userId={post}/>
                             </div>
                         </div>
                         <div className='w-full flex justify-center align-middle'>
@@ -398,14 +356,7 @@ const handleView = () => {
                                         <div>100</div>
                                         <div onClick={() => handleView(post)}>{!view ? 'view' : 'viewsss'}</div>
                                     </div>
-                                    <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike2(post)}>
-                                        {post.totalLikes > 0 ? (
-                                        <>
-                                        <span className='flex self-center'>{checkPost}</span>
-                                        <span><FavoriteIcon /></span>
-                                        </>
-                                        ) : (<span onClick={handlelikeClickedToggle2}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
-                                    </div>
+                                    <Like postId={post}/>
                                     <div className='flex flex-row gap-2 align-middle'>
                                         <div>20</div>
                                         <div><ChatBubbleOutlineIcon /></div>
@@ -417,7 +368,7 @@ const handleView = () => {
                                 </div>
                             </div>
                             <div className='ft-ftr flex flex-row w-full  align-middle'>
-                                <div>cmt content</div>
+                                <div>comment content displayed here</div>
                             </div>
                         </div>
                     </div>

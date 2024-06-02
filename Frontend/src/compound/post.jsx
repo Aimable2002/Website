@@ -1,6 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 
-const post = () => {
+import axios from 'axios';
+const post = ({post}) => {
+
+    const [isPosted, setIsPosted] = useState([])
+
+    useEffect(() => {
+        const fetchPost = async () => {
+          try {
+            const token = localStorage.getItem('online-user');
+            const response = await axios.get(`https://website-s9ue.onrender.com/api/upload${post}`, {}, {
+              headers: {
+                Authorization: `${JSON.parse(token).token}`
+              }
+            });
+            setIsPosted(response.data)
+            console.log('data :', response.data.isLiked)
+          } catch (error) {
+            console.error('There was an error fetching the likes!', error);
+          }
+        };
+    
+            fetchPost();
+      }, []);
+
   return (
     <div className='grid grid-cols-1'>
         <figure>

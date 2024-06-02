@@ -11,7 +11,7 @@ const follow = ({userId}) => {
     const fetchFollow = async () => {
       try {
         const token = localStorage.getItem('online-user');
-        const response = await axios.get(`http://localhost:4000/api/action/follow/${user}`, {}, {
+        const response = await axios.get(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }
@@ -29,7 +29,7 @@ const follow = ({userId}) => {
   const handleFollow = async () => {
     try {
       const token = localStorage.getItem('online-user');
-      const response = await axios.post(`http://localhost:4000/api/action/follow/${user}`, {}, {
+      const response = await axios.post(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
         headers: {
           Authorization: `${JSON.parse(token).token}`
         }
@@ -41,15 +41,36 @@ const follow = ({userId}) => {
   };
   console.log('user :', userId)
   return (
+    // <div className="card-actions justify-end">
+    //     {IsFollowing !== null ? (
+    //         <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+    //         onClick={handleFollow}>{IsFollowing ? 'following' : 'follow'}
+    //     </div>
+    //     ) : (
+    //         <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+    //             onClick={handleFollow}>{userId.isFollowing ? 'following' : 'follow'}
+    //         </div>
+    //     )}
+    //     <div className="border-none badge badge-outline cursor-pointer">Subscribe</div>
+    // </div>
+
     <div className="card-actions justify-end">
         {IsFollowing !== null ? (
             <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
-            onClick={handleFollow}>{IsFollowing ? 'following' : 'follow'}
-        </div>
-        ) : (
-            <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
-                onClick={handleFollow}>{userId.isFollowing ? 'following' : 'follow'}
+                onClick={handleFollow}>Following
             </div>
+        ) : (
+            <>
+                {userId.isFollowing ? (
+                    <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
+                        onClick={handleFollow}>Following
+                    </div>
+                ) : (
+                    <div className="border-none badge badge-outline cursor-pointer py-1 " 
+                        onClick={handleFollow}>Follow
+                    </div>
+                )}
+            </>
         )}
         <div className="border-none badge badge-outline cursor-pointer">Subscribe</div>
     </div>

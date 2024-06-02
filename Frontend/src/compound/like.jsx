@@ -13,7 +13,7 @@ const like = ({postId}) => {
     const fetchLikes = async () => {
       try {
         const token = localStorage.getItem('online-user');
-        const response = await axios.get(`http://localhost:4000/api/action/like/${post}`, {}, {
+        const response = await axios.get(`https://website-s9ue.onrender.com/api/action/like/${post}`, {}, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }
@@ -33,7 +33,7 @@ const like = ({postId}) => {
     try {
         console.log('postId :', postId)
       const token = localStorage.getItem('online-user');
-      const response = await axios.post(`http://localhost:4000/api/action/like/${post}`, {}, {
+      const response = await axios.post(`https://website-s9ue.onrender.com/api/action/like/${post}`, {}, {
         headers: {
           Authorization: `${JSON.parse(token).token}`
         }
@@ -53,7 +53,20 @@ const like = ({postId}) => {
             
         </>
     </div>
+
   )
 }
 
 export default like
+
+
+
+
+{/* <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike2(post)}>
+                                        {post.totalLikes > 0 ? (
+                                        <>
+                                        <span className='flex self-center'>{checkPost}</span>
+                                        <span><FavoriteIcon /></span>
+                                        </>
+                                        ) : (<span onClick={handlelikeClickedToggle2}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
+                                    </div> */}

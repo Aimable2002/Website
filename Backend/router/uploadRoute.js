@@ -81,7 +81,7 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
         }
         
         console.log('upload complete :', req.file);
-        res.status(201).json('upload complete')
+        res.status(201).json({message: 'post upload complete', pstImage: imageUrl})
     }catch(error){
         console.log('fail to upload', error.message);
         res.status(500).json({error: 'fail to upload'})

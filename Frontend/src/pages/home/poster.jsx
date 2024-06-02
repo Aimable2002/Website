@@ -317,6 +317,7 @@ import { useAuthContext } from '../../context/authContext';
 import useGetLikes from '../../hook/useGetLikes';
 import Like from '../../compound/like';
 import Follow from '../../compound/follow';
+import Post from '../../compound/post';
 
 // Helper function to get image dimensions
 const getImageDimensions = (url) => {
@@ -378,7 +379,6 @@ const handlePost = async (e) => {
   await upload(e.target.files[0])
 }
 
-
 const [imageStyles, setImageStyles] = useState([]);
 
   useEffect(() => {
@@ -394,60 +394,10 @@ const [imageStyles, setImageStyles] = useState([]);
 
     fetchImageStyles();
   }, [users]);
-
-  const {postFollow} = useFollow();
-  //const {likes} = useGetLikes();
-
-  const handleFollowClick = async(userId) => {
-    await postFollow(userId)
-  }
-
-  const {follower} = useGetFollow();
-  const {following} =useGetFollowing();
+ 
   const { posts: initiolValue } = useGetPost();
 
- 
-  const {isLike: likeState, likesCount: countState, postLikes: postLike, toggleLike} = useToggleLike();
- 
-  const handleToggleLike = async (postId) => {
-    await toggleLike(postId)
-    
-    
-  }
-  
 
-  const [isLikeClicked, setIsLikeClicked] = useState(false);
-  const [count, setCount] = useState(initiolValue);
-  const handlelikeClickedToggle = (e) => {
-    e.preventDefault()
-    setIsLikeClicked(!isLikeClicked)
-    setCount(!count)
-  }
-  
-//  console.log('initialValue :', initiolValue)
-
-
-const [likes, setLikes] = useState(0);
-
-useEffect(() => {
-  axios.get('http://localhost:4000/likes')
-    .then(response => {
-      setLikes(response.data.likes);
-    })
-    .catch(error => {
-      console.error('There was an error fetching the likes!', error);
-    });
-}, []);
-
-const handleLike = () => {
-  axios.post('http://localhost:4000/like')
-    .then(response => {
-      setLikes(response.data.likes);
-    })
-    .catch(error => {
-      console.error('There was an error liking the post!', error);
-    });
-};
 
   return (
     <div className='w-full flex flex-col overflow-auto'>
@@ -461,7 +411,6 @@ const handleLike = () => {
                     <dialog id="my_modal_3" className="modal">
                       <div className="modal-box">
                         <form method="dialog">
-                          {/* if there is a button in form, it will close the modal */}
                           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                         </form>
                         <form onSubmit={handleSearch}>
@@ -491,11 +440,7 @@ const handleLike = () => {
           position: 'relative' }}>
         <div className="card w-96 bg-base-100 shadow-xl"> 
 
-        <div className='grid grid-cols-1'>
-            <figure>
-                <img src={post.imageURL} alt="" />
-            </figure>
-          </div>
+          <Post post={post}/>
   
           <div className="card-body align-middle">
             <div className='flex flex-row w-full align-middle gap-3'>
@@ -523,12 +468,7 @@ const handleLike = () => {
             )
         })}
         
-        <div className='mb-10'>
-          <div>
-            <p>Likes: {likes}</p>
-            <button onClick={handleLike}>Like</button>
-          </div>
-        </div>
+        <div className='mb-10'></div>
       </div>
       
     </div>

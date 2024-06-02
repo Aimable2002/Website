@@ -11,7 +11,7 @@ const useSendMessage = () => {
     setLoading(true)
     try{
         const token = localStorage.getItem('online-user')
-        const res = await axios.post(`http://localhost:4000/api/message/send/${selectedUser._id}`, {message}, {
+        const res = await axios.post(`https://website-s9ue.onrender.com/api/message/send/${selectedUser._id}`, {message}, {
             headers: {
                 Authorization: `${JSON.parse(token).token}`
             }
