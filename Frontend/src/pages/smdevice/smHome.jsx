@@ -116,7 +116,7 @@ const navigate = useNavigate();
           ))}
         </div>
        */}
-        <div className='header bg-base-100'>
+        <div className='header bg-base-100 h-8'>
           <div className='header-content px-2 fixed bg-base-100' style={{zIndex: '1'}}>
             <Link to='/smPost'><div className='w-3/12'>WebbApp</div></Link>
             <div className='flex flex-row align-middle justify-between w-2/4'>
