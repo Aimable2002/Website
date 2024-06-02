@@ -307,7 +307,7 @@ const[fileChange, setFileChange] = useState();
             <div className='w-3/12 flex self-center justify-center'>
               <div className="avatar" onClick={handleFileStatusRef}>
                 <div className="w-10 rounded-full">
-                  <img src={getStatus(user)} />
+                  <img src={getProfileImageUrl(user)} />
                 </div>
               </div>
             </div>

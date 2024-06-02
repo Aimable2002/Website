@@ -17,6 +17,7 @@ const useSendMessage = () => {
             }
         });
         const data = res.data;
+        console.log('send :', data)
 
         if(data.error){
             throw new Error('error of data :' + error.message)

@@ -18,7 +18,7 @@ export const likesCount = async (req, res) => {
         }
         console.log('post :', post)
         const newPost = post._id.toString()
-        console.log('new :', newPost)
+        
         if(newPost !== postId){
             return res.status(400).json('not post match')
         }
@@ -33,8 +33,9 @@ export const likesCount = async (req, res) => {
         // post.totalLikes += 1;
         }
         post.totalLikes = post.likes.length
+        console.log('new :', newPost)
     await post.save();
-    res.status(200).json({ isLiked: isLiked ? false : true, likes: post.likes.length });
+    res.status(200).json({ isLiked: isLiked ? false : true, likes: post.likes.length, postLiked: req.params.id });
     // res.status(200).json({ isLiked: isLiked ? false : true, likes: totalLikes });
     }catch(error){
         console.log('internal server likeCount error:', error.message)
@@ -73,8 +74,14 @@ export const follow = async (req, res) => {
         const follow = await Follow.findOne({ follower: userId, following: userToFollow })
         console.log('follow : ', follow)
         if(follow){
-            return res.status(401).json('already following')
-        }
+            // return res.status(401).json('already following')
+            await Follow.findByIdAndDelete(follow._id);
+            await User.findByIdAndUpdate(userId, { $inc: { totalFollowing: -1 }, $pull: { following: userToFollow } });
+            await User.findByIdAndUpdate(userToFollow, { $inc: { totalFollower: -1 }, $pull: { follower: userId } });
+            console.log('Unfollowed: ', userToFollow);
+            return res.status(200).json({message: 'Unfollowed successfully', unFollowed: userToFollow, unFollowing: userId, isFollowing: false});
+            
+        }else{
         const newFollow = new Follow({follower: userId, following: userToFollow })
         console.log('newFollow :', newFollow)
         await newFollow.save();
@@ -82,7 +89,9 @@ export const follow = async (req, res) => {
         await User.findByIdAndUpdate(userId, {$inc: {totalFollowing: 1}, $push: {following: userToFollow}})
         await User.findByIdAndUpdate(userToFollow, {$inc: {totalFollower: 1}, $push: {follower: userId}})
         console.log('newFollow : ', newFollow)
-        res.status(201).json(newFollow)
+        res.status(201).json({message: 'follow successfully', newFollow: newFollow, newFollowed: userToFollow, newFollowing: userId, isFollowing: true })
+        
+        }
  
     }catch(error){
         console.log('internal server Follow error :', error.message)

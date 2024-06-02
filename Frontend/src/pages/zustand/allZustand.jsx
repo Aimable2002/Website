@@ -1,21 +1,25 @@
 import { create } from 'zustand';
 
 const initialState = {
-    selectedUser:  JSON.parse(localStorage.getItem('selectedUser')) ||null,
-    messages: [],
+    selectedpost:  JSON.parse(localStorage.getItem('selectedpost')) ||null,
+    likes: [],
+    follow: [],
+    posts: []
 };
 
-const Conversation = create((set) => ({
+const relationShip = create((set) => ({
     ...initialState,
     setUser: (user) => {
         if(!user) {
-            localStorage.removeItem('selectedUser')
+            localStorage.removeItem('selectedpost')
         }else{
-        localStorage.setItem('selectedUser', JSON.stringify(user));
+        localStorage.setItem('selectedpost', JSON.stringify(user));
     }
         set({ selectedUser: user });
     },
-    setMessages: (messages) => set({ messages }),
+    setLikes: (likes) => set({ likes }),
+    setFollow: (follow) => set({ follow }),
+    setPosts: (posts) => set({ posts })
 }));
 
-export default Conversation;
+export default relationShip;

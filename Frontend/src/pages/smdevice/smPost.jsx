@@ -126,12 +126,12 @@ const handleRefProfile = () => {
     return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
   };
 
-  const {posts} = useGetPost();
+  const {posts: initialValue} = useGetPost();
 
   const getUserById = (userId) => {
     return users.find((user) => user._id === userId)
   }
-  const filterPost = posts.filter((post) => {
+  const filterPost = initialValue.filter((post) => {
     const user = getUserById(post.userId)
   })
   
@@ -142,7 +142,6 @@ const handleRefProfile = () => {
   const {isFollow, isFollowCount, postFollow} = useFollow();
 
   const handleToggleLike2 = async (post) => {
-    console.log('post liked :')
     await toggleLike(post)
   }
 
@@ -347,12 +346,21 @@ const handleView = () => {
             {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
-            {posts.map((post, idx) => {
+            {initialValue.map((post, idx) => {
                 // const user = getUserById(post.userId);
                 // if (!user) return null; // Ensure user exists
                 //console.log('userId :', post.userId)
                 const userId = post.userId
                 //console.log('post :', post._id)
+                const like = localStorage.getItem('like')
+            
+                console.log('like :', like)
+                const likeIn = `${JSON.parse(like)?.postLiked ?? null}`
+                console.log('likeedId :', likeIn)
+                const currentLike = `${JSON.parse(like)?.likes ?? null}`
+                const checkPost = post._id === likeIn ? currentLike : post.totalLikes
+                console.log('checkPost :', checkPost)
+                console.log('available post used :', post._id)
                 return (                   
                     <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                         <div className=' crd w-full relative flex align-middle py-2'>
@@ -393,7 +401,7 @@ const handleView = () => {
                                     <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike2(post)}>
                                         {post.totalLikes > 0 ? (
                                         <>
-                                        <span className='flex self-center'>{post.totalLikes}</span>
+                                        <span className='flex self-center'>{checkPost}</span>
                                         <span><FavoriteIcon /></span>
                                         </>
                                         ) : (<span onClick={handlelikeClickedToggle2}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
+import relationShip from '../pages/zustand/allZustand';
 
 const useGetPost = () => {
   const [loading, setLoading] = useState(false)
-  const [posts, setPosts] = useState([])
+const [posts, setPosts] = useState([]);
+//   const {follow, setFollow, posts, setPosts} = relationShip();
 
   useEffect(() => {
     const getPost = async() => {
@@ -23,7 +25,7 @@ const useGetPost = () => {
             throw new Error('data has issue' + error.message)
         }
         setPosts(data)
-        console.log('data :', data)
+        //console.log('data :', data)
         }catch(error){
             console.log('error :', error.message)
         }finally{
