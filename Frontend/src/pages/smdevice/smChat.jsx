@@ -45,7 +45,7 @@ const navigate = useNavigate();
 // console.log('authUser :', AuthUser._id)
   return (
     <div className='w-screen h-screen'>
-        <div className='hdr w-full top-0  relative flex bg-base-100' style={{zIndex: '1'}}>
+        <div className='hdr w-full   relative flex bg-base-100' style={{zIndex: '1', marginTop: '-9vh'}}>
             <div className='hdr-ct px-2 py-1 w-full fixed bg-base-100  flex flex-row justify-between'>
                 <div className='pfl flex  flex-row gap-2'>
                     <div className='flex  justify-center self-center' onClick={() => handleReset(selectedUser)}><KeyboardArrowLeftIcon /></div>
