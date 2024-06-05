@@ -26,18 +26,6 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   return (
-    // <Routes>
-    //   <Route path='sign' element={AuthUser ? <Navigate to='/'/> : <Reg />} />
-    //   <Route path='/' element={AuthUser ? <Home /> : <Navigate to='sign'/>} />
-    //   <Route path='/home' element={AuthUser ? <Chat /> : <Navigate to='sign'/>} />
-    //   <Route path='account' element={AuthUser ? <Account /> : <Navigate to='sign' />} />
-    //   <Route path= '/upload' element={AuthUser ? <Upload /> : <Navigate to='sign' />} />
-    //   <Route path='/smHome' element={<SmHome />} />
-    //   <Route path='/smPost' element={<SmPost />} />
-    //   <Route path='/smChat/:id' element={<SmChat />} />
-    //   <Route path='/smReg' element={<SmReg />} />
-    // </Routes>
-
 
     <div>
       {isSmallScreen ? (
