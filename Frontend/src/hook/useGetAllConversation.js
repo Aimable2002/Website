@@ -12,7 +12,7 @@ const useGetConversations = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('online-user');
-        const res = await axios.get('https://website-s9ue.onrender.com/api/message/getAllConv', {
+        const res = await axios.get('http://localhost:4000/api/message/getAllConv', {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }

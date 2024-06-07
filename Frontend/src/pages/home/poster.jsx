@@ -397,7 +397,26 @@ const [imageStyles, setImageStyles] = useState([]);
  
   const { posts: initiolValue } = useGetPost();
 
+  const [isPosted, setIsPosted] = useState([])
 
+  useEffect(() => {
+      const fetchPost = async () => {
+        try {
+          const token = localStorage.getItem('online-user');
+          const response = await axios.get(`http://localhost:4000/api/upload${post}`, {}, {
+            headers: {
+              Authorization: `${JSON.parse(token).token}`
+            }
+          });
+          setIsPosted(response.data.pstImage)
+          console.log('data :', response.data.pstImage)
+        } catch (error) {
+          console.error('There was an error fetching the likes!', error);
+        }
+      };
+  
+          fetchPost();
+    }, [handlePost]);
 
   return (
     <div className='w-full flex flex-col overflow-auto'>

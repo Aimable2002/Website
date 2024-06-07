@@ -10,7 +10,7 @@ const postRequest = () => {
         const formData = new FormData();
         formData.append('file', file)
         console.log('file on frontend :', file)
-        const res = await axios.post('https://website-s9ue.onrender.com/api/upload/posted', 
+        const res = await axios.post('http://localhost:4000/api/upload/posted', 
         formData,{
         headers: {
           Authorization: `${JSON.parse(token).token}`

@@ -12,7 +12,7 @@ const useGetMessage = () => {
         setLoading(true);
         try{
             const token = localStorage.getItem('online-user');
-            const res = await axios.get(`https://website-s9ue.onrender.com/api/message/${selectedUser._id}`, {
+            const res = await axios.get(`http://localhost:4000/api/message/${selectedUser._id}`, {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }

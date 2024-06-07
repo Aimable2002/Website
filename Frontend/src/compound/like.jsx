@@ -13,33 +13,34 @@ const like = ({postId}) => {
     const fetchLikes = async () => {
       try {
         const token = localStorage.getItem('online-user');
-        const response = await axios.get(`https://website-s9ue.onrender.com/api/action/like/${post}`, {}, {
+        const response = await axios.get(`http://localhost:4000/api/action/like/${post}`, {}, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }
         });
         setLikes(response.data.likes);
         setIsLiked(response.data.isLiked);
-        console.log('data :', response.data.isLiked)
+        //console.log('data :', response.data.isLiked)
       } catch (error) {
         console.error('There was an error fetching the likes!', error);
       }
     };
 
-        fetchLikes();
+      fetchLikes();
   }, [postId]);
 
   const handleLike = async () => {
     try {
-        console.log('postId :', postId)
+        //console.log('postId :', postId)
       const token = localStorage.getItem('online-user');
-      const response = await axios.post(`https://website-s9ue.onrender.com/api/action/like/${post}`, {}, {
+      const response = await axios.post(`http://localhost:4000/api/action/like/${post}`, {}, {
         headers: {
           Authorization: `${JSON.parse(token).token}`
         }
       });
       setLikes(response.data.likes);
       setIsLiked(response.data.isLiked);
+      // console.log('isLiked :', response.data.isLiked)
     } catch (error) {
       console.error('There was an error liking the post!', error);
     }
@@ -48,8 +49,8 @@ const like = ({postId}) => {
     <div className='flex self-center cursor-pointer gap-1'>
         <> 
 
-            {likes !== null ? <span className='flex self-center'>{likes}</span> : <span className='flex self-center'>{postId.totalLikes}</span>}
-            <span onClick={handleLike}>{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}</span>
+          {isLiked !== null ? <span className='flex self-center'>{likes}</span> : <span className='flex self-center'>{postId.totalLikes}</span>}
+          <span onClick={handleLike}>{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}</span>
             
         </>
     </div>
@@ -62,11 +63,15 @@ export default like
 
 
 
-{/* <div className='flex self-center cursor-pointer gap-1' onClick={() => handleToggleLike2(post)}>
-                                        {post.totalLikes > 0 ? (
-                                        <>
-                                        <span className='flex self-center'>{checkPost}</span>
-                                        <span><FavoriteIcon /></span>
-                                        </>
-                                        ) : (<span onClick={handlelikeClickedToggle2}>{!isLikeClicked ? <FavoriteBorderIcon /> : <FavoriteIcon /> }</span>)}
-                                    </div> */}
+
+
+
+
+
+
+
+
+
+
+
+

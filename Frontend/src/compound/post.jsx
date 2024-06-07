@@ -9,13 +9,13 @@ const post = ({post}) => {
         const fetchPost = async () => {
           try {
             const token = localStorage.getItem('online-user');
-            const response = await axios.get(`https://website-s9ue.onrender.com/api/upload${post}`, {}, {
+            const response = await axios.get(`http://localhost:4000/api/upload${post}`, {}, {
               headers: {
                 Authorization: `${JSON.parse(token).token}`
               }
             });
             setIsPosted(response.data)
-            console.log('data :', response.data.isLiked)
+            //console.log('data :', response.data.isLiked)
           } catch (error) {
             console.error('There was an error fetching the likes!', error);
           }

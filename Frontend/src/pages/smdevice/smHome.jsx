@@ -24,6 +24,7 @@ import Conversation from '../zustand/zustand';
 import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
+import useListenMessage from '../../hook/useListenMessage';
 
 const truncateString = (str, maxLength) => {
   if(str.length <= maxLength ){
@@ -90,10 +91,23 @@ const navigate = useNavigate();
     const getProfileImageUrl = (user) => {
       return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
     };
+    const getLastMessage = (userId) => {
+      const userMessages = messages.filter(message => message.senderId === userId || message.recipientId === userId);
+      if (userMessages.length > 0) {
+        return userMessages[userMessages.length - 1].content;
+      }
+      return '';
+    };
+  
+    const getMessageCount = (userId) => {
+      return messages.filter(message => message.recipientId === userId && !message.read).length;
+    };
+  
+    useListenMessage();
+    
   return (
-    <div className=' w-screen h-screen'>
-      {/**
-       * <div className='flex flex-col w-full overflow-y-auto'>
+    <div className=' w-screen h-screen'> 
+      {/* <div className='flex flex-col w-full overflow-y-auto'>
           {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
           .map((user, index) => (
@@ -114,8 +128,7 @@ const navigate = useNavigate();
             </div>
             </div>
           ))}
-        </div>
-       */}
+        </div> */}
         <div className='header bg-base-100 h-8'>
           <div className='header-content px-2 fixed bg-base-100' style={{zIndex: '1'}}>
             <Link to='/smPost'><div className='w-3/12'>WebbApp</div></Link>

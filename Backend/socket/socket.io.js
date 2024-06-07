@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ["https://website-s9ue.onrender.com"],
+        origin: ["http://localhost:2000"],
         methods: ["GET", "POST"],
     }
 });
@@ -34,6 +34,18 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUser", Object.keys(userSocketMap));
 
     console.log("userSocketMap :", userSocketMap)
+
+    socket.on("likePost", (postId, userId) => {
+        io.emit("postLiked", { postId, userId });
+      });
+    
+      socket.on("followUser", (followerId, followingId) => {
+        io.emit("userFollowed", { followerId, followingId });
+      });
+    
+      socket.on("newPost", (post) => {
+        io.emit("postAdded", post);
+      });
     
     socket.on("disconnect", () => {
         console.log("disconnected user :", socket.id);
