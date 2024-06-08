@@ -10,7 +10,7 @@ const follow = ({userId}) => {
     const fetchFollow = async () => {
       try {
         const token = localStorage.getItem('online-user');
-        const response = await axios.get(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
+        const response = await axios.get(`http://localhost:4000/api/action/follow/${user}`, {}, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }
@@ -29,7 +29,7 @@ const follow = ({userId}) => {
   const handleFollow = async () => {
     try {
       const token = localStorage.getItem('online-user');
-      const response = await axios.post(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
+      const response = await axios.post(`http://localhost:4000/api/action/follow/${user}`, {}, {
         headers: {
           Authorization: `${JSON.parse(token).token}`
         }

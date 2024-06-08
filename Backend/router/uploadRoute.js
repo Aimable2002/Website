@@ -31,7 +31,7 @@ router.post('/profile', protectRoute, upload.single("file"), async(req, res) => 
         }
         const userId = req.user._id;
         console.log('userId :', userId);
-        const profile = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
+        const profile = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
 
         
         const user = await User.findById(userId)
@@ -55,7 +55,7 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
             return res.status(400).json('no file found')
         }
         const userId = req.user._id
-        const imageUrl = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
+        const imageUrl = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
 
         let user = await Post.findById(userId);
         if(!user){
@@ -82,7 +82,7 @@ router.get('/getPost', protectRoute, async(req, res) => {
     try{
         const currentUserId = req.user._id;
 
-        const posts = await Post.find().populate('userId').lean();
+        const posts = await Post.find().populate('userId').lean().sort({createdAt: -1});
 
         const following = await Follow.find({ follower: currentUserId }).lean();
         const followingSet = new Set(following.map(f => f.following.toString()));

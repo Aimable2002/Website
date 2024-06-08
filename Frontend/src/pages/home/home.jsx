@@ -37,7 +37,7 @@ import useListenMessage from '../../hook/useListenMessage.js';
 import useGetMessage from '../../hook/useGetMessage.js';
 import storyRequest from '../../hook/storyRequest.js';
 
-
+import Last from '../../compound/lastMessages.jsx'
 
 const home = ({user}) => {
   const {loading, users} = useGetUser();
@@ -50,16 +50,15 @@ const home = ({user}) => {
 
   const [search, setSearch] = useState('')
 //useListenMessage();
-
 const {messages} = useGetMessage();
-const getLatestMessage = (message) => {
-  if(!message.messages || message.messages === 0) {
-    return {text: 'no message', timestamp: ''}
-  }
+// const getLatestMessage = (message) => {
+//   if(!message.messages || message.messages === 0) {
+//     return {text: 'no message', timestamp: ''}
+//   }
 
-  const latestmessage = message.messages[message.messages.length -1]
-  return latestmessage
-}
+//   const latestmessage = message.messages[message.messages.length -1]
+//   return latestmessage
+// }
   const handleSearch = (e) => {
     if(e.key === 'Enter'){
         e.preventDefault();
@@ -165,12 +164,11 @@ const[fileChange, setFileChange] = useState();
               <div>{user.userName}</div>
           </div>))}
         </div> */}
-        <div className='flex flex-row w-full'>Verified</div>
+        <div className='flex px-2 flex-row w-full'>Verified</div>
         <div className='flex flex-col w-full overflow-y-auto'>
           {userWithOnlineStatus
           .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
           .map((user, index) => {
-            const lastMessage = getLatestMessage(messages[user._id] || { messages: [] });
             return(
           <div key={index} className='flex flex-row w-full bg-base-100  gap-3 py-1 mb-1 cursor-pointer'>
             <div className='flex py-2 px-2 justify-center align-middle'>
@@ -180,10 +178,10 @@ const[fileChange, setFileChange] = useState();
                 </div>
               </div>
             </div>
-            <div className='flex flex-col align-middle justify-center'
+            <div className='flex flex-col align-middle justify-center w-full'
             onClick={() => setUser(user)}>
-              <div>{user.userName}</div>
-              <div>{lastMessage}</div>
+              <div className='w-4/5'>{user.userName}</div>
+              <Last userId={user}/>
             </div>
           </div>
             )

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/send/:id', protectRoute, sendMessages);
 router.get('/:id', protectRoute, getMessages);
-router.get('/getAllConv', protectRoute, getAllConversation)
+router.get('/getAllConv/:id', protectRoute, getAllConversation)
 
 
 export default router

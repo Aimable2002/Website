@@ -403,7 +403,6 @@ const [imageStyles, setImageStyles] = useState([]);
  
   const { posts: initiolValue } = useGetPost(postChange);
 
-  const [isPosted, setIsPosted] = useState([])
 
   return (
     <div className='w-full flex flex-col overflow-auto'>

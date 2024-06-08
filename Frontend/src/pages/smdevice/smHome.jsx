@@ -26,6 +26,8 @@ import usegetLoggedIn from '../../hook/usegetLoggedIn';
 import uploadRequest from '../../hook/uploadRequest';
 import useListenMessage from '../../hook/useListenMessage';
 
+import Last from '../../compound/lastMessages';
+
 const truncateString = (str, maxLength) => {
   if(str.length <= maxLength ){
     return str;
@@ -249,10 +251,10 @@ const navigate = useNavigate();
                 <img src={getProfileImageUrl(user)} />
               </div>
             </div>
-              <div className='flex self-center'>{truncateString(user.userName, 7)}</div>
+              <div className='flex self-center mt-2'>{truncateString(user.userName, 7)}</div>
           </div>))}
         </div>
-        <div className='flex flex-row w-full justify-between align-middle'>
+        <div className='flex px-2 flex-row w-full justify-between align-middle'>
           <div>Verified</div>
           <div>Explore more</div>
         </div>
@@ -268,10 +270,10 @@ const navigate = useNavigate();
                 </div>
               </div>
             </div>
-            <div className='flex flex-col align-middle justify-center'
+            <div className='flex flex-col align-middle justify-center w-full'
             onClick={() => handleuser(user)}>
               <div>{user.userName}</div>
-              <div>you have message</div>
+              <Last userId={user}/>
             </div>
           </div>
           ))}

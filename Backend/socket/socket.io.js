@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ["https://website-s9ue.onrender.com"],
+        origin: ["http://localhost:2000"],
         methods: ["GET", "POST"],
     }
 });

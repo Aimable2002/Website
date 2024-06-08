@@ -7,7 +7,7 @@ const messages = () => {
   useListenMessage()
 
   return (
-    <div className='w-full flex' style={{zIndex: '-1'}}>
+    <div className='w-full flex mb-20' style={{zIndex: '-1'}}>
         <Message/>
     </div>
   )

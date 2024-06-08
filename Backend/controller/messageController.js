@@ -7,11 +7,11 @@ import { getRecievedSocketId, io } from '../socket/socket.io.js';
 export const sendMessages = async (req, res) => {
     try{
         const {message} = req.body;
-        console.log('messages :', message)
+        //console.log('messages :', message)
         const {id: senderId} = req.user;
-        console.log('senderId :', senderId)
+        //console.log('senderId :', senderId)
         const {id: recieverId} = req.params;
-        console.log('recieverId :', recieverId)
+        //console.log('recieverId :', recieverId)
 
         if(!message || !senderId || !recieverId){
             return res.status(409).json('no data presented')
@@ -63,12 +63,9 @@ export const sendMessages = async (req, res) => {
 export const getMessages = async(req, res) => {
     try{
         const {_id: senderId} = req.user;
-        console.log('senderId :', senderId)
-        // const {_id: userToChat} = req.params;
+        //console.log('senderId :', senderId)
         const userToChat = req.params.id
-        console.log('userToChat :', userToChat)
-        // const {message} = req.body
-        // console.log('message :', message)
+        //console.log('userToChat :', userToChat)
 
 
         if(!senderId || !userToChat){
@@ -100,20 +97,32 @@ export const getMessages = async(req, res) => {
 
 
 
-
 export const getAllConversation = async (req, res) => {
-    try{
-        const userId = req.user._id;
-        //const recieverId = req.params.id;
-        const user = userId.toString()
-        console.log('user :', user)
-        
-
-        const conversations = await Conversation.find({participants: user}).populate('messages')
-        console.log('conversations :', conversations)
-        res.status(201).json(conversations)
-    }catch(error){
-        console.log('internal server getAll conversation error :', error)
-        res.status(500).json({error: 'internal server get all conversation error'})
+    try {
+      const { _id: senderId } = req.user;
+      const userToChat = req.params.id;
+  
+      if (!senderId || !userToChat) {
+        return res.status(409).json('please provide data');
+      }
+  
+      const existConversation = await Conversation.findOne({
+        participants: { $all: [senderId, userToChat] }
+      }).populate({
+        path: 'messages',
+        options: { sort: { createdAt: -1 }, limit: 1 } 
+      });
+  
+      if (!existConversation || existConversation.messages.length === 0) {
+        return res.status(200).json(null);
+      }
+  
+      const lastMessage = existConversation.messages[0]; 
+      //console.log('last message :', lastMessage)
+      res.status(201).json(lastMessage)
+    } catch (error) {
+      console.log('internal server get message error', error.message);
+      res.status(500).json({ error: 'internal server get message error' });
     }
-}
+  };
+  

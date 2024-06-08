@@ -30,7 +30,7 @@ router.post('/status', protectRoute, upload.single("file"), async(req, res) => {
         }
         const userId = req.user._id;
         console.log('userId :', userId);
-        const status = `https://website-s9ue.onrender.com/status/${userId}-${req.file.originalname}`;
+        const status = `http://localhost:2000/status/${userId}-${req.file.originalname}`;
 
         
         const user = await User.findById(userId)

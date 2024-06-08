@@ -11,7 +11,7 @@ const Message = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-console.log('authUser :', AuthUser._id)
+//console.log('authUser :', AuthUser._id)
   return (
     <div className='relative flex flex-col overflow-y-auto w-full'>
         {messages.length === 0 ? (
