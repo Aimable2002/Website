@@ -342,7 +342,6 @@ const determineGridStyle = (dimensions) => {
 
 
 const poster = ({userId, post }) => {
-
   const {loading, users} = useGetUser();
 
 const {AuthUser} = useAuthContext();
@@ -374,10 +373,17 @@ const {AuthUser} = useAuthContext();
   const {upload} = postRequest();
 
 const [postChange, setPostChange] = useState();
+// const handlePost = async (e) => {
+//   setPostChange(e.target.files[0]);
+//   await upload(e.target.files[0])
+//   setPostChange(new Date().getTime()); // Update postChange state
+// }
+
 const handlePost = async (e) => {
-  setPostChange(e.target.files[0]);
-  await upload(e.target.files[0])
-}
+  const file = e.target.files[0];
+  await upload(file);
+  setPostChange(new Date().getTime()); // Update postChange state
+};
 
 const [imageStyles, setImageStyles] = useState([]);
 
@@ -395,28 +401,9 @@ const [imageStyles, setImageStyles] = useState([]);
     fetchImageStyles();
   }, [users]);
  
-  const { posts: initiolValue } = useGetPost();
+  const { posts: initiolValue } = useGetPost(postChange);
 
   const [isPosted, setIsPosted] = useState([])
-
-  useEffect(() => {
-      const fetchPost = async () => {
-        try {
-          const token = localStorage.getItem('online-user');
-          const response = await axios.get(`http://localhost:4000/api/upload${post}`, {}, {
-            headers: {
-              Authorization: `${JSON.parse(token).token}`
-            }
-          });
-          setIsPosted(response.data.pstImage)
-          console.log('data :', response.data.pstImage)
-        } catch (error) {
-          console.error('There was an error fetching the likes!', error);
-        }
-      };
-  
-          fetchPost();
-    }, [handlePost]);
 
   return (
     <div className='w-full flex flex-col overflow-auto'>

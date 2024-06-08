@@ -10,7 +10,7 @@ const smFollow = ({userId}) => {
       const fetchFollow = async () => {
         try {
           const token = localStorage.getItem('online-user');
-          const response = await axios.get(`http://localhost:4000/api/action/follow/${user}`, {}, {
+          const response = await axios.get(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
             headers: {
               Authorization: `${JSON.parse(token).token}`
             }
@@ -28,7 +28,7 @@ const smFollow = ({userId}) => {
     const handleFollow = async () => {
       try {
         const token = localStorage.getItem('online-user');
-        const response = await axios.post(`http://localhost:4000/api/action/follow/${user}`, {}, {
+        const response = await axios.post(`https://website-s9ue.onrender.com/api/action/follow/${user}`, {}, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }
@@ -38,11 +38,11 @@ const smFollow = ({userId}) => {
         console.error('There was an error follow the user!', error);
       }
     };
-    console.log('user :', userId)
+    //console.log('user :', userId)
 
   return (
     <div className='crd-rgt flex self-center justify-around '>
-        {IsFollowing !== null ? (
+        {IsFollowing ? (
             <div className="border-none badge badge-outline cursor-pointer py-1 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg" 
             onClick={handleFollow}>Following
         </div>

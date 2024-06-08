@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
-const useGetPost = () => {
+const useGetPost = (postChange) => {
   const [loading, setLoading] = useState(false)
 const [posts, setPosts] = useState([]);
 
@@ -12,7 +12,7 @@ const [posts, setPosts] = useState([]);
         try{
         const token = localStorage.getItem('online-user')
         //console.log('token :', token)
-        const res = await axios.get('http://localhost:4000/api/upload/getPost', {
+        const res = await axios.get('https://website-s9ue.onrender.com/api/upload/getPost', {
             headers: {
                 Authorization: `${JSON.parse(token).token}`,   
             }
@@ -31,7 +31,7 @@ const [posts, setPosts] = useState([]);
         }
     }
     getPost();
-  },[])
+  },[postChange])
   return {loading, posts}
 }
 

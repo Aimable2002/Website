@@ -12,7 +12,7 @@ const useGetFollowing = (userId) => {
             const token = localStorage.getItem('online-user');
             console.log(token)
             console.log('userId:', userId)
-            const res = await axios.get(`http://localhost:4000/api/action/following/${userId}`,{}, {
+            const res = await axios.get(`https://website-s9ue.onrender.com/api/action/following/${userId}`,{}, {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }
