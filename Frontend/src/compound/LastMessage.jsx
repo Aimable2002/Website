@@ -1,6 +1,15 @@
 import React from 'react'
 import useGetConversations from '../hook/useGetAllConversation'
 
+const truncateString = (str, maxLength) => {
+  if(str.length <= maxLength ){
+    return str;
+  }else{
+    const truncatedString = str.slice(0, maxLength);
+    return truncatedString + (truncatedString.endsWith('') ? '..' : '...');
+  }
+}
+
 const LastMessage = ({userId}) => {
   const user = userId._id
   const { loading, conversations } = useGetConversations(user);
@@ -21,7 +30,7 @@ const LastMessage = ({userId}) => {
     //     <div className='w-4/5'>{message.message}</div>
     //   ))}
     // </>
-    <div className='w-4/5' style={{color: '#337AFF'}}>{conversations.message}</div>
+    <div className='w-4/5' style={{color: '#337AFF'}}>{truncateString(conversations.message, 35)}</div>
   );
 }
 

@@ -33,7 +33,7 @@ router.post('/profile', protectRoute, upload.single("file"), async(req, res) => 
         }
         const userId = req.user._id;
         console.log('userId :', userId);
-        const profile = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+        const profile = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
 
         
         const user = await User.findById(userId)
@@ -137,9 +137,9 @@ router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
 
       let url;
       if (fileType === 'video') {
-          url = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+          url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
       } else {
-          url = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+          url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
       }
 
       let user = await Post.findById(userId);

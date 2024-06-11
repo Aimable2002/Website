@@ -57,8 +57,80 @@
 
 
 
-import React, { useRef, useEffect, useState } from 'react';
+// import React, { useRef, useEffect, useState } from 'react';
 
+// import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+// import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+
+// const post = ({ post }) => {
+//   const [muted, setMuted] = useState(true);
+//   const videoRef = useRef(null);
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       const video = videoRef.current;
+//       if (!video) return;
+
+//       const rect = video.getBoundingClientRect();
+//       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+//       const isInView = rect.top >= 0 && rect.bottom <= viewportHeight;
+
+//       if (isInView && video.paused) {
+//         video.play();
+//       } else if (!isInView && !video.paused) {
+//         video.pause();
+//       }
+//     };
+
+//     window.addEventListener('scroll', handleScroll);
+
+    
+//     return () => {
+//       window.removeEventListener('scroll', handleScroll);
+//     };
+//   }, []);
+  
+
+//   const handleVideoClick = () => {
+//     const video = videoRef.current;
+//     if (video.paused) {
+//       video.play();
+//     } else {
+//       video.pause();
+//     }
+//   };
+
+//   const handleVideoMute = () => {
+//     setMuted(!muted);
+//     videoRef.current.muted = !muted;
+//   };
+
+//   return (
+//     <>
+//       <figure>
+//         {post.type === 'image' && <img src={post.imageURL} alt="" />}
+//         {post.type === 'video' && (
+//           <div className="w-full relative overflow-hidden cursor-pointer">
+//             <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick}>
+//               <source src={post.videoURL} type="video/mp4" />
+//               Your browser does not support the video tag.
+//             </video>
+//             <button onClick={handleVideoMute}>{muted ? <VolumeOffIcon /> : <VolumeUpIcon />}</button>
+//           </div>
+//         )}
+//       </figure>
+//     </>
+//   );
+// };
+
+// export default post;
+
+
+
+
+
+import React, { useRef, useEffect, useState } from 'react';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
@@ -67,31 +139,30 @@ const post = ({ post }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const video = videoRef.current;
-      if (!video) return;
+    const video = videoRef.current;
 
-      const rect = video.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      // Check if the video is in the viewport
-      const isInView = rect.top >= 0 && rect.bottom <= viewportHeight;
-
-      if (isInView && video.paused) {
-        // If video is in view and is paused, play it
-        video.play();
-      } else if (!isInView && !video.paused) {
-        // If video is out of view and is playing, pause it
-        video.pause();
-      }
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && video.paused) {
+          video.play();
+        } else if (!entry.isIntersecting && !video.paused) {
+          video.pause();
+        }
+      });
     };
 
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScroll);
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.5, // Trigger when at least 50% of the video is in the viewport
+    });
 
-    // Cleanup
+    if (video) {
+      observer.observe(video);
+    }
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      if (video) {
+        observer.unobserve(video);
+      }
     };
   }, []);
 
@@ -127,8 +198,17 @@ const post = ({ post }) => {
   );
 };
 
-export default post;
+// Debounce function
+const debounce = (func, delay) => {
+  let timeoutId;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(context, args), delay);
+  };
+};
 
+export default post;
 
 
 //controls
