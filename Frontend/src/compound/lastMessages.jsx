@@ -4,7 +4,7 @@ import Last from '../compound/LastMessage.jsx'
 import useListenMessage from '../hook/useListenMessage';
 
 const lastMessages = ({userId}) => {
-    useListenMessage();
+    // useListenMessage();
   return (
     <>
         <Last userId={userId}/>

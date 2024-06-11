@@ -370,7 +370,7 @@ const handleView = () => {
                                 </div>
                             </div>
                             <div className='ft-ftr flex flex-row w-full  align-middle'>
-                                <div>comment content displayed here</div>
+                                {/* <div>comment content displayed here</div> */}
                             </div>
                         </div>
                     </div>

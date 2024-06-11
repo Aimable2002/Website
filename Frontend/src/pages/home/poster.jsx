@@ -462,7 +462,7 @@ const [imageStyles, setImageStyles] = useState([]);
                 <ChatBubbleOutlineIcon /></div> 
               <div className='flex self-center cursor-pointer'><ShareIcon /></div>
             </div>
-            <p>thats the cmt there...</p>
+            {/* <p>thats the cmt there...</p> */}
               <Follow  userId={post}/>
           </div>
           </div>
