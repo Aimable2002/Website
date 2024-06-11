@@ -82,8 +82,8 @@ const {messages} = useGetMessage();
   }
 
   const {logout} = useLogout();
-
-  const {logUser} = usegetLoggedIn();
+  const [profileChange, setProfileChange] = useState()
+  const {logUser} = usegetLoggedIn(profileChange);
   const {uploadProfile} = uploadRequest();
   const addProfile = useRef();
 
@@ -104,14 +104,21 @@ const handelStatusChange = async (e) => {
 }
 
 const[fileChange, setFileChange] = useState();
+  // const handleFileChange = async(e) => {
+  //   setFileChange(e.target.files[0]);
+  //   await uploadProfile(e.target.files[0]);
+  //   setFileChange('')
+  //   setPostChange(new Date().getTime());
+  // }
+  
   const handleFileChange = async(e) => {
-    setFileChange(e.target.files[0]);
-    await uploadProfile(e.target.files[0]);
-    setFileChange('')
+    const file = e.target.files[0];
+    await uploadProfile(file);
+    setProfileChange(new Date().getTime());
   }
 
   const getProfileImageUrl = (selectedUser) => {
-    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.gender === 'Male' ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
   };
 
   const getStatus = (logUser) => {
@@ -122,10 +129,13 @@ const[fileChange, setFileChange] = useState();
   const getUserById = (userId) => {
     return users.find((user) => user._id === userId)
   }
-  const filterPost = posts.filter((post) => {
-    const user = getUserById(post.userId)
-  })
+  const getPostInfo = (userId) => {
+    const userPosts = posts.filter(post => post.userId._id === userId);
+    const totalLikes = userPosts.reduce((acc, post) => acc + post.totalLikes, 0); 
+    return { postCount: userPosts.length, totalLikes };
+  };
 
+  
 
   return (
     <div className='flex flex-row w-screen h-screen overflow-y-auto' style={{fontSize: '12px'}}>
@@ -211,9 +221,11 @@ const[fileChange, setFileChange] = useState();
               </div>
           </div>
         </div>
-        {isAcount ? (
+        {!isAcount ? (
           <>
-          {logUser.map((user, idx) => (
+          {logUser.map((user, idx) => {
+            const { postCount, totalLikes } = getPostInfo(user._id);
+            return(
         <div className='flex flex-col w-full overflow-y-auto'>
           <div className='flex flex-col py-4 align-middle justify-center self-center'>
             <div className="avatar" onClick={handleFileRef}>
@@ -231,7 +243,7 @@ const[fileChange, setFileChange] = useState();
           </div>
           <div className='flex flex-row align-middle justify-around mt-8'>
             <div className='flex flex-col w-full align-middle justify-center'>
-              <div className='flex align-middle justify-center'>46</div>
+              <div className='flex align-middle justify-center'>{ postCount }</div>
               <div className='flex align-middle justify-center'>post</div>
             </div>
             <div className='flex flex-col w-full align-middle justify-center'>
@@ -241,6 +253,10 @@ const[fileChange, setFileChange] = useState();
             <div className='flex flex-col w-full align-middle justify-center'>
               <div className='flex align-middle justify-center'>{user.totalFollowing}</div>
               <div className='flex align-middle justify-center'>Following</div>
+            </div>
+            <div className='flex flex-col w-full align-middle justify-center'>
+              <div className='flex align-middle justify-center'>{totalLikes}</div>
+              <div className='flex align-middle justify-center'>likes</div>
             </div>
           </div>
           <div className='flex flex-col w-full mt-5'>
@@ -296,7 +312,8 @@ const[fileChange, setFileChange] = useState();
           </div>
         <div className='py-10'></div>
         </div>
-        ))}
+          )
+        })}
         </>
         ) : (
         <div className='flex flex-col w-full overflow-y-auto'>
@@ -327,15 +344,12 @@ const[fileChange, setFileChange] = useState();
           </div>
           ))}
           {posts.map((post, idx) => {
-                // const user = getUserById(post.userId);
-                // if (!user) return null; // Ensure user exists
-                //console.log('home post.user :', post.user)
-                return (
+            return (
           <div key={idx} className='flex flex-row w-full  gap-3 py-1 mb-1 cursor-pointer bg-base-100'>
             <div className='flex py-2 px-2 justify-center align-middle'>
               <div className="avatar ">
                 <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <img src={post.imageURL}/>
+                  <img src={post.user.status}/>
                 </div>
               </div>
             </div>
@@ -345,8 +359,8 @@ const[fileChange, setFileChange] = useState();
               <div>status context</div>
             </div>
             </div>
-                )
-          })}
+        ) 
+      })}
         </div>
         )}
       </div>

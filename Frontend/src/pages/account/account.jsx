@@ -37,9 +37,10 @@ import Conversation from '../zustand/zustand';
 import postRequest from '../../hook/postRequest';
 import useLogout from '../../hook/useLogout.js';
 
+import SmPoster from '../../compound/smPost.jsx';
 const account = () => {
-
-  const {logUser} = usegetLoggedIn();
+  const [profileChange, setProfileChange] = useState()
+  const {logUser} = usegetLoggedIn(profileChange);
   const {uploadProfile} = uploadRequest();
 
   const {logout} = useLogout();
@@ -61,9 +62,10 @@ const account = () => {
   const[fileChange, setFileChange] = useState();
   
   const handleFileChange = async(e) => {
-    setFileChange(e.target.files[0]);
-    await uploadProfile(e.target.files[0]);
-    setFileChange('')
+    const file = e.target.files[0];
+    await uploadProfile(file);
+    // setFileChange('')
+    setProfileChange(new Date().getTime());
   }
   const { posts } = useGetPost();
   const useron = localStorage.getItem('online-user');
@@ -112,20 +114,21 @@ const [postChange, setPostChange] = useState();
 const handlePost = async (e) => {
   setPostChange(e.target.files[0]);
   await upload(e.target.files[0])
+
 }
 
 const getPostInfo = (userId) => {
   const userPosts = posts.filter(post => post.userId._id === userId);
   const totalLikes = userPosts.reduce((acc, post) => acc + post.totalLikes, 0); 
-  console.log('userPost :', userPosts);
-  console.log('totalLikes :', totalLikes);
+  // console.log('userPost :', userPosts);
+  // console.log('totalLikes :', totalLikes);
   return { postCount: userPosts.length, totalLikes };
 };
 
   return (
     <div className='w-screen flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10 h-10 bg-base-100' style={{zIndex: '1'}}>
-            <div className='fixed self-center   h-5 w-full flex flex-row justify-between'>
+            <div className='fixed self-center px-2  h-5 w-full flex flex-row justify-between'>
                 {logUser.map((user) => (<div>{user.userName}</div>))} 
                 <div className='flex flex-row justify-around gap-2'>
                 <div className='flex flex-row align-middle justify-between gap-2'>
@@ -278,9 +281,7 @@ const getPostInfo = (userId) => {
               </div>
             ) : (filteredPosts.map((post) => (
               <div className='flex flex-row align-middle justify-center'>
-                <figure>
-                  <img src={post.imageURL} alt="" />
-                </figure>
+                <SmPoster id={post} />
               </div>
               )
             ))}

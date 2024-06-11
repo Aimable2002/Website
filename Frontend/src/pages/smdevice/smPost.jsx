@@ -35,6 +35,7 @@ import useGetPost from '../../hook/useGetPost';
 
 import SmFollow from '../../compound/smFollow';
 import Like from '../../compound/like';
+import SmPoster from '../../compound/smPost';
 
 const smPost = ({user, post}) => {
 
@@ -69,8 +70,9 @@ const smPost = ({user, post}) => {
 
 const [postChange, setPostChange] = useState();
 const handlePost = async (e) => {
-  setPostChange(e.target.files[0]);
-  await upload(e.target.files[0])
+    const file = e.target.files[0];
+    await upload(file);
+  setPostChange(new Date().getTime());
 }
 
 const [activeButton, setActiveButton] = useState('All');
@@ -127,7 +129,7 @@ const handleRefProfile = () => {
     return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
   };
 
-  const {posts: initialValue} = useGetPost();
+  const {posts: initialValue} = useGetPost(postChange);
 
   const getUserById = (userId) => {
     return users.find((user) => user._id === userId)
@@ -334,7 +336,9 @@ const handleView = () => {
                                 <div className='crd-prof flex flex-row gap-4'>
                                     <div className="avatar">
                                         <div className="w-11 rounded-full">
-                                            <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.avatar} />
+                                            <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.gender === 'Male' ? 
+                                                'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange'
+                                            } />
                                         </div>
                                     </div>
                                     <div className='dtl flex align-middle self-center'>
@@ -345,9 +349,7 @@ const handleView = () => {
                             </div>
                         </div>
                         <div className='w-full flex justify-center align-middle'>
-                            <figure>
-                                <img src={post.imageURL} alt="" />
-                            </figure>
+                            <SmPoster id={post} />
                         </div>
                         <div className='flex flex-col align-middle py-2'>
                             <div className='ftr-hd flex flex-row  w-full justify-between'>

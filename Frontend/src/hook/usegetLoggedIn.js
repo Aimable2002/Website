@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
-const usegetLoggedIn = () => {
+const usegetLoggedIn = (profileChange) => {
   const [logUser, setLogUser] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -10,7 +10,7 @@ const usegetLoggedIn = () => {
         setLoading(true)
         try{
             const token = localStorage.getItem('online-user')
-            const res = await axios.get('http://localhost:4000/api/users/logUser', {
+            const res = await axios.get('/api/users/logUser', {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }
@@ -30,7 +30,7 @@ const usegetLoggedIn = () => {
         }
       }
       getLogged();
-  },[])
+  },[profileChange])
   return {loading, logUser}
 }
 

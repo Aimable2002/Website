@@ -15,7 +15,7 @@ const useGetConversations = (user) => {
       setLoading(true);
       try {
         const token = localStorage.getItem('online-user');
-        const res = await axios.get(`http://localhost:4000/api/message/getAllConv/${user}`, {
+        const res = await axios.get(`/api/message/getAllConv/${user}`, {
           headers: {
             Authorization: `${JSON.parse(token).token}`
           }

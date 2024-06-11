@@ -8,7 +8,7 @@ const useGetLikes = () => {
     const getLikes = async () => { 
         try{
             const token = localStorage.getItem('online-user');
-            const res = await axios.get('http://localhost:4000/api/action/updateLike', {
+            const res = await axios.get('/api/action/updateLike', {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }

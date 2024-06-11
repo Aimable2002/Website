@@ -12,7 +12,7 @@ const useGetUser = () => {
         try{
         const token = localStorage.getItem('online-user')
         //console.log('token :', token)
-        const res = await axios.get('http://localhost:4000/api/users/allUser', {
+        const res = await axios.get('/api/users/allUser', {
             headers: {
                 Authorization: `${JSON.parse(token).token}`,   
             }

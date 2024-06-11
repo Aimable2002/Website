@@ -11,7 +11,7 @@ const useGetFollow = (userId) => {
         setLoading(true)
         try{
             const token = localStorage.getItem('online-user');
-            const res = await axios.get(`http://localhost:4000/api/action/followers/${userId._id}`, {
+            const res = await axios.get(`/api/action/followers/${userId._id}`, {
                 headers: {
                     Authorization: `${JSON.parse(token).token}`
                 }

@@ -2,7 +2,7 @@ import express from 'express';
 import Post from '../Model/postModel.js';
 import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js';
-
+import {io} from '../socket/socket.io.js'
 
 export const likesCount = async (req, res) => {
     try{
@@ -35,6 +35,7 @@ export const likesCount = async (req, res) => {
         post.totalLikes = post.likes.length
         console.log('new :', newPost)
     await post.save();
+    io.emit('postLiked', { postId: req.params.id });
     res.status(200).json({ isLiked: isLiked ? false : true, likes: post.likes.length, postLiked: req.params.id });
     // res.status(200).json({ isLiked: isLiked ? false : true, likes: totalLikes });
     }catch(error){
@@ -79,6 +80,7 @@ export const follow = async (req, res) => {
             await User.findByIdAndUpdate(userId, { $inc: { totalFollowing: -1 }, $pull: { following: userToFollow } });
             await User.findByIdAndUpdate(userToFollow, { $inc: { totalFollower: -1 }, $pull: { follower: userId } });
             console.log('Unfollowed: ', userToFollow);
+            io.emit('userUnFollowed', { followerId: req.user._id, followingId: req.params.id });
             return res.status(200).json({message: 'Unfollowed successfully', unFollowed: userToFollow, unFollowing: userId, isFollowing: false});
             
         }else{
@@ -89,6 +91,7 @@ export const follow = async (req, res) => {
         await User.findByIdAndUpdate(userId, {$inc: {totalFollowing: 1}, $push: {following: userToFollow}})
         await User.findByIdAndUpdate(userToFollow, {$inc: {totalFollower: 1}, $push: {follower: userId}})
         console.log('newFollow : ', newFollow)
+        io.emit('userFollowed', { followerId: req.user._id, followingId: req.params.id });
         res.status(201).json({message: 'follow successfully', newFollow: newFollow, newFollowed: userToFollow, newFollowing: userId, isFollowing: true })
         
         }

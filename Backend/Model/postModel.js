@@ -23,6 +23,12 @@ const postSchema = new mongoose.Schema({
     },
     imageURL: {
         type: String,
+    },
+    type: {
+        type: String
+    },
+    videoURL: {
+        type: String,
     }
 }, {timestamps: true})
 

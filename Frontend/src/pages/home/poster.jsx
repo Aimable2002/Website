@@ -373,16 +373,11 @@ const {AuthUser} = useAuthContext();
   const {upload} = postRequest();
 
 const [postChange, setPostChange] = useState();
-// const handlePost = async (e) => {
-//   setPostChange(e.target.files[0]);
-//   await upload(e.target.files[0])
-//   setPostChange(new Date().getTime()); // Update postChange state
-// }
 
 const handlePost = async (e) => {
   const file = e.target.files[0];
   await upload(file);
-  setPostChange(new Date().getTime()); // Update postChange state
+  setPostChange(new Date().getTime());
 };
 
 const [imageStyles, setImageStyles] = useState([]);
@@ -452,7 +447,9 @@ const [imageStyles, setImageStyles] = useState([]);
               <div className="avatar">
                 <div className="w-8 rounded-full">
                   {/* <img src={getProfileImageUrl(user)} /> */}
-                  <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.avatar} alt="" />
+                  <img src={post.user.profile && post.user.profile.trim() !== '' ? post.user.profile : post.user.gender === 'Male' ? 
+                    'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange'
+                  } alt="" />
                 </div>
               </div>
               <div className='flex self-center w-3/6'>{post.user.userName}</div>

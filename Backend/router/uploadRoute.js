@@ -1,9 +1,11 @@
 import express from 'express'
 import multer from 'multer';
+import path from 'path'
 import protectRoute from '../middleware/protectRoute.js';
 import Post from '../Model/postModel.js';
 import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js'
+import {io} from '../socket/socket.io.js'
 
 const router = express.Router();
 
@@ -49,33 +51,122 @@ router.post('/profile', protectRoute, upload.single("file"), async(req, res) => 
     }
 })
 
-router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
-    try{
-        if(!req.file){
-            return res.status(400).json('no file found')
-        }
-        const userId = req.user._id
-        const imageUrl = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
 
-        let user = await Post.findById(userId);
-        if(!user){
-            user = await Post.create({
-                userId: userId,
-                imageURL: imageUrl,
-            })
-            await user.save();
-        }else{
-            user.imageURL = imageUrl
-            await user.save();
-        }
-        
-        console.log('upload complete :', req.file);
-        res.status(201).json({message: 'post upload complete', pstImage: imageUrl})
-    }catch(error){
-        console.log('fail to upload', error.message);
-        res.status(500).json({error: 'fail to upload'})
-    }
-})
+// router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
+//     try{
+//         if(!req.file){
+//             return res.status(400).json('no file found')
+//         }
+//         const userId = req.user._id
+//         const imageUrl = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+
+//         let user = await Post.findById(userId);
+//         if(!user){
+//             user = await Post.create({
+//                 userId: userId,
+//                 imageURL: imageUrl,
+//             })
+//             await user.save();
+//         }else{
+//             user.imageURL = imageUrl
+//             await user.save();
+//         }
+//         io.emit('postUploaded', { imageURL: imageUrl });
+//         console.log('upload complete :', req.file);
+//         res.status(201).json({message: 'post upload complete', pstImage: imageUrl})
+//     }catch(error){
+//         console.log('fail to upload', error.message);
+//         res.status(500).json({error: 'fail to upload'})
+//     }
+// })
+
+
+// router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
+//     try {
+//       if (!req.file) {
+//         return res.status(400).json('no file found');
+//       }
+  
+//       const userId = req.user._id;
+//       const fileExtension = path.extname(req.file.originalname).toLowerCase();
+//       let fileType = 'image';
+  
+//       if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi') {
+//         fileType = 'video';
+//       }
+//       const imageUrl = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+  
+//       let user = await Post.findById(userId);
+  
+//       if (!user) {
+//         user = await Post.create({
+//           userId: userId,
+//           type: fileType,
+//           imageURL: imageUrl,
+//         });
+//         await user.save();
+//       } else {
+//         user.type = fileType;
+//         user.imageURL = imageUrl
+//         await user.save();
+//       }
+  
+//       io.emit('postUploaded', { type: fileType, imageURL: imageUrl });
+//       console.log('upload complete:', req.file);
+//       res.status(201).json({ message: 'post upload complete', type: fileType, imageURL: imageUrl });
+//     } catch (error) {
+//       console.log('fail to upload', error.message);
+//       res.status(500).json({ error: 'fail to upload' });
+//     }
+//   });
+
+
+router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).json('no file found');
+      }
+
+      const userId = req.user._id;
+      const fileExtension = path.extname(req.file.originalname).toLowerCase();
+      let fileType = 'image';
+
+      if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi') {
+          fileType = 'video';
+      }
+
+      let url;
+      if (fileType === 'video') {
+          url = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+      } else {
+          url = `http://localhost:2000/images/${userId}-${req.file.originalname}`;
+      }
+
+      let user = await Post.findById(userId);
+
+      if (!user) {
+          user = await Post.create({
+              userId: userId,
+              type: fileType,
+              imageURL: fileType === 'image' ? url : '',
+              videoURL: fileType === 'video' ? url : '',
+          });
+          await user.save();
+      } else {
+          user.type = fileType;
+          user.imageURL = fileType === 'image' ? url : '';
+          user.videoURL = fileType === 'video' ? url : '';
+          await user.save();
+      }
+
+      io.emit('postUploaded', { type: fileType, url: url });
+      console.log('upload complete:', req.file);
+      res.status(201).json({ message: 'post upload complete', type: fileType, imageURL: url });
+  } catch (error) {
+      console.log('fail to upload', error.message);
+      res.status(500).json({ error: 'fail to upload' });
+  }
+});
 
 
 router.get('/getPost', protectRoute, async(req, res) => {

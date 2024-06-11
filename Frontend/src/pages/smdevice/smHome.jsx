@@ -76,7 +76,8 @@ const navigate = useNavigate();
     setIsMenu(!isMenu)
   }
   const {logout} = useLogout();
-  const {logUser} = usegetLoggedIn();
+  const [profileChange, setProfileChange] = useState()
+  const {logUser} = usegetLoggedIn(profileChange);
   const [fileChange, setFileChange] = useState();
   const {uploadProfile} = uploadRequest();
   
@@ -86,12 +87,13 @@ const navigate = useNavigate();
       addProfile.current.click();
   }
     const handleProfileChange = async (e) => {
-      setFileChange(e.target.files[0])
-      await uploadProfile(e.target.files[0])
+      const file = e.target.files[0];
+      await uploadProfile(file)
+      setProfileChange(new Date().getTime());
     }
   
     const getProfileImageUrl = (user) => {
-      return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
+      return user.profile && user.profile.trim() !== '' ? user.profile : user.gender === 'Male' ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
     };
     const getLastMessage = (userId) => {
       const userMessages = messages.filter(message => message.senderId === userId || message.recipientId === userId);

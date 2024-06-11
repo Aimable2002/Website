@@ -8,7 +8,7 @@ const LastMessage = ({userId}) => {
   
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='loading loading-dots'></div>;
   }
 
   if (!conversations) {
