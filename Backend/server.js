@@ -13,6 +13,7 @@ import storyRoute from './router/storyRoute.js'
 import actionRoute from './router/actionRoute.js'
 import {server, app} from './socket/socket.io.js';
 
+import connectCloud from './Cloudinary/cloudinary.js';
 
 //const app = express();
 
@@ -44,5 +45,6 @@ app.get("*", (req, res) => {
 
 server.listen(PORT, () => {
     connectDB();
+    connectCloud()
     console.log(`connect server : ${PORT}`)
 })

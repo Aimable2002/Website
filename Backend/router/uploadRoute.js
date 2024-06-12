@@ -7,16 +7,12 @@ import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js'
 import {io} from '../socket/socket.io.js'
 
-import { v2 as cloudinary } from 'cloudinary';
+
 
 
 const router = express.Router();
 
-cloudinary.config({
-    cloud_name: 'djwl0uwtj',
-    api_key: '393912979629683',
-    api_secret: 'aebD4G6oq66Pywob9CX-bYVHq1w'
-});
+
 
 // const storage = multer.diskStorage({
 //     destination: (req, file, cb) => {
