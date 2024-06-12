@@ -125,9 +125,9 @@ const upload = multer({ storage: storage });
 //     }
 //   });
 
-router.post('/profile', async (req, res) => {
+router.post('/profile', protectRoute, upload.single("file"), async (req, res) => {
     try {
-        upload.single('file')(req, res, async (err) => {
+        // upload.single('file')(req, res, async (err) => {
             if (err instanceof multer.MulterError) {
                 // Multer error
                 return res.status(400).json({ error: err.message });
@@ -156,7 +156,7 @@ router.post('/profile', async (req, res) => {
             await user.save();
             console.log('upload complete:', req.file);
             res.status(201).json({ message: 'Upload complete', url: result.secure_url });
-        });
+        // });
     } catch (error) {
         console.error('Failed to upload', error.message);
         res.status(500).json({ error: 'Failed to upload' });
