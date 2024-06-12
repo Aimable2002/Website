@@ -8,7 +8,7 @@ import Follow from '../Model/followModel.js'
 import {io} from '../socket/socket.io.js'
 
 
-import cloudinary from 'cloudinary';
+// import cloudinary from 'cloudinary';
 
 const router = express.Router();
 
@@ -127,38 +127,23 @@ const upload = multer({ storage: storage });
 
 router.post('/profile', protectRoute, upload.single("file"), async (req, res) => {
     try {
-        // upload.single('file')(req, res, async (err) => {
-            // if (err instanceof multer.MulterError) {
-            //     // Multer error
-            //     return res.status(400).json({ error: err.message });
-            // } else if (err) {
-            //     // Other error
-            //     return res.status(500).json({ error: err.message });
-            // }
-
-            // if (!req.file.mimetype.startsWith('image')) {
-            //     return res.status(400).json({ error: 'Uploaded file is not an image' });
-            // }
             if (!req.file) {
                 return res.status(400).json({ error: 'No file uploaded' });
             }
-            // Upload image to Cloudinary
-            const result = await cloudinary.v2.uploader.upload(req.file, {
-                folder: 'profile_images', //Optional: Folder to store images in Cloudinary
+            const result = await cloudinary.uploader.upload(req.file, {
+                folder: 'profile_picture',
+                public_id: 'profile'
             });
-
-            // Save Cloudinary URL to user profileImage field in the database
-            const userId = req.user._id; // Assuming you have user authentication middleware
+            const userId = req.user._id;
             const user = await User.findById(userId);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
 
-            user.profile = result.secure_url; // Assuming you have a profileImage field in your User model
+            user.profile = result.secure_url;
             await user.save();
-            console.log('upload complete:', req.file);
+            console.log('upload complete:', result.secure_url);
             res.status(201).json({ message: 'Upload complete', url: result.secure_url });
-        // });
     } catch (error) {
         console.error('Failed to upload', error.message);
         res.status(500).json({ error: 'Failed to upload' });
