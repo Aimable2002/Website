@@ -7,7 +7,8 @@ import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js'
 import {io} from '../socket/socket.io.js'
 
-import {v2 as cloudinary} from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+
 
 const router = express.Router();
 
@@ -31,8 +32,8 @@ cloudinary.config({
 // })
 
 const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-const upload = multer({storage: storage})
 
 // router.post('/profile', protectRoute, upload.single("file"), async(req, res) => {
 //     try{
@@ -157,7 +158,7 @@ router.post('/profile', async (req, res) => {
 
             user.profile = result.secure_url; // Assuming you have a profileImage field in your User model
             await user.save();
-
+            console.log('upload complete:', req.file);
             res.status(201).json({ message: 'Upload complete', url: result.secure_url });
         });
     } catch (error) {
