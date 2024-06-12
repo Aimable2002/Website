@@ -7,49 +7,57 @@ import User from '../Model/userModel.js';
 import Follow from '../Model/followModel.js'
 import {io} from '../socket/socket.io.js'
 
+import {v2 as cloudinary} from 'cloudinary';
+
 const router = express.Router();
 
+cloudinary.config({
+    cloud_name: 'djwl0uwtj',
+    api_key: '393912979629683',
+    api_secret: 'aebD4G6oq66Pywob9CX-bYVHq1w'
+});
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'Frontend/public/images')
-    },
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'Frontend/public/images')
+//     },
 
 
-    filename: (req, file, cb) => {
-        const userId = req.user._id;
-        const fileName = `${userId}-${file.originalname}`;
-        cb(null, fileName);
-    }
-})
+//     filename: (req, file, cb) => {
+//         const userId = req.user._id;
+//         const fileName = `${userId}-${file.originalname}`;
+//         cb(null, fileName);
+//     }
+// })
 
+const storage = multer.memoryStorage();
 
 const upload = multer({storage: storage})
 
-router.post('/profile', protectRoute, upload.single("file"), async(req, res) => {
-    try{
-        if(!req.file){
-            return res.status(400).json('not file found')
-        }
-        const userId = req.user._id;
-        console.log('userId :', userId);
-        const profile = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
+// router.post('/profile', protectRoute, upload.single("file"), async(req, res) => {
+//     try{
+//         if(!req.file){
+//             return res.status(400).json('not file found')
+//         }
+//         const userId = req.user._id;
+//         console.log('userId :', userId);
+//         const profile = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
 
         
-        const user = await User.findById(userId)
-        if(!user){
-            return res.status(404).json('user not found')
-        }
-        user.profile = profile
-        await user.save()
+//         const user = await User.findById(userId)
+//         if(!user){
+//             return res.status(404).json('user not found')
+//         }
+//         user.profile = profile
+//         await user.save()
 
-        console.log('upload complete :', req.file);
-        res.status(201).json('upload complete')
-    }catch(error){
-        console.log('fail to upload', error.message);
-        res.status(500).json({error: 'fail to upload'})
-    }
-})
+//         console.log('upload complete :', req.file);
+//         res.status(201).json('upload complete')
+//     }catch(error){
+//         console.log('fail to upload', error.message);
+//         res.status(500).json({error: 'fail to upload'})
+//     }
+// })
 
 
 // router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
@@ -119,6 +127,45 @@ router.post('/profile', protectRoute, upload.single("file"), async(req, res) => 
 //       res.status(500).json({ error: 'fail to upload' });
 //     }
 //   });
+
+router.post('/profile', async (req, res) => {
+    try {
+        upload.single('file')(req, res, async (err) => {
+            if (err instanceof multer.MulterError) {
+                // Multer error
+                return res.status(400).json({ error: err.message });
+            } else if (err) {
+                // Other error
+                return res.status(500).json({ error: err.message });
+            }
+
+            // if (!req.file.mimetype.startsWith('image')) {
+            //     return res.status(400).json({ error: 'Uploaded file is not an image' });
+            // }
+
+            // Upload image to Cloudinary
+            const result = await cloudinary.v2.uploader.upload(req.file.buffer, {
+                folder: 'profile_images', // Optional: Folder to store images in Cloudinary
+            });
+
+            // Save Cloudinary URL to user profileImage field in the database
+            const userId = req.user._id; // Assuming you have user authentication middleware
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            user.profile = result.secure_url; // Assuming you have a profileImage field in your User model
+            await user.save();
+
+            res.status(201).json({ message: 'Upload complete', url: result.secure_url });
+        });
+    } catch (error) {
+        console.error('Failed to upload', error.message);
+        res.status(500).json({ error: 'Failed to upload' });
+    }
+});
+
 
 
 router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
