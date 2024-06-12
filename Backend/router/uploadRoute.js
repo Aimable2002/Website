@@ -143,24 +143,8 @@ router.post('/profile', protectRoute, upload.single("file"), async (req, res) =>
                 return res.status(400).json({ error: 'No file uploaded' });
             }
             // Upload image to Cloudinary
-            // const result = await cloudinary.v2.uploader.upload(req.file.buffer, {
-            //     folder: 'profile_images', // Optional: Folder to store images in Cloudinary
-            // });
-
-            const result = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinary.v2.uploader.upload_stream(
-                    { folder: 'profile_images' },
-                    (error, result) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve(result);
-                        }
-                    }
-                );
-    
-                // Pipe the buffer to the upload stream
-                req.file.stream.pipe(uploadStream);
+            const result = await cloudinary.v2.uploader.upload(req.file, {
+                folder: 'profile_images', //Optional: Folder to store images in Cloudinary
             });
 
             // Save Cloudinary URL to user profileImage field in the database
