@@ -128,18 +128,20 @@ const upload = multer({ storage: storage });
 router.post('/profile', protectRoute, upload.single("file"), async (req, res) => {
     try {
         // upload.single('file')(req, res, async (err) => {
-            if (err instanceof multer.MulterError) {
-                // Multer error
-                return res.status(400).json({ error: err.message });
-            } else if (err) {
-                // Other error
-                return res.status(500).json({ error: err.message });
-            }
+            // if (err instanceof multer.MulterError) {
+            //     // Multer error
+            //     return res.status(400).json({ error: err.message });
+            // } else if (err) {
+            //     // Other error
+            //     return res.status(500).json({ error: err.message });
+            // }
 
             // if (!req.file.mimetype.startsWith('image')) {
             //     return res.status(400).json({ error: 'Uploaded file is not an image' });
             // }
-
+            if (!req.file) {
+                return res.status(400).json({ error: 'No file uploaded' });
+            }
             // Upload image to Cloudinary
             const result = await cloudinary.v2.uploader.upload(req.file.buffer, {
                 folder: 'profile_images', // Optional: Folder to store images in Cloudinary
