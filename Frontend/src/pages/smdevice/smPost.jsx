@@ -352,7 +352,7 @@ const handleSubmit = async (e) => {
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
             {initialValue.map((post, idx) => (    
-                postersFetched[post.id] ? (            
+                        postersFetched[post] ? (    
                     <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                         <div className=' crd w-full relative flex align-middle py-2'>
                             <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
@@ -371,9 +371,11 @@ const handleSubmit = async (e) => {
                                 <SmFollow userId={post}/>
                             </div>
                         </div>
+                        
                         <div className='w-full flex justify-center align-middle'>
                             <SmPoster id={post} onFetched={handlePosterFetched}/>
                         </div>
+                    
                         <div className='flex flex-col align-middle py-2'>
                             <div className='ftr-hd flex flex-row  w-full justify-between'>
                                 <div className='ft-lft flex flex-row  w-3/5 gap-4'>
