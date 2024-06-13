@@ -245,7 +245,7 @@ const navigate = useNavigate();
             </form>
           </div>
         </div>
-        <div className='stry-row  py-2 px-2' style={{zIndex: '-1'}}>
+        {/* <div className='stry-row  py-2 px-2' style={{zIndex: '-1'}}>
           {users.map((user, idx) => (
           <div className='flex py-2 px-2 justify-center align-middle flex-col self-center'>
             <div className="avatar flex self-center">
@@ -255,7 +255,7 @@ const navigate = useNavigate();
             </div>
               <div className='flex self-center mt-2'>{truncateString(user.userName, 7)}</div>
           </div>))}
-        </div>
+        </div> */}
         <div className='flex px-2 flex-row w-full justify-between align-middle'>
           <div>Verified</div>
           <div>Explore more</div>
