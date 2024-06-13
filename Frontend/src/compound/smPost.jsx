@@ -75,7 +75,7 @@ const smPost = ({id}) => {
           {id.type === 'image' && <img src={id.imageURL} alt="" />}
           {id.type === 'video' && (
             <div className="w-full relative overflow-hidden cursor-pointer">
-              <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick}>
+              <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick} style={{maxHeight: '80vh', width:'100%', objectFit: 'cover'}}>
                 <source src={id.videoURL} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
