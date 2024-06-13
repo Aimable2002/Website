@@ -31,7 +31,7 @@ const useGetConversations = (user) => {
     };
 
     fetchConversations();
-  }, []);
+  }, [messages]);
 
   return { loading, conversations };
 };

@@ -23,7 +23,7 @@ const useGetMessage = () => {
                 throw new Error('data error ')
             }
             setMessages(data)
-            //console.log('data :', data)
+            console.log('data :', data)
         }catch(error){
             console.log('error in get message', error.message)
         }finally{
