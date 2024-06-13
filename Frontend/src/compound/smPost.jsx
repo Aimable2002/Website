@@ -8,6 +8,7 @@ const smPost = ({id}) => {
   
     const [muted, setMuted] = useState(true);
     const videoRef = useRef(null);
+    const imageRef = useRef(null);
   
     useEffect(() => {
       const handleScroll = () => {
@@ -17,22 +18,17 @@ const smPost = ({id}) => {
         const rect = video.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
   
-        // Check if the video is in the viewport
         const isInView = rect.top >= 0 && rect.bottom <= viewportHeight;
   
         if (isInView && video.paused) {
-          // If video is in view and is paused, play it
           video.play();
         } else if (!isInView && !video.paused) {
-          // If video is out of view and is playing, pause it
           video.pause();
         }
       };
   
-      // Add scroll event listener
       window.addEventListener('scroll', handleScroll);
   
-      // Cleanup
       return () => {
         window.removeEventListener('scroll', handleScroll);
       };
@@ -51,6 +47,27 @@ const smPost = ({id}) => {
       setMuted(!muted);
       videoRef.current.muted = !muted;
     };
+
+    useEffect(() => {
+      const adjustImageHeight = () => {
+        if (imageRef.current) {
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          if (imageRef.current.height > 0.6 * viewportHeight) {
+            imageRef.current.style.height = '80vh';
+          } else {
+            imageRef.current.style.height = 'auto';
+          }
+        }
+      };
+  
+      adjustImageHeight();
+  
+      window.addEventListener('resize', adjustImageHeight);
+  
+      return () => {
+        window.removeEventListener('resize', adjustImageHeight);
+      };
+    }, []);
   
     return (
       <>
@@ -58,7 +75,7 @@ const smPost = ({id}) => {
           {id.type === 'image' && <img src={id.imageURL} alt="" />}
           {id.type === 'video' && (
             <div className="w-full relative overflow-hidden cursor-pointer">
-              <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick}>
+              <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick} style={{maxHeight: '80vh', width:'100%', objectFit: 'cover'}}>
                 <source src={id.videoURL} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
