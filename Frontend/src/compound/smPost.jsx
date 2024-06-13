@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
   import VolumeOffIcon from '@mui/icons-material/VolumeOff';
   import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
-const smPost = ({id}) => {
+const smPost = ({id, onFetched}) => {
   
   
     const [muted, setMuted] = useState(true);
@@ -68,6 +68,22 @@ const smPost = ({id}) => {
         window.removeEventListener('resize', adjustImageHeight);
       };
     }, []);
+
+    useEffect(() => {
+      if (id.type === 'image') {
+        const img = new Image();
+        img.src = id.imageURL;
+        img.onload = () => {
+          onFetched(id.id);
+        };
+      } else if (id.type === 'video') {
+        const video = document.createElement('video');
+        video.src = id.videoURL;
+        video.onloadeddata = () => {
+          onFetched(id.id);
+        };
+      }
+    }, [id, onFetched]);
   
     return (
       <>

@@ -41,6 +41,12 @@ import useSendMessage from '../../hook/useSendMessage';
 
 const smPost = ({user, post}) => {
 
+    const [postersFetched, setPostersFetched] = useState({});
+
+    const handlePosterFetched = (postId) => {
+        setPostersFetched((prev) => ({ ...prev, [postId]: true }));
+      };
+
     const {loading, users} = useGetUser();
   
     const {selectedUser, setUser} = Conversation();
@@ -345,8 +351,8 @@ const handleSubmit = async (e) => {
             {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
-            {initialValue.map((post, idx) => {
-                return (                   
+            {initialValue.map((post, idx) => (    
+                postersFetched[post.id] ? (            
                     <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                         <div className=' crd w-full relative flex align-middle py-2'>
                             <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
@@ -366,7 +372,7 @@ const handleSubmit = async (e) => {
                             </div>
                         </div>
                         <div className='w-full flex justify-center align-middle'>
-                            <SmPoster id={post} />
+                            <SmPoster id={post} onFetched={handlePosterFetched}/>
                         </div>
                         <div className='flex flex-col align-middle py-2'>
                             <div className='ftr-hd flex flex-row  w-full justify-between'>
@@ -408,8 +414,8 @@ const handleSubmit = async (e) => {
                             </div>
                         </div>
                     </div>
-                )
-            })}
+                ) : null
+            ))}
         </div>
         <div className='mb-40'></div>
     </div>
