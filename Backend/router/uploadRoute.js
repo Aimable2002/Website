@@ -8,7 +8,7 @@ import Follow from '../Model/followModel.js'
 import {io} from '../socket/socket.io.js'
 
 
-// import cloudinary from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
 const router = express.Router();
 
@@ -31,30 +31,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
-// router.post('/profile', protectRoute, upload.single("file"), async(req, res) => {
-//     try{
-//         if(!req.file){
-//             return res.status(400).json('not file found')
-//         }
-//         const userId = req.user._id;
-//         console.log('userId :', userId);
-//         const profile = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
-
-        
-//         const user = await User.findById(userId)
-//         if(!user){
-//             return res.status(404).json('user not found')
-//         }
-//         user.profile = profile
-//         await user.save()
-
-//         console.log('upload complete :', req.file);
-//         res.status(201).json('upload complete')
-//     }catch(error){
-//         console.log('fail to upload', error.message);
-//         res.status(500).json({error: 'fail to upload'})
-//     }
-// })
 
 
 // router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
@@ -125,15 +101,28 @@ const upload = multer({ storage: storage });
 //     }
 //   });
 
+const uploadToCloudinary = (buffer) => {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+      stream.end(buffer);
+    });
+  };
+  
 router.post('/profile', protectRoute, upload.single("file"), async (req, res) => {
     try {
+        console.log('req file :', req.file)
             if (!req.file) {
                 return res.status(400).json({ error: 'No file uploaded' });
             }
-            const result = await cloudinary.uploader.upload(req.file, {
-                folder: 'profile_picture',
-                public_id: 'profile'
-            });
+            const result = await uploadToCloudinary(req.file.buffer);
+            console.log('result :', result)
+
             const userId = req.user._id;
             const user = await User.findById(userId);
             if (!user) {
@@ -152,52 +141,94 @@ router.post('/profile', protectRoute, upload.single("file"), async (req, res) =>
 
 
 
-router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
-  try {
+// router.post('/posted', protectRoute, upload.single("file"), async(req, res) => {
+//   try {
+//       if (!req.file) {
+//           return res.status(400).json('no file found');
+//       }
+
+//       const userId = req.user._id;
+//       const fileExtension = path.extname(req.file.originalname).toLowerCase();
+//       let fileType = 'image';
+
+//       if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi') {
+//           fileType = 'video';
+//       }
+
+//       let url;
+//       if (fileType === 'video') {
+//           url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
+          
+//       } else {
+//           url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
+//       }
+
+      
+
+//       let user = await Post.findById(userId);
+//       if (!user) {
+//           user = await Post.create({
+//               userId: userId,
+//               type: fileType,
+//               imageURL: fileType === 'image' ? url : '',
+//               videoURL: fileType === 'video' ? url : '',
+//           });
+//           await user.save();
+//       } else {
+//           user.type = fileType;
+//           user.imageURL = fileType === 'image' ? url : '';
+//           user.videoURL = fileType === 'video' ? url : '';
+//           await user.save();
+//       }
+
+//       io.emit('postUploaded', { type: fileType, url: url });
+//       console.log('upload complete:', req.file);
+//       res.status(201).json({ message: 'post upload complete', type: fileType, imageURL: url });
+//   } catch (error) {
+//       console.log('fail to upload', error.message);
+//       res.status(500).json({ error: 'fail to upload' });
+//   }
+// });
+
+
+router.post('/posted', protectRoute, upload.single("file"), async (req, res) => {
+    try {
       if (!req.file) {
-          return res.status(400).json('no file found');
+        return res.status(400).json('no file found');
       }
-
+  
       const userId = req.user._id;
+      console.log('userId :', userId)
       const fileExtension = path.extname(req.file.originalname).toLowerCase();
-      let fileType = 'image';
-
-      if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi') {
-          fileType = 'video';
+      let resourceType = 'image';
+      let folderName = 'post';
+  
+      if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi'|| fileExtension === '.mpeg' || fileExtension === '.webm' || fileExtension === '.3gpp') {
+        resourceType = 'video';
+        folderName = 'videos';
       }
+  
+      const result = await uploadToCloudinary(req.file.buffer, folderName, resourceType);
+      const url = result.secure_url;
+  
+    //   const user = await Post.findById(userId);
 
-      let url;
-      if (fileType === 'video') {
-          url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
-      } else {
-          url = `https://website-s9ue.onrender.com/images/${userId}-${req.file.originalname}`;
-      }
-
-      let user = await Post.findById(userId);
-
-      if (!user) {
-          user = await Post.create({
-              userId: userId,
-              type: fileType,
-              imageURL: fileType === 'image' ? url : '',
-              videoURL: fileType === 'video' ? url : '',
-          });
-          await user.save();
-      } else {
-          user.type = fileType;
-          user.imageURL = fileType === 'image' ? url : '';
-          user.videoURL = fileType === 'video' ? url : '';
-          await user.save();
-      }
-
-      io.emit('postUploaded', { type: fileType, url: url });
-      console.log('upload complete:', req.file);
-      res.status(201).json({ message: 'post upload complete', type: fileType, imageURL: url });
-  } catch (error) {
+      const post = new Post({
+        userId: userId,
+        type: resourceType,
+        imageURL: resourceType === 'image' ? url : '',
+        videoURL: resourceType === 'video' ? url : '',
+      });
+      await post.save();
+      io.emit('postUploaded', { type: resourceType, url: url });
+  
+      console.log('upload complete:', url);
+      res.status(201).json({ message: 'post upload complete', type: resourceType, imageURL: url });
+    } catch (error) {
       console.log('fail to upload', error.message);
       res.status(500).json({ error: 'fail to upload' });
-  }
-});
+    }
+  });
 
 
 router.get('/getPost', protectRoute, async(req, res) => {
