@@ -7,11 +7,11 @@ import { getRecievedSocketId, io } from '../socket/socket.io.js';
 export const sendMessages = async (req, res) => {
     try{
         const {message} = req.body;
-        //console.log('messages :', message)
+        console.log('messages :', message)
         const {id: senderId} = req.user;
-        //console.log('senderId :', senderId)
+        console.log('senderId :', senderId)
         const {id: recieverId} = req.params;
-        //console.log('recieverId :', recieverId)
+        console.log('recieverId :', recieverId)
 
         if(!message || !senderId || !recieverId){
             return res.status(409).json('no data presented')

@@ -37,6 +37,8 @@ import SmFollow from '../../compound/smFollow';
 import Like from '../../compound/like';
 import SmPoster from '../../compound/smPost';
 
+import useSendMessage from '../../hook/useSendMessage';
+
 const smPost = ({user, post}) => {
 
     const {loading, users} = useGetUser();
@@ -143,6 +145,21 @@ const handleView = () => {
     console.log('view is clicked')
     setView(!view)
 }
+const [message, setMessage] = useState('');
+  const {sendMessages} = useSendMessage()
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(!message.trim())return;
+
+    await sendMessages(message)
+    setMessage('')
+  }
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -278,7 +295,7 @@ const handleView = () => {
             </form>
           </div>
         </div> */}
-        <div className='w-full flex flex-row overflow-x-auto mt-8'>
+        {/* <div className='w-full flex flex-row overflow-x-auto mt-8'> 
             <div className='btn'>
                 <Button
                     size='sm'
@@ -323,8 +340,8 @@ const handleView = () => {
                     Sure deal
                 </Button>
             </div>
-        </div>
-        <div className='w-full relative flex overflow-y-auto flex-col'>
+        </div> */}
+        <div className='w-full relative flex overflow-y-auto flex-col mt-5'>
             {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
@@ -366,7 +383,24 @@ const handleView = () => {
                                 </div>
                                 <div className='ft-rgt flex self-end  w-2/6 justify-around align-middle'>
                                     <div><ShareIcon /></div>
-                                    <div>DM</div>
+                                    {/* You can open the modal using document.getElementById('ID').showModal() method */}
+                                    <div onClick={()=>document.getElementById('my_modal_3').showModal()}>DM</div>
+                                    <dialog id="my_modal_3" className="modal">
+                                        <div className="modal-box" onSubmit={handleSubmit}>
+                                            <form method="dialog">
+                                            {/* if there is a button in form, it will close the modal */}
+                                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                            </form>
+                                            <textarea
+                                                name="" 
+                                                rows='2' 
+                                                id=""
+                                                value={message}
+                                                onChange={(e) => setMessage(e.target.value)}
+                                                onKeyDown={handleKeyPress}></textarea>
+                                        </div>
+                                        <button>send</button>
+                                    </dialog>
                                 </div>
                             </div>
                             <div className='ft-ftr flex flex-row w-full  align-middle'>
