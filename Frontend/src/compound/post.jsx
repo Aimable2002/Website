@@ -152,7 +152,7 @@ const Post = ({ post }) => {
     };
 
     if (post.type === 'image' && img) {
-      adjustHeight(img);
+      // adjustHeight(img);
     }
 
     if (post.type === 'video' && video) {

@@ -33,7 +33,7 @@ const useGetMessage = () => {
       if (selectedUser?._id) {
         getMessages();
       } else {
-        setMessages([]); // Clear messages when selectedUser changes
+        setMessages([]); 
       }
   },[selectedUser?._id, setMessages])
   return { loading, messages }
