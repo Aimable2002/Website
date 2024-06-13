@@ -22,7 +22,7 @@ const useGetConversations = (user) => {
         });
         const data = res.data;
         //console.log('data conv :', data)
-        setMessages(data)
+        setConversations(data)
       } catch (error) {
         console.log('Error fetching conversations', error.message);
       } finally {
