@@ -101,15 +101,18 @@ const upload = multer({ storage: storage });
 //     }
 //   });
 
-const uploadToCloudinary = (buffer) => {
+const uploadToCloudinary = (buffer, folderName) => {
     return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: 'image', folder: folderName },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
-      });
+      );
       stream.end(buffer);
     });
   };
@@ -120,7 +123,8 @@ router.post('/profile', protectRoute, upload.single("file"), async (req, res) =>
             if (!req.file) {
                 return res.status(400).json({ error: 'No file uploaded' });
             }
-            const result = await uploadToCloudinary(req.file.buffer);
+            let folderName = 'profile_upload'
+            const result = await uploadToCloudinary(req.file.buffer, folderName);
             console.log('result :', result)
 
             const userId = req.user._id;
