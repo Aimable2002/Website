@@ -190,7 +190,21 @@ router.post('/profile', protectRoute, upload.single("file"), async (req, res) =>
 //   }
 // });
 
-
+const uploadToCloudinaryPost = (buffer, folderName, resourceType) => {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: resourceType, folder: folderName },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+      stream.end(buffer);
+    });
+  }
 router.post('/posted', protectRoute, upload.single("file"), async (req, res) => {
     try {
       if (!req.file) {
@@ -201,16 +215,15 @@ router.post('/posted', protectRoute, upload.single("file"), async (req, res) => 
       console.log('userId :', userId)
       const fileExtension = path.extname(req.file.originalname).toLowerCase();
       let resourceType = 'image';
-      let folderName = 'post';
+      let folderName = 'post_upload';
   
-      if (fileExtension === '.mp4' || fileExtension === '.mov' || fileExtension === '.avi'|| fileExtension === '.mpeg' || fileExtension === '.webm' || fileExtension === '.3gpp') {
+      if (['.mp4', '.mov', '.avi', '.mpeg', '.webm', '.3gpp'].includes(fileExtension)) {
         resourceType = 'video';
-        folderName = 'videos';
       }
   
-      const result = await uploadToCloudinary(req.file.buffer, folderName, resourceType);
+      const result = await uploadToCloudinaryPost(req.file.buffer, folderName, resourceType);
       const url = result.secure_url;
-  
+      console.log('resourceType :', resourceType)
     //   const user = await Post.findById(userId);
 
       const post = new Post({
