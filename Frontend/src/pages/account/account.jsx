@@ -56,7 +56,7 @@ const account = () => {
   }
 
   const getProfileImageUrl = (selectedUser) => {
-    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+    return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.gender === 'Male' ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
   };
 
   const[fileChange, setFileChange] = useState();
