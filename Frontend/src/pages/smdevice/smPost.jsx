@@ -39,6 +39,8 @@ import SmPoster from '../../compound/smPost';
 
 import useSendMessage from '../../hook/useSendMessage';
 
+import MessageSkeleton from '../../skeleton/skeleton';
+
 const smPost = ({user, post}) => {
 
     const [postersFetched, setPostersFetched] = useState({});
@@ -166,6 +168,7 @@ const handleSubmit = async (e) => {
       handleSubmit(e);
     }
   };
+  console.log('initial value :', initialValue)
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -351,8 +354,8 @@ const handleSubmit = async (e) => {
             {/*{users
             .filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
             .map((user, idx) => ( */}
-            {initialValue.map((post, idx) => (      
-                    <div className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
+            {!loading && initialValue.length > 0 && initialValue.map((post, idx) => (      
+                    <div key={idx} className='crd-area w-full flex  gap-1 flex-col px-1  bg-base-100'>
                         <div className=' crd w-full relative flex align-middle py-2'>
                             <div className='px-2 crd-hd w-full flex flex-row justify-between align-middle'>
                                 <div className='crd-prof flex flex-row gap-4'>
@@ -416,6 +419,10 @@ const handleSubmit = async (e) => {
                         </div>
                     </div>
             ))}
+            {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+            {!loading && initialValue.length === 0 && (
+				<p className='text-center'>no post</p>
+			)}
         </div>
         <div className='mb-40'></div>
     </div>

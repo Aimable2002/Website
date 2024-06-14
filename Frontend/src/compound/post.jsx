@@ -131,10 +131,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
+import MessageSkeleton from '../skeleton/skeleton';
+
 const Post = ({ post }) => {
   const [muted, setMuted] = useState(true);
   const videoRef = useRef(null);
   const imgRef = useRef(null);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -196,12 +200,40 @@ const Post = ({ post }) => {
     videoRef.current.muted = !muted;
   };
 
+  const handleImageLoad = () => {
+    setLoading(false);
+  };
+
+  const handleVideoLoad = () => {
+    setLoading(false);
+  };
+
   return (
     <figure>
-      {post.type === 'image' && <img ref={imgRef} src={post.imageURL} alt="" />}
+      {post.type === 'image' && (
+        <>
+          {loading && <MessageSkeleton height="60vh" />}
+          <img 
+            ref={imgRef} 
+            src={post.imageURL} 
+            alt=""
+            style={{ display: loading ? 'none' : 'block' }}
+            onLoad={handleImageLoad} 
+            />
+        </>
+      )}
       {post.type === 'video' && (
         <div className="w-full relative overflow-hidden cursor-pointer">
-          <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick} >
+          {loading && <MessageSkeleton height="80vh" />}
+          <video 
+            ref={videoRef} 
+            autoPlay 
+            loop 
+            muted={muted} 
+            onClick={handleVideoClick} 
+            onLoadedData={handleVideoLoad}
+            style={{ maxHeight: '80vh', width: '100%', objectFit: 'cover', display: loading ? 'none' : 'block' }}
+          >
             <source src={post.videoURL} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
