@@ -5,7 +5,7 @@ const MobileMoney = () => {
     const [email, setEmail] = useState('');
     const [amount, setAmount] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [currency, setCurrency] = useState('RWF'); // Default to RWF for Uganda Mobile Money
+    const [currency, setCurrency] = useState('RWF'); // Default to RWF for Rwanda Mobile Money
 
     const handlePayment = async () => {
         try {

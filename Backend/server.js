@@ -76,12 +76,12 @@ app.post('/create-mobile-money-payment', async (req, res) => {
     const { amount, email, phone_number, currency } = req.body;
 
     try {
-        const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_uganda', {
+        const response = await axios.post('https://api.flutterwave.com/v3/charges', {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount,
             currency,
             redirect_url: 'https://website-s9ue.onrender.com/', // Replace with your frontend success URL
-            payment_type: 'mobilemoneyuganda', // Change this based on the type of mobile money (e.g., mobilemoneyghana, mobilemoneyrwanda, etc.)
+            payment_type: 'mobilemoneyrwanda', // Change this based on the type of mobile money (e.g., mobilemoneyghana, mobilemoneyrwanda, etc.)
             phone_number,
             customer: {
                 email,
