@@ -44,8 +44,11 @@ const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 
 app.post('/create-payment', async (req, res) => {
     const { amount, email, currency } = req.body;
-
+    
     try {
+        console.log('amount :', amount)
+        console.log('email :', email)
+        console.log('currency :', currency)
         const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount,

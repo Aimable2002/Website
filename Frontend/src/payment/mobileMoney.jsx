@@ -9,7 +9,7 @@ const MobileMoney = () => {
 
     const handlePayment = async () => {
         try {
-            const response = await axios.post('https://website-s9ue.onrender.com/create-mobile-money-payment', {
+            const response = await axios.post('https://website-s9ue.onrender.com/create-mobile-money-payment', {}, {
                 amount,
                 currency,
                 email,
