@@ -46,7 +46,7 @@ app.post('/create-payment', async (req, res) => {
     const { amount, email, currency } = req.body;
 
     try {
-        const response = await axios.post('https://api.flutterwave.com/v3/payments', {
+        const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount,
             currency,
@@ -72,7 +72,38 @@ app.post('/create-payment', async (req, res) => {
     }
 });
 
+app.post('/create-mobile-money-payment', async (req, res) => {
+    const { amount, email, phone_number, currency } = req.body;
 
+    try {
+        const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_uganda', {
+            tx_ref: `hooli-tx-${Date.now()}`,
+            amount,
+            currency,
+            redirect_url: 'https://website-s9ue.onrender.com/', // Replace with your frontend success URL
+            payment_type: 'mobilemoneyuganda', // Change this based on the type of mobile money (e.g., mobilemoneyghana, mobilemoneyrwanda, etc.)
+            phone_number,
+            customer: {
+                email,
+                phonenumber: phone_number,
+            },
+            customizations: {
+                title: 'Payment for items in cart',
+                description: 'Payment for items in cart',
+            },
+        }, {
+            headers: {
+                Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error creating payment link:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
+    }
+});
 
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));
 

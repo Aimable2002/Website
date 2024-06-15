@@ -14,6 +14,7 @@ import SmReg from './pages/smReg/smReg.jsx';
 import useScreenSize from './resize/resize.jsx';
 
 import Payment from './payment/payment.jsx';
+import MobileMoney from './payment/mobileMoney.jsx';
 
 function App() {
 const {AuthUser} = useAuthContext();
@@ -42,6 +43,7 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
           <Route path='/smChat/:id' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} />
           {/* <Route path='/smReg' element={AuthUser ? <Navigate to='/' /> : <SmReg />} /> */}
           <Route path='/payment' element={<Payment />} />
+          <Route path='/mobile' element={<MobileMoney />} />
         </Routes>
       ) : (
         <Routes>
@@ -51,6 +53,7 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
           <Route path='account' element={AuthUser ? <Account /> : <Navigate to='sign' />} />
           <Route path='/upload' element={<Upload />} />
           <Route path='/payment' element={<Payment />} />
+          <Route path='/mobile' element={<MobileMoney />} />
         </Routes>
       )}
     </div>
