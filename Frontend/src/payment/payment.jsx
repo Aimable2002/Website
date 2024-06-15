@@ -7,7 +7,7 @@ const Payment = () => {
 
     const handlePayment = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/create-payment', {
+            const response = await axios.post('https://website-s9ue.onrender.com/create-payment', {
                 amount,
                 currency: 'USD',
                 email,
