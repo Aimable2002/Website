@@ -56,7 +56,7 @@ const handleSubmit2 = async(e) => {
               {!isClicked ? 'Welcome Back !!!' : 'Welcome !!'}
             </h1>
             <p className='flex justify-center align-middle'>
-              {!isClicked ? 'stay connect to meet new community' : 'this site is not for under 18 user'}
+              {!isClicked ? 'stay connect to meet new community' : 'this site is for date purpose'}
             </p>
             <div className='btn flex justify-center align-middle mt-8 bg-slate-500'>
               <Button 

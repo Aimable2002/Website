@@ -1,37 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const Payment = () => {
+    const [email, setEmail] = useState('');
+    const [amount, setAmount] = useState('');
+
     const handlePayment = async () => {
         try {
             const response = await axios.post('http://localhost:4000/create-payment', {
-                amount: 1000,
-                currency: 'FRW', // Change to the appropriate currency
-                externalId: '123456',
-                payer: {
-                    partyIdType: 'MSISDN',
-                    partyId: '0787462384' // Replace with the payer's phone number
-                },
-                payerMessage: 'Payment for services',
-                payeeNote: 'Thank you for your business'
+                amount,
+                currency: 'USD',
+                email,
             });
 
             if (response.data.status === 'success') {
-                console.log('Payment initiated successfully');
+                window.location.href = response.data.data.link;
             } else {
-                console.error('Payment initiation failed');
+                alert('Payment initiation failed.');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error initiating payment:', error);
+            alert('An error occurred while initiating payment.');
         }
     };
 
     return (
         <div>
-            <h1>MTN Mobile Money Payment</h1>
+            <h1>Flutterwave Payment</h1>
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+                type="number"
+                placeholder="Amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+            />
             <button onClick={handlePayment}>Pay Now</button>
         </div>
     );
 };
 
 export default Payment;
+

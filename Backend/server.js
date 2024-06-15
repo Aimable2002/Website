@@ -5,6 +5,8 @@ import path from 'path'
 import bodyParser from 'body-parser';
 import { v4 as uuidv4 } from 'uuid';
 
+import axios from 'axios'
+
 import connectDB from './Model/db/connectDb.js';
 
 import authRoute from './router/authRoute.js'
@@ -37,96 +39,39 @@ app.use('/api/message', messageRoute);
 app.use('/api/users', userRoute)
 app.use('/api/action', actionRoute)
 
-const MTN_API_BASE_URL = 'https://sandbox.momodeveloper.mtn.com';
-const API_PRIMARY_KEY = '0ea09030d08f4a91bf1036e7cfdc2ee7'; // Replace with your MTN primary key
-const CALLBACK_HOST = 'https://website-s9ue.onrender.com'; // Replace with your callback URL
+const FLW_PUBLIC_KEY = process.env.FLW_PUBLIC_KEY;
+const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 
-// Function to create API user
-const createApiUser = async () => {
-    const apiUserId = uuidv4();
-    try {
-        await axios.post(
-            `${MTN_API_BASE_URL}/v1_0/apiuser`,
-            { providerCallbackHost: CALLBACK_HOST },
-            { headers: { 'Ocp-Apim-Subscription-Key': API_PRIMARY_KEY, 'Content-Type': 'application/json' } }
-        );
-        console.log(`API User created with ID: ${apiUserId}`);
-        return apiUserId;
-    } catch (error) {
-        console.error('Error creating API user:', error.response.data);
-    }
-};
-
-// Function to generate API key
-const generateApiKey = async (apiUserId) => {
-    try {
-        const response = await axios.post(
-            `${MTN_API_BASE_URL}/v1_0/apiuser/${apiUserId}/apikey`,
-            {},
-            { headers: { 'Ocp-Apim-Subscription-Key': API_PRIMARY_KEY } }
-        );
-        const apiKey = response.data.apiKey;
-        console.log(`API Key: ${apiKey}`);
-        return apiKey;
-    } catch (error) {
-        console.error('Error generating API key:', error.response.data);
-    }
-};
-
-// Function to get access token
-const getAccessToken = async (apiUserId, apiKey) => {
-    const credentials = Buffer.from(`${apiUserId}:${apiKey}`).toString('base64');
-    try {
-        const response = await axios.post(
-            `${MTN_API_BASE_URL}/collection/token/`,
-            {},
-            {
-                headers: {
-                    'Ocp-Apim-Subscription-Key': API_PRIMARY_KEY,
-                    'Authorization': `Basic ${credentials}`
-                }
-            }
-        );
-        const accessToken = response.data.access_token;
-        console.log(`Access Token: ${accessToken}`);
-        return accessToken;
-    } catch (error) {
-        console.error('Error obtaining access token:', error.response.data);
-    }
-};
-
-// Create a payment request
 app.post('/create-payment', async (req, res) => {
-    const { amount, currency, externalId, payer, payerMessage, payeeNote } = req.body;
-    const referenceId = uuidv4(); // Unique reference ID for the payment request
+    const { amount, email, currency } = req.body;
 
     try {
-        const apiUserId = await createApiUser();
-        const apiKey = await generateApiKey(apiUserId);
-        const accessToken = await getAccessToken(apiUserId, apiKey);
-
-        const response = await axios.post(`${MTN_API_BASE_URL}/collection/v1_0/requesttopay`, {
+        const response = await axios.post('https://api.flutterwave.com/v3/payments', {
+            tx_ref: `hooli-tx-${Date.now()}`,
             amount,
             currency,
-            externalId,
-            payer,
-            payerMessage,
-            payeeNote
+            redirect_url: 'http://localhost:2000/account',
+            customer: {
+                email,
+            },
+            customizations: {
+                title: 'Payment for items in cart',
+                description: 'Payment for items in cart',
+            },
         }, {
             headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'X-Reference-Id': referenceId,
-                'X-Target-Environment': 'sandbox', // Change to 'production' when going live
-                'Ocp-Apim-Subscription-Key': API_PRIMARY_KEY,
-                'Content-Type': 'application/json'
-            }
+                Authorization: `Bearer ${FLW_SECRET_KEY}`,
+                'Content-Type': 'application/json',
+            },
         });
 
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating payment:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
 });
+
 
 
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));

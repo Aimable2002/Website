@@ -58,7 +58,7 @@ const smReg = () => {
             <div className='ctn w-full flex mt-40'>
                 <div className='hd flex w-full flex-col align-middle justify-center'>
                     <h1 className='text-center mb-10'>Welcome!!!!</h1>
-                    <p className='text-center text-red-500'>This site is for adults only <br /> by using this site <br /> u confirm that you are above 18 yrs old</p>
+                    <p className='text-center text-red-500'>This site is for dating <br /> by using this site <br /> u confirm that you are adult enought date</p>
                 </div>
             </div>
             <div className='w-full flex justify-center mt-10'>
