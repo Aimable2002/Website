@@ -50,7 +50,7 @@ app.post('/create-payment', async (req, res) => {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount,
             currency,
-            redirect_url: 'http://localhost:2000/account',
+            redirect_url: 'https://website-s9ue.onrender.com/account',
             customer: {
                 email,
             },
