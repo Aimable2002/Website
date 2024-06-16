@@ -45,13 +45,16 @@ const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 app.post('/create-payment', async (req, res) => {
 
     const { amount, email, currency } = req.body;
+
+    console.log('colled')
+     
     
     try {
         const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
             tx_ref: `hooli-tx-${Date.now()}`,
-            amount,
+            amount: amount,
             currency,
-            redirect_url: 'https://website-s9ue.onrender.com/account',
+            redirect_url: 'http://localhost:2000/account',
             customer: {
                 email,
             },
@@ -65,7 +68,10 @@ app.post('/create-payment', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
-
+        console.log('email :', email)
+        console.log('currency :', currency)
+        console.log('phone_number :', amount)
+        console.log('response.data :', response.data)
         res.json(response.data);
     } catch (error) {
         console.error('Error creating payment:', error.response ? error.response.data : error.message);
@@ -76,21 +82,23 @@ app.post('/create-payment', async (req, res) => {
 app.post('/mobile', async (req, res) => {
     console.log('called')
     const { amount, email, phoneNumber, currency } = req.body;
-    console.log('amount :', amount)
-        console.log('email :', email)
-        console.log('currency :', currency)
-        console.log('phone_number :', phoneNumber)
+    // console.log('amount :', amount)
+    //     console.log('email :', email)
+    //     console.log('currency :', currency)
+    //     console.log('phone_number :', phoneNumber)
 
     try {
-        const response = await axios.post('https://api.flutterwave.com/v3/charges', {
+        // const response = await axios.post('https://api.flutterwave.com/v3/charges', {
+        const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
             tx_ref: `hooli-tx-${Date.now()}`,
-            amount,
-            currency,
-            redirect_url: 'https://website-s9ue.onrender.com/', // Replace with your frontend success URL
-            payment_type: 'mobilemoneyrwanda', // Change this based on the type of mobile money (e.g., mobilemoneyghana, mobilemoneyrwanda, etc.)
-            phoneNumber,
+            amount: amount,
+            currency: currency,
+            email: email,
+            payment_type: "card",
+            redirect_url: 'https://website-s9ue.onrender.com/', 
+            phone_number: phoneNumber,
             customer: {
-                email,
+                email: email,
             },
             customizations: {
                 title: 'Payment for items in cart',
@@ -102,7 +110,7 @@ app.post('/mobile', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
-
+        console.log('response :', response.data)
         res.json(response.data);
     } catch (error) {
         console.error('Error creating payment link:', error.response ? error.response.data : error.message);

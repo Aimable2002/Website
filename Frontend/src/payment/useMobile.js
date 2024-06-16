@@ -7,7 +7,7 @@ const useMobile = () => {
   const applyPayment = async ({email, amount, phoneNumber, currency}) => {
     setLoading(true)
     try{
-        const res = await axios.post('/mobile', {
+        const res = await axios.post('https://website-s9ue.onrender.com/mobile', {
             email,
             amount,
             phoneNumber,
