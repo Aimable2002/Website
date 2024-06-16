@@ -14,12 +14,17 @@ const useMobile = () => {
             currency
         })
         const data = res.data
-        console.log('data')
+        console.log('data:', data.meta.authorization.redirect)
         if(!data){
             throw new Error ('error with data ')
         }
         console.log(data)
-        window.location ='/'
+        // window.location ='/'
+        if (data && data.meta && data.meta.authorization && data.meta.authorization.redirect) {
+            window.location.href = data.meta.authorization.redirect;
+        } else {
+            console.log('Unexpected response format', response.data);
+        }
     }catch(error){
         console.log('error :', error.message)
     }finally{

@@ -54,7 +54,7 @@ app.post('/create-payment', async (req, res) => {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount: amount,
             currency,
-            redirect_url: 'http://localhost:2000/account',
+            redirect_url: 'https://website-s9ue.onrender.com/account',
             customer: {
                 email,
             },
@@ -106,6 +106,8 @@ app.post('/mobile', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
+        console.log('amount :', amount)
+        console.log('phoneNumber :', phoneNumber)
         console.log('response :', response.data)
         res.json(response.data);
     } catch (error) {
