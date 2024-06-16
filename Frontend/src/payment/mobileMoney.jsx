@@ -1,31 +1,28 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import useMobile from './useMobile';
 
 const MobileMoney = () => {
-    const [email, setEmail] = useState('');
-    const [amount, setAmount] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [currency, setCurrency] = useState('RWF'); // Default to RWF for Rwanda Mobile Money
-
-    const handlePayment = async () => {
-        try {
-            const response = await axios.post('https://website-s9ue.onrender.com/create-mobile-money-payment', {}, {
-                amount,
-                currency,
-                email,
-                phone_number: phoneNumber,
-            });
-
-            if (response.data.status === 'success') {
-                window.location.href = response.data.data.link;
-            } else {
-                alert('Payment initiation failed.');
-            }
-        } catch (error) {
-            console.error('Error initiating payment:', error);
-            alert('An error occurred while initiating payment.');
-        }
-    };
+    // const [email, setEmail] = useState('');
+    // const [amount, setAmount] = useState('');
+    // const [phoneNumber, setPhoneNumber] = useState('');
+    // const [currency, setCurrency] = useState('RWF'); // Default to RWF for Rwanda Mobile Money
+    const [input, setInput] = useState({
+        email: "",
+        amount: "",
+        phoneNumber: "",
+        currency: "RWF"
+      })
+    const { loading, applyPayment } = useMobile();
+      const handlePayment = async(e) => {
+        e.preventDefault();
+        const {amount, email, phoneNumber, currency} = input
+        console.log('inputs :', input)
+        await applyPayment(input)
+      }
+    // const handlePayment = async () => {
+       
+    // };
 
     return (
         <div>
@@ -33,22 +30,22 @@ const MobileMoney = () => {
             <input
                 type="email"
                 placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={input.email}
+                onChange={(e) => setInput({...input, email: e.target.value})}
             />
             <input
                 type="number"
                 placeholder="Amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                value={input.amount}
+                onChange={(e) => setInput({...input, amount: e.target.value})}
             />
             <input
                 type="tel"
                 placeholder="Phone Number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={input.phoneNumber}
+                onChange={(e) => setInput({...input, phoneNumber: e.target.value})}
             />
-            <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
+            <select value={input.currency} onChange={(e) => setInput({...input, currency: e.target.value})}>
                 <option value="UGX">UGX (Uganda)</option>
                 <option value="GHS">GHS (Ghana)</option>
                 <option value="RWF">RWF (Rwanda)</option>

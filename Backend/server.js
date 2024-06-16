@@ -43,12 +43,10 @@ const FLW_PUBLIC_KEY = process.env.FLW_PUBLIC_KEY;
 const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 
 app.post('/create-payment', async (req, res) => {
+
     const { amount, email, currency } = req.body;
     
     try {
-        console.log('amount :', amount)
-        console.log('email :', email)
-        console.log('currency :', currency)
         const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount,
@@ -75,8 +73,13 @@ app.post('/create-payment', async (req, res) => {
     }
 });
 
-app.post('/create-mobile-money-payment', async (req, res) => {
-    const { amount, email, phone_number, currency } = req.body;
+app.post('/mobile', async (req, res) => {
+    console.log('called')
+    const { amount, email, phoneNumber, currency } = req.body;
+    console.log('amount :', amount)
+        console.log('email :', email)
+        console.log('currency :', currency)
+        console.log('phone_number :', phoneNumber)
 
     try {
         const response = await axios.post('https://api.flutterwave.com/v3/charges', {
@@ -85,10 +88,9 @@ app.post('/create-mobile-money-payment', async (req, res) => {
             currency,
             redirect_url: 'https://website-s9ue.onrender.com/', // Replace with your frontend success URL
             payment_type: 'mobilemoneyrwanda', // Change this based on the type of mobile money (e.g., mobilemoneyghana, mobilemoneyrwanda, etc.)
-            phone_number,
+            phoneNumber,
             customer: {
                 email,
-                phonenumber: phone_number,
             },
             customizations: {
                 title: 'Payment for items in cart',
@@ -96,7 +98,7 @@ app.post('/create-mobile-money-payment', async (req, res) => {
             },
         }, {
             headers: {
-                Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+                Authorization: `Bearer ${FLW_SECRET_KEY}`,
                 'Content-Type': 'application/json',
             },
         });
