@@ -82,10 +82,6 @@ app.post('/create-payment', async (req, res) => {
 app.post('/mobile', async (req, res) => {
     console.log('called')
     const { amount, email, phoneNumber, currency } = req.body;
-    // console.log('amount :', amount)
-    //     console.log('email :', email)
-    //     console.log('currency :', currency)
-    //     console.log('phone_number :', phoneNumber)
 
     try {
         // const response = await axios.post('https://api.flutterwave.com/v3/charges', {
@@ -94,7 +90,7 @@ app.post('/mobile', async (req, res) => {
             amount: amount,
             currency: currency,
             email: email,
-            payment_type: "card",
+            payment_type: "mobilemoneyrwanda",
             redirect_url: 'https://website-s9ue.onrender.com/', 
             phone_number: phoneNumber,
             customer: {
