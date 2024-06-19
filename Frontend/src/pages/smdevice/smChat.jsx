@@ -132,7 +132,7 @@ const navigate = useNavigate();
    return <div>Loading...</div>;
  }
  const getProfileImageUrl = (selectedUser) => {
-   return selectedUser.profile && selectedUser.profile.trim() !== '' ? selectedUser.profile : selectedUser.avatar;
+   return selectedUser.profile || selectedUser.user.profile && selectedUser.user.profile.trim() || selectedUser.profile.trim()  !== '' ? selectedUser.profile || selectedUser.user.profile : selectedUser.gender || selectedUser.user.gender === "Male" ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
  };
   return (
     <div className='w-full flex flex-col overflow-auto'>
@@ -148,7 +148,7 @@ const navigate = useNavigate();
                         </div>
                     </div>
                     <div className='dtl flex align-middle flex-row self-center gap-1 w-full'>
-                        <div style={{fontSize: '14px', alignItems: 'center'}}>{selectedUser.userName}</div>
+                        <div style={{fontSize: '14px', alignItems: 'center'}}>{selectedUser.userName || selectedUser.user.userName}</div>
                         <div style={{fontSize: '14px', alignItems: 'center'}}>Is</div>
                         <div style={{fontSize: '14px', alignItems: 'center'}}>{isOnline ? 'online' : 'offline'}</div>
                     </div>

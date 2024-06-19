@@ -20,13 +20,10 @@ const MobileMoney = () => {
         console.log('inputs :', input)
         await applyPayment(input)
       }
-    // const handlePayment = async () => {
-       
-    // };
 
     return (
         <div>
-            <h1>Flutterwave Mobile Money Payment</h1>
+            <h1>Mobile Money Payment</h1>
             <input
                 type="email"
                 placeholder="Email"

@@ -19,7 +19,6 @@ const useMobile = () => {
             throw new Error ('error with data ')
         }
         console.log(data)
-        // window.location ='/'
         if (data && data.meta && data.meta.authorization && data.meta.authorization.redirect) {
             window.location.href = data.meta.authorization.redirect;
         } else {

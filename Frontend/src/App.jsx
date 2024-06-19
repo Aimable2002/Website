@@ -16,6 +16,8 @@ import useScreenSize from './resize/resize.jsx';
 import Payment from './payment/payment.jsx';
 import MobileMoney from './payment/mobileMoney.jsx';
 
+import Private from './pages/account/private.jsx'
+
 function App() {
 const {AuthUser} = useAuthContext();
 const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
@@ -36,7 +38,7 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
           <Route path='sign' element={AuthUser ? <Navigate to='/' /> : <SmReg />} />
           <Route path='/' element={AuthUser ? <SmHome /> : <Navigate to='sign' />} />
           {/* <Route path='/home' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} /> */}
-          <Route path='account' element={AuthUser ? <Account /> : <Navigate to='sign' />} />
+          <Route path='/account' element={AuthUser ? <Account /> : <Navigate to='sign' />} />
           <Route path='/upload' element={AuthUser ? <Upload /> : <Navigate to='sign' />} />
           {/* <Route path='/smHome' element={AuthUser ? <SmHome /> : <Navigate to='sign' />} /> */}
           <Route path='/smPost' element={AuthUser ? <SmPost /> : <Navigate to='sign' />} />
@@ -44,6 +46,7 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
           {/* <Route path='/smReg' element={AuthUser ? <Navigate to='/' /> : <SmReg />} /> */}
           <Route path='/payment' element={<Payment />} />
           <Route path='/mobile' element={<MobileMoney />} />
+          <Route path='/private/:id' element={AuthUser ? <Private /> : <Navigate to='sign' />} />
         </Routes>
       ) : (
         <Routes>

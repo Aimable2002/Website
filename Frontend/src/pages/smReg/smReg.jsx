@@ -117,8 +117,8 @@ const smReg = () => {
                     <div className='btn flex justify-center mt-5'>
                         <Button onClick={handleNext}>Next</Button>
                     </div>
-                    <div className='ftr flex flex-row w-full hover:text-fuchsia-400' onClick={handleLog}>
-                        <p>Already have account <span className='green'>  login</span></p>
+                    <div className='ftr relative mt-10  flex flex-row w-full hover:text-fuchsia-400' onClick={handleLog}>
+                        <p>Already have account <span className='text-fuchsia-500'>  login</span></p>
                     </div>
                 </form>
                 ) : (
@@ -149,8 +149,8 @@ const smReg = () => {
                         <div className='btn flex justify-center mt-5'>
                             <Button type='submit'>Sign up</Button>
                         </div>
-                        <div className='ftr flex flex-row w-full hover:text-fuchsia-400' onClick={(e) => setIsNext(!isNext)}>
-                            <p>Already have account <span className='green'>  login</span></p>
+                        <div className='ftr relative mt-10 flex flex-row w-full hover:text-fuchsia-400' onClick={(e) => setIsNext(!isNext)}>
+                            <p>Already have account <span className='text-fuchsia-500'>  Go Back</span></p>
                         </div>
                     </form>
                 )}
@@ -177,8 +177,8 @@ const smReg = () => {
                     <div className='btn flex justify-center mt-5'>
                         <Button type='submit'>Login</Button>
                     </div>
-                    <div className='ftr flex flex-row w-full hover:text-fuchsia-400' onClick={() => setIsLog(!isLog)}>
-                        <p>dont have account <span className='green'>  signup</span></p>
+                    <div className='ftr relative mt-10  flex flex-row w-full hover:text-fuchsia-400' onClick={() => setIsLog(!isLog)}>
+                        <p>dont have account <span className='text-fuchsia-500'>  signup</span></p>
                     </div>
                 </form>
             </div>

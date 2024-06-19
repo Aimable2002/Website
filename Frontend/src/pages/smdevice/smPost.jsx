@@ -148,11 +148,6 @@ const handleRefProfile = () => {
     const user = getUserById(post.userId)
   })
   
-  const [view, setView] = useState(false)
-const handleView = () => {
-    console.log('view is clicked')
-    setView(!view)
-}
 const [message, setMessage] = useState('');
   const {sendMessages} = useSendMessage()
 const handleSubmit = async (e) => {
@@ -162,13 +157,12 @@ const handleSubmit = async (e) => {
     await sendMessages(message)
     setMessage('')
   }
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-  console.log('initial value :', initialValue)
+  const [path, setPath] = useState()
+  const handlePath = (post) => {
+    setUser(post)
+    navigate(`/private/${post.user._id}`)
+
+  }
   return (
     <div className=' w-screen overflow-auto'>
         <div className='header flex w-full relative bg-base-100' style={{zIndex: '1'}}>
@@ -382,23 +376,23 @@ const handleSubmit = async (e) => {
                             <div className='ftr-hd flex flex-row  w-full justify-between'>
                                 <div className='ft-lft flex flex-row  w-3/5 gap-4'>
                                     <div className='flex flex-row gap-2 align-middle'>
-                                        <div>100</div>
-                                        <div onClick={() => handleView(post)}>{!view ? 'view' : 'viewsss'}</div>
+                                        {/* <button>About Me</button> */}
+                                        {/* <div onClick={() => handleView(post)}>{!view ? 'view' : 'viewsss'}</div> */}
                                     </div>
                                     <Like postId={post}/>
                                     <div className='flex flex-row gap-2 align-middle'>
-                                        <div>20</div>
-                                        <div><ChatBubbleOutlineIcon /></div>
+                                        <button></button>
+                                        {/* <div><ChatBubbleOutlineIcon /></div> */}
                                     </div>
                                 </div>
                                 <div className='ft-rgt flex self-end  w-2/6 justify-around align-middle'>
-                                    <div><ShareIcon /></div>
+                                    <div></div>
                                     {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                                    <div onClick={()=>document.getElementById('my_modal_3').showModal()}>DM</div>
+                                    <button onClick={() => handlePath(post)}>See More</button>
+                                    {/* <div onClick={()=>document.getElementById('my_modal_3').showModal()}>DM</div>
                                     <dialog id="my_modal_3" className="modal">
                                         <div className="modal-box" onSubmit={handleSubmit}>
                                             <form method="dialog">
-                                            {/* if there is a button in form, it will close the modal */}
                                             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                             </form>
                                             <textarea
@@ -410,7 +404,7 @@ const handleSubmit = async (e) => {
                                                 onKeyDown={handleKeyPress}></textarea>
                                         </div>
                                         <button>send</button>
-                                    </dialog>
+                                    </dialog> */}
                                 </div>
                             </div>
                             <div className='ft-ftr flex flex-row w-full  align-middle'>
@@ -421,7 +415,7 @@ const handleSubmit = async (e) => {
             ))}
             {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
             {!loading && initialValue.length === 0 && (
-				<p className='text-center'>no post</p>
+				<p className='text-center'></p>
 			)}
         </div>
         <div className='mb-40'></div>

@@ -125,4 +125,38 @@ export const getAllConversation = async (req, res) => {
       res.status(500).json({ error: 'internal server get message error' });
     }
   };
+
+
+export const getUnreadMessageCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const unreadCounts = await Message.aggregate([
+      { $match: { recieverId: userId, read: false } },
+      { $group: { _id: "$senderId", count: { $sum: 1 } } }
+    ]);
+
+    res.status(200).json(unreadCounts);
+  } catch (error) {
+    console.error('Error getting unread message count:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const markMessagesAsRead = async (req, res) => {
+  try {
+    const { senderId, recieverId } = req.body;
+
+    await Message.updateMany(
+      { senderId, recieverId, read: false },
+      { read: true }
+    );
+
+    res.status(200).json({ message: 'Messages marked as read' });
+  } catch (error) {
+    console.error('Error marking messages as read:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
   
