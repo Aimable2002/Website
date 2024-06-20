@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 const privateRequest = () => {
   const [loading, setLoading] = useState();
-  const upload = async(file) => {
+  const uploadPrivate = async(file) => {
     setLoading(true)
     try{
       const token = localStorage.getItem('online-user')
@@ -27,7 +27,7 @@ const privateRequest = () => {
         setLoading(false)
     }
   }
-  return {upload, loading}
+  return {uploadPrivate, loading}
 }
 
 export default privateRequest

@@ -5,7 +5,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
   import MessageSkeleton from '../skeleton/skeleton';
 
-const smPost = ({id, onFetched}) => {
+const smPrivate = ({id, onFetched}) => {
   
   
     const [muted, setMuted] = useState(true);
@@ -95,23 +95,6 @@ const smPost = ({id, onFetched}) => {
     const handleVideoLoad = () => {
       setLoading(false);
     };
-  
-    // return (
-    //   <>
-    //     <figure>
-    //       {id.type === 'image' && <img src={id.imageURL} alt="" />}
-    //       {id.type === 'video' && (
-    //         <div className="w-full relative overflow-hidden cursor-pointer">
-    //           <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick} style={{maxHeight: '80vh', width:'100%', objectFit: 'cover'}}>
-    //             <source src={id.videoURL} type="video/mp4" />
-    //             Your browser does not support the video tag.
-    //           </video>
-    //           <button onClick={handleVideoMute}>{muted ? <VolumeOffIcon /> : <VolumeUpIcon />}</button>
-    //         </div>
-    //       )}
-    //     </figure>
-    //   </>
-    // );
 
     return (
       <>
@@ -152,4 +135,4 @@ const smPost = ({id, onFetched}) => {
     );
   };
 
-export default smPost
+export default smPrivate

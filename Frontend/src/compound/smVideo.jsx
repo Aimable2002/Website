@@ -5,7 +5,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
   import MessageSkeleton from '../skeleton/skeleton';
 
-const smPost = ({id, onFetched}) => {
+const smVideo = ({id, onFetched}) => {
   
   
     const [muted, setMuted] = useState(true);
@@ -72,69 +72,32 @@ const smPost = ({id, onFetched}) => {
       };
     }, []);
 
-    // useEffect(() => {
-    //   if (id.type === 'image') {
-    //     const img = new Image();
-    //     img.src = id.imageURL;
-    //     img.onload = () => {
-    //       onFetched(id.id);
-    //     };
-    //   } else if (id.type === 'video') {
-    //     const video = document.createElement('video');
-    //     video.src = id.videoURL;
-    //     video.onloadeddata = () => {
-    //       onFetched(id.id);
-    //     };
-    //   }
-    // }, [id, onFetched]);
-
-    const handleImageLoad = () => {
-      setLoading(false);
-    };
+    useEffect(() => {
+        if (id.type === 'video') {
+        const video = document.createElement('video');
+        video.src = id.videoURL;
+        video.onloadeddata = () => {
+          onFetched(id.id);
+        };
+      }
+    }, [id, onFetched]);
   
     const handleVideoLoad = () => {
       setLoading(false);
     };
-  
-    // return (
-    //   <>
-    //     <figure>
-    //       {id.type === 'image' && <img src={id.imageURL} alt="" />}
-    //       {id.type === 'video' && (
-    //         <div className="w-full relative overflow-hidden cursor-pointer">
-    //           <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick} style={{maxHeight: '80vh', width:'100%', objectFit: 'cover'}}>
-    //             <source src={id.videoURL} type="video/mp4" />
-    //             Your browser does not support the video tag.
-    //           </video>
-    //           <button onClick={handleVideoMute}>{muted ? <VolumeOffIcon /> : <VolumeUpIcon />}</button>
-    //         </div>
-    //       )}
-    //     </figure>
-    //   </>
-    // );
 
     return (
       <>
         <figure>
-          {id.type === 'image' && (
-            <>
-              {loading && <MessageSkeleton height="60vh" />}
-              <img
-                src={id.imageURL}
-                alt=""
-                style={{ display: loading ? 'none' : 'block' }}
-                onLoad={handleImageLoad}
-              />
-            </>
-          )}
           {id.type === 'video' && (
-            <div className="w-full relative overflow-hidden cursor-pointer">
+            <div className="w-full relative overflow-hidden cursor-pointer" onClick={handleVideoMute}>
               {loading && <MessageSkeleton height="80vh" />}
               <video
                 ref={videoRef}
                 autoPlay
                 loop
                 muted={muted}
+                
                 onClick={handleVideoClick}
                 onLoadedData={handleVideoLoad}
                 style={{ maxHeight: '80vh', width: '100%', objectFit: 'cover', display: loading ? 'none' : 'block' }}
@@ -142,9 +105,9 @@ const smPost = ({id, onFetched}) => {
                 <source src={id.videoURL} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <button onClick={handleVideoMute}>
+              {/* <button onClick={handleVideoMute}>
                 {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-              </button>
+              </button> */}
             </div>
           )}
         </figure>
@@ -152,4 +115,4 @@ const smPost = ({id, onFetched}) => {
     );
   };
 
-export default smPost
+export default smVideo

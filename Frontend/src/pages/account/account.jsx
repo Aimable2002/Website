@@ -38,8 +38,17 @@ import postRequest from '../../hook/postRequest';
 import useLogout from '../../hook/useLogout.js';
 
 import SmPoster from '../../compound/smPost.jsx';
+import SmVideo from '../../compound/smVideo.jsx';
+import SmPrivate from '../../compound/smPrivate.jsx';
+
+import LockIcon from '@mui/icons-material/Lock';
+import privateRequest from '../../hook/privateRequest.js';
+import useGetPrivatePost from '../../hook/useGetPrivatePost.js';
+
 const account = () => {
   const [profileChange, setProfileChange] = useState()
+  const [privateChange, setPrivateChange] = useState();
+  const [postChange, setPostChange] = useState();
   const {logUser} = usegetLoggedIn(profileChange);
   const {uploadProfile} = uploadRequest();
 
@@ -67,13 +76,15 @@ const account = () => {
     // setFileChange('')
     setProfileChange(new Date().getTime());
   }
-  const { posts } = useGetPost();
+  const { posts } = useGetPost(postChange);
+  const { privates, loading } = useGetPrivatePost(privateChange);
   const useron = localStorage.getItem('online-user');
   const getUser = useron ? JSON.parse(useron)._id : null;
   //console.log('getUser :', getUser);
 
   // Filter posts to include only those where the userId matches
   const filteredPosts = posts.filter(post => post.userId._id === getUser);
+  const filteredprivates = privates.filter(post => post.userId._id === getUser);
 
   const filterUserLoggedIn = posts.filter(post => post.user._id === getUser)
 
@@ -102,18 +113,34 @@ const account = () => {
     e.preventDefault();
     setIsMenu(!isMenu)
   }
+  const [isAdd, setIsAdd] = useState();
 
+  const checkAdd = (e) => {
+    e.preventDefault();
+    setIsAdd(!isAdd)
+  }
   const addPost = useRef();
+  const addPrivate = useRef();
 
   const handleRefPost = () => {
     addPost.current.click();
   }
+  const handleRefPrivate = () => {
+    addPrivate.current.click();
+  }
   const {upload} = postRequest();
+  const {uploadPrivate} = privateRequest();
 
-const [postChange, setPostChange] = useState();
+
 const handlePost = async (e) => {
-  setPostChange(e.target.files[0]);
-  await upload(e.target.files[0])
+  const file = e.target.files[0];
+    await upload(file);
+    setPostChange(new Date().getTime());
+}
+const handlePrivate = async (e) => {
+  const file = e.target.files[0];
+    await uploadPrivate(file);
+    setPrivateChange(new Date().getTime());
 
 }
 
@@ -126,7 +153,7 @@ const getPostInfo = (userId) => {
 };
 
   const [activeButton, setActiveButton] = useState('all');
-  const [isPhoto, setIsPhoto] = useState(false)
+  const [isPhoto, setIsPhoto] = useState(true)
   const [isVideo, setIsVideo] = useState(false)
   const [isPrivacy, setIsPrivacy] = useState(false)
 
@@ -149,24 +176,43 @@ const getPostInfo = (userId) => {
       case 'privacy':
         setIsPrivacy(true)
         break;
+      default:
+        break;
     }
   };
 
 
   return (
     <div className='w-screen flex flex-col overflow-auto'>
-        <div className='flex relative w-full mb-10 h-10 bg-base-100' style={{zIndex: '1'}}>
-            <div className='fixed self-center px-2  h-5 w-full flex flex-row justify-between'>
+        <div className='flex relative w-full mb-4 h-10' style={{zIndex: '1'}}>
+            <div className='fixed self-center px-2  h-10 w-full flex flex-row justify-between bg-base-100'>
                 {logUser.map((user) => (<div>{user.userName}</div>))} 
-                <div className='flex flex-row justify-around gap-2'>
-                <div className='flex flex-row align-middle justify-between gap-2'>
+                <div className='flex flex-row justify-end gap-2 w-3/4'>
+                <div className='flex flex-row align-middle gap-2 justify-end'>
                     <Link to='/smPost'><div><HomeIcon /></div></Link>
-                    <div onClick={handleRefPost}><AddCircleOutlineIcon /></div>
-                        <input type="file"
-                        style={{display: 'none'}}
-                        ref={addPost}
-                        onChange={handlePost}/>
-                    
+                    <div onClick={checkAdd}>{!isAdd ? <AddCircleOutlineIcon /> : <ClearIcon />}</div>
+                    {isAdd && (
+                      <>
+                        <div className='bg-base-100 flex flex-col absolute mt-8 w-2/5'>
+                          <div className='flex flex-row gap-2' onClick={handleRefPost}>
+                            <div><AddCircleOutlineIcon /></div>
+                            <div>Add public post</div>
+                          </div>
+                            <div className='flex flex-row gap-2' onClick={handleRefPrivate}>
+                              <div><LockIcon /></div>
+                              <div>Add private post</div>
+                            </div>
+                        </div>
+                          <input type="file"
+                            style={{display: 'none'}}
+                            ref={addPost}
+                            onChange={handlePost}/>
+                          <input type="file"
+                            style={{display: 'none'}}
+                            ref={addPrivate}
+                            onChange={handlePrivate}/>
+                      </>
+                      )}
                     <Link to='/'><div><ChatBubbleOutlineIcon /></div></Link> 
                     <div className='drop-menu relative inline-block'>
                         <div onClick={handleMenu}>{isMenu ? <ClearIcon /> : <MenuIcon />}</div>
@@ -260,7 +306,7 @@ const getPostInfo = (userId) => {
         {logUser.map((user, idx) => {
           const { postCount, totalLikes } = getPostInfo(user._id);
           return (
-          <div className='w-full flex flex-row align-middle justify-around py-1 bg-base-100'>
+          <div className='w-full flex flex-row align-middle justify-around py-1'>
             <div className='flex flex-col self-center'>
               <div className='flex align-middle justify-center'>{ postCount } </div>
               <div className='flex align-middle justify-center'>post</div>
@@ -332,12 +378,39 @@ const getPostInfo = (userId) => {
           </div>
         </div>
         ) : isVideo ? (
-          <div>video only here</div>
+          <div className='pl-2 pr-2'>
+            <div class="grid grid-cols-3 gap-1">
+              {filteredPosts.length === 0 ? (
+                <div className='w-full flex'>
+                  <p>No post yet</p>
+                </div>
+              ) : (filteredPosts.map((post) => (
+                <div className='flex flex-row align-middle justify-center'>
+                  <SmVideo id={post} />
+                </div>
+              )
+              ))}
+            </div>
+          </div>
         ) : isPrivacy ? (
-          <div>the privacy post here</div>
+          <div className='pl-2 pr-2'>
+            <div class="grid grid-cols-3 gap-1">
+              {filteredprivates.length === 0 ? (
+                <div className='w-full flex'>
+                  <p>No post yet</p>
+                </div>
+              ) : (filteredprivates.map((post) => (
+                <div className='flex flex-row align-middle justify-center'>
+                  <SmPrivate id={post} />
+                </div>
+              )
+              ))}
+            </div>
+          </div>
         ) : (
           <div>nothing here</div>
         )}
+        <div className='mt-10'></div>
     </div>
   )
 }
