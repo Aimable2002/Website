@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {Button} from "@nextui-org/react";
 
@@ -125,6 +125,34 @@ const getPostInfo = (userId) => {
   return { postCount: userPosts.length, totalLikes };
 };
 
+  const [activeButton, setActiveButton] = useState('all');
+  const [isPhoto, setIsPhoto] = useState(false)
+  const [isVideo, setIsVideo] = useState(false)
+  const [isPrivacy, setIsPrivacy] = useState(false)
+
+
+  const handleButtonClick = (button) => {
+    setActiveButton(button);
+
+    setIsPhoto(false);
+    setIsVideo(false);
+    setIsPrivacy(false);
+    
+
+    switch (button) {
+      case 'all':
+        setIsPhoto(true)
+        break;
+      case 'video':
+        setIsVideo(true)
+        break;
+      case 'privacy':
+        setIsPrivacy(true)
+        break;
+    }
+  };
+
+
   return (
     <div className='w-screen flex flex-col overflow-auto'>
         <div className='flex relative w-full mb-10 h-10 bg-base-100' style={{zIndex: '1'}}>
@@ -217,7 +245,7 @@ const getPostInfo = (userId) => {
                 </div>
             </div>
         </div>
-        <div className='w-full flex flex-row align-middle justify-around py-2'>
+        {/* <div className='w-full flex flex-row align-middle justify-around py-2'>
           <div>
             <Button size='sm' className='bg-base-100' endContent={<AccountBalanceWalletIcon />}>
               Wallet Balance
@@ -228,7 +256,7 @@ const getPostInfo = (userId) => {
               Subscriptions
             </Button>
           </div>
-        </div>
+        </div> */}
         {logUser.map((user, idx) => {
           const { postCount, totalLikes } = getPostInfo(user._id);
           return (
@@ -268,12 +296,28 @@ const getPostInfo = (userId) => {
           )
         })}
         <div className='flex flex-row align-middle justify-around mt-2 py-4'>
-          <div><PhotoLibraryIcon /></div>
-          <div><FeaturedVideoIcon /></div>
-          <div><FolderSpecialIcon /></div>
+          <button 
+            onClick={() =>handleButtonClick("all")}>
+              <PhotoLibraryIcon 
+              className={`${activeButton === 'all' ? 'text-fuchsia-500' : ''}`}
+              />
+          </button>
+          <button 
+            onClick={() =>handleButtonClick("video")}>
+              <FeaturedVideoIcon 
+                className={`${activeButton === 'video' ? 'text-fuchsia-500' : ''}`}
+                />
+          </button>
+          <button 
+            onClick={() =>handleButtonClick("privacy")}>
+              <FolderSpecialIcon 
+                className={`${activeButton === 'privacy' ? 'text-fuchsia-500' : ''}`}
+              />
+          </button>
         </div>
         
-        <div className='pl-2 pr-2'>
+        {isPhoto ? (
+          <div className='pl-2 pr-2'>
           <div class="grid grid-cols-3 gap-1">
             {filteredPosts.length === 0 ? (
               <div className='w-full flex'>
@@ -287,6 +331,13 @@ const getPostInfo = (userId) => {
             ))}
           </div>
         </div>
+        ) : isVideo ? (
+          <div>video only here</div>
+        ) : isPrivacy ? (
+          <div>the privacy post here</div>
+        ) : (
+          <div>nothing here</div>
+        )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/send/:id', protectRoute, sendMessages);
 router.get('/:id', protectRoute, getMessages);
 router.get('/getAllConv/:id', protectRoute, getAllConversation)
-router.get('/unreadCount/:userId', protectRoute, getUnreadMessageCount);
+router.get('/unreadCount', protectRoute, getUnreadMessageCount);
 router.post('/markAsRead', protectRoute, markMessagesAsRead);
 
 

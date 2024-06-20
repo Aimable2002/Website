@@ -35,7 +35,7 @@ import { useRef } from 'react';
 import useGetConversations from '../../hook/useGetAllConversation.js';
 import useListenMessage from '../../hook/useListenMessage.js';
 import useGetMessage from '../../hook/useGetMessage.js';
-import storyRequest from '../../hook/storyRequest.js';
+// import storyRequest from '../../hook/storyRequest.js';
 
 import Last from '../../compound/lastMessages.jsx'
 
@@ -95,13 +95,13 @@ const handleFileStatusRef = () => {
   addStatus.current.click();
 }
 
-const {upload} = storyRequest();
-const [statusChange, setStatusChange] = useState()
-const handelStatusChange = async (e) => {
-  setStatusChange(e.target.files[0]);
-  await upload(e.target.files[0]);
-  setStatusChange('')
-}
+// const {upload} = storyRequest();
+// const [statusChange, setStatusChange] = useState()
+// const handelStatusChange = async (e) => {
+//   setStatusChange(e.target.files[0]);
+//   await upload(e.target.files[0]);
+//   setStatusChange('')
+// }
 
 const[fileChange, setFileChange] = useState();
   // const handleFileChange = async(e) => {

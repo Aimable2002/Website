@@ -10,6 +10,8 @@ import {io} from '../socket/socket.io.js'
 
 import { v2 as cloudinary } from 'cloudinary';
 
+import Private from '../Model/private.js';
+
 const router = express.Router();
 
 
@@ -248,6 +250,45 @@ router.post('/posted', protectRoute, upload.single("file"), async (req, res) => 
   });
 
 
+  router.post('/private', protectRoute, upload.single("file"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json('no file found');
+      }
+  
+      const userId = req.user._id;
+      console.log('userId :', userId)
+      const fileExtension = path.extname(req.file.originalname).toLowerCase();
+      let resourceType = 'image';
+      let folderName = 'private_upload';
+  
+      if (['.mp4', '.mov', '.avi', '.mpeg', '.webm', '.3gpp'].includes(fileExtension)) {
+        resourceType = 'video';
+      }
+  
+      const result = await uploadToCloudinaryPost(req.file.buffer, folderName, resourceType);
+      const url = result.secure_url;
+      console.log('resourceType :', resourceType)
+    //   const user = await Post.findById(userId);
+
+      const privatePost = new Private({
+        userId: userId,
+        type: resourceType,
+        imageURL: resourceType === 'image' ? url : '',
+        videoURL: resourceType === 'video' ? url : '',
+      });
+      await privatePost.save();
+      io.emit('privateUploaded', { type: resourceType, url: url });
+  
+      console.log('upload complete:', url);
+      res.status(201).json({ message: 'private upload complete', type: resourceType, imageURL: url });
+    } catch (error) {
+      console.log('fail to upload', error.message);
+      res.status(500).json({ error: 'fail to upload' });
+    }
+  });
+
+
 router.get('/getPost', protectRoute, async(req, res) => {
     try{
         const currentUserId = req.user._id;
@@ -272,6 +313,33 @@ router.get('/getPost', protectRoute, async(req, res) => {
         console.log('internal server get post error', error.message);
         res.status(500).json({error: 'internal server post error'})
     }
+})
+
+
+router.get('/getPrivate', protectRoute, async(req, res) => {
+  try{
+      const currentUserId = req.user._id;
+
+      const privatePost = await Private.find().populate('userId').lean().sort({createdAt: -1});
+
+      const following = await Follow.find({ follower: currentUserId }).lean();
+      const followingSet = new Set(following.map(f => f.following.toString()));
+
+      const privateWithFollowInfo = privatePost.map(post => {
+          const user = post.userId;
+          const isFollowing = followingSet.has(user._id.toString());
+          return {
+              ...post,
+              user: user,
+              isFollowing: isFollowing
+          };
+      });
+      //console.log('postwithfollowinfo :', postsWithFollowInfo)
+      res.status(200).json(privateWithFollowInfo);
+  }catch(error){
+      console.log('internal server get post error', error.message);
+      res.status(500).json({error: 'internal server post error'})
+  }
 })
 
 

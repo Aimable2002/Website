@@ -132,7 +132,7 @@ const navigate = useNavigate();
    return <div>Loading...</div>;
  }
  const getProfileImageUrl = (selectedUser) => {
-   return selectedUser.profile || selectedUser.user.profile && selectedUser.user.profile.trim() || selectedUser.profile.trim()  !== '' ? selectedUser.profile || selectedUser.user.profile : selectedUser.gender || selectedUser.user.gender === "Male" ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
+   return selectedUser.profile &&  selectedUser.profile.trim()  !== '' ? selectedUser.profile : selectedUser.gender === "Male" ? 'https://avatar.iran.liara.run/public/boy?username=new' : 'https://avatar.iran.liara.run/public/girl?username=ange';
  };
   return (
     <div className='w-full flex flex-col overflow-auto'>

@@ -26,7 +26,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import useGetUser from '../../hook/useGetUser';
 import Conversation from '../zustand/zustand';
-import postRequest from '../../hook/postRequest';
+import privateRequest from '../../hook/privateRequest';
 import { Button } from '@nextui-org/react';
 import useLogout from '../../hook/useLogout';
 import usegetLoggedIn from '../../hook/usegetLoggedIn';
@@ -41,6 +41,7 @@ import useSendMessage from '../../hook/useSendMessage';
 
 import MessageSkeleton from '../../skeleton/skeleton';
 import { useSocketContext } from '../../context/socketContext';
+import useGetPrivatePost from '../../hook/useGetPrivatePost';
 
 const AlbmPrive = ({user, post}) => {
     const {loading, users} = useGetUser();
@@ -54,21 +55,18 @@ const AlbmPrive = ({user, post}) => {
   const handleRefPost = () => {
     addPost.current.click();
   }
-  const {upload} = postRequest();
+  const {upload} = privateRequest();
 
-const [postChange, setPostChange] = useState();
+const [privateChange, setPrivateChange] = useState();
 const handlePost = async (e) => {
     const file = e.target.files[0];
     await upload(file);
-  setPostChange(new Date().getTime());
+  setPrivateChange(new Date().getTime());
 }
 
-const [activeButton, setActiveButton] = useState('All');
 const navigate = useNavigate(); // For navigation
 
-  const handleButtonClick = (button) => {
-    setActiveButton(button);
-  };
+
 const [isMenu, setIsMenu] = useState();
   const handleMenu = (e) => {
     e.preventDefault();
@@ -76,42 +74,17 @@ const [isMenu, setIsMenu] = useState();
   }
   const {logout} = useLogout();
   const {logUser} = usegetLoggedIn();
-const [fileChange, setFileChange] = useState();
-const {uploadProfile} = uploadRequest();
 
-const addProfile = useRef();
 
-const handleRefProfile = () => {
-    addProfile.current.click();
-}
-  const handleProfileChange = async (e) => {
-    setFileChange(e.target.files[0])
-    await uploadProfile(e.target.files[0])
-  }
-
-  const getProfileImageUrl = (user) => {
-    return user.profile && user.profile.trim() !== '' ? user.profile : user.avatar;
-  };
-
-  const {posts} = useGetPost(postChange);
+  const {privates} = useGetPrivatePost(privateChange);
 
   const useron = localStorage.getItem('selectedUser');
   const getUser = useron ? JSON.parse(useron).user._id : null;
   //console.log('getUser :', getUser);
 
   // Filter posts to include only those where the userId matches
-  const filteredPosts = posts.filter(post => post.user._id === getUser);
-  
-const [message, setMessage] = useState('');
-  const {sendMessages} = useSendMessage()
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    if(!message.trim())return;
+  const filteredPosts = privates.filter(post => post.user._id === getUser) || null;
 
-    await sendMessages(message)
-    setMessage('')
-  }
-  const [path, setPath] = useState()
   const handlePath = (selectedUser) => {
     localStorage.removeItem('selectedUser')
     setUser(selectedUser.user)
@@ -120,11 +93,6 @@ const handleSubmit = async (e) => {
   }
   const {onlineUser} = useSocketContext();
   const isOnline = onlineUser.includes(selectedUser?._id)
-  const initialValue = posts.map(post => ({
-    ...post,
-    isOnline: onlineUser.includes(post.user._id)
-  }))
-  console.log('selected User :', selectedUser.user._id)
   const handlepostBack = () => {
     setUser(null)
     localStorage.removeItem('selectedUser')

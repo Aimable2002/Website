@@ -129,7 +129,9 @@ export const getAllConversation = async (req, res) => {
 
 export const getUnreadMessageCount = async (req, res) => {
   try {
-    const { userId } = req.params;
+    console.log('called unread');
+    const { _id: userId} = req.user;
+    console.log('user in params:', userId);
 
     const unreadCounts = await Message.aggregate([
       { $match: { recieverId: userId, read: false } },

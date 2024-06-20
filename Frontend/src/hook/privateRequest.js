@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 
-const storyRequest = () => {
+const privateRequest = () => {
   const [loading, setLoading] = useState();
   const upload = async(file) => {
     setLoading(true)
@@ -10,7 +10,7 @@ const storyRequest = () => {
         const formData = new FormData();
         formData.append('file', file)
         console.log('file on frontend :', file)
-        const res = await axios.post('/api/uploadStory/status', 
+        const res = await axios.post('/api/upload/private', 
         formData,{
         headers: {
           Authorization: `${JSON.parse(token).token}`
@@ -30,4 +30,4 @@ const storyRequest = () => {
   return {upload, loading}
 }
 
-export default storyRequest
+export default privateRequest
