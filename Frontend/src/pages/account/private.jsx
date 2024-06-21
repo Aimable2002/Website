@@ -49,7 +49,16 @@ const AlbmPrive = ({user, post}) => {
     const {selectedUser, setUser} = Conversation();
 
     const [search, setSearch] = useState('')
+    
+    const addProfile = useRef();
 
+    const handleFileRef = () => {
+      addProfile.current.click();
+    }
+    const handleProfileChange = async (e) => {
+      setFileChange(e.target.files[0])
+      await uploadProfile(e.target.files[0])
+    }
   const addPost = useRef();
 
   const handleRefPost = () => {
