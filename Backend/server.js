@@ -20,6 +20,7 @@ import {server, app} from './socket/socket.io.js';
 import connectCloud from './Cloudinary/cloudinary.js';
 
 import subRoute from './router/subscriptionRoute.js'
+// import webRoute from './router/webRoute.js'
 
 //const app = express();
 
@@ -42,17 +43,28 @@ app.use('/api/users', userRoute)
 app.use('/api/action', actionRoute)
 
 app.use('/api/subscription', subRoute)
+// app.use('/api/webhook', webRoute)
 
 
 
-// app.post('/create-payment', async (req, res) => {
+app.get('/api/verify-transaction/:id', async (req, res) => {
+    const transactionId = req.params.id;
 
-    
-// });
+    try {
+        const response = await axios.get(`https://api.flutterwave.com/v3/transactions/${transactionId}/verify`, {
+            headers: {
+                Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
+            },
+        });
 
-// app.post('/mobile', async (req, res) => {
-    
-// });
+        res.json(response.data);
+    } catch (error) {
+        res.status(error.response ? error.response.status : 500).json({
+            error: error.response ? error.response.data : 'An error occurred',
+        });
+    }
+});
+
 
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));
 

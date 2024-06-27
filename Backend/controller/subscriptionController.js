@@ -1,5 +1,7 @@
 import Subscription from "../Model/subscriptionModel.js";
 
+import axios from 'axios'
+
 const FLW_PUBLIC_KEY = process.env.FLW_PUBLIC_KEY;
 const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
 
@@ -15,7 +17,7 @@ export const paymentSub = async (req, res) => {
             tx_ref: `hooli-tx-${Date.now()}`,
             amount: amount,
             currency,
-            redirect_url: 'https://website-s9ue.onrender.com/account',
+            redirect_url: 'http://localhost:4000/api/subscription/mobile-response',
             customer: {
                 email,
             },
@@ -42,10 +44,14 @@ export const paymentSub = async (req, res) => {
 
 
 export const OneTimePayment = async (req, res) => {
-    console.log('called')
+    //console.log('called :', req.body)
     const {_id: user} = req.user
-    console.log('user :', user)
     const { amount, email, phoneNumber, currency } = req.body;
+    const webhookUrl = `http://localhost:4000/api/webhook/flutterwave?userId=${user}`;
+
+    // if(!amount || !email || !phoneNumber || !currency || !unit ){
+    //     return res.status(409).json({message: 'fill the the field'})
+    // }
 
     try {
         // const response = await axios.post('https://api.flutterwave.com/v3/charges', {
@@ -57,7 +63,7 @@ export const OneTimePayment = async (req, res) => {
             currency: currency,
             email: email,
             payment_type: "mobilemoneyrwanda",
-            redirect_url: 'https://website-s9ue.onrender.com/', 
+            redirect_url: 'http://localhost:2000/',
             phone_number: phoneNumber,
             customer: {
                 email: email,
@@ -66,6 +72,7 @@ export const OneTimePayment = async (req, res) => {
                 title: 'Payment for items in cart',
                 description: 'Payment for items in cart',
             },
+            webhook_url: webhookUrl,
         }, {
             headers: {
                 Authorization: `Bearer ${FLW_SECRET_KEY}`,
@@ -73,29 +80,39 @@ export const OneTimePayment = async (req, res) => {
             },
         });
 
-        const { start_date } = response.data.created_at;
+        const paymentStatus = response.data.status;
+        console.log('payment status :', response)
+        if (paymentStatus === "success"){
+            // const { start_date } = response.data.created_at;
+        const start_date = new Date();
         const expiration_date = new Date(start_date);
         //expiration_date.setMonth(expiration_date.getMonth() + 1);  // Fixed 1-month duration
 
          // Calculate expiration date based on duration and unit
-         if (unit === 'days') {
+         if (amount === '100') {
+            expiration_date.setDate(expiration_date.getDate() + 7);
+        } else if (amount === '200') {
             expiration_date.setDate(expiration_date.getDate() + 1);
-        } else if (unit === 'weeks') {
-            expiration_date.setDate(expiration_date.getDate() + (1 * 7));
+        } else if (amount === '300') {
+            expiration_date.setDate(expiration_date.getDate() + 2);
         }
-        const subscription = new Subscription({
-            email,
-            userId: user,
-            amount,
-            currency,
-            status: response.data.status,
-            start_date: new Date(start_date),
-            expiration_date
-        })
-        
-        await subscription.save();
+        console.log('response :', response.data)
+        const transactionId = response.data.id;
+        console.log('transactionId :', transactionId)
+        res.json({transactionId, ...response.data});
+        // res.status(200).json({message: 'Payment successful',  data: response.data} );
+        }else{
+            console.log('technical error', response.data)
+            res.status(200).json({message: 'Payment failed'})
+        }
+        // else{
+        //     console.log('technical error', response.data)
+        //     res.status(200).json({message: 'Payment failed',  data: response.data })
+        // }
 
-        res.json(response.data);
+        
+
+        
     } catch (error) {
         console.error('Error creating payment link:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: error.response ? error.response.data : error.message });
@@ -105,6 +122,13 @@ export const OneTimePayment = async (req, res) => {
 
 
 
-// console.log('amount :', amount)
-//         console.log('phoneNumber :', phoneNumber)
-//         console.log('response :', response.data)
+export const subscription = async(req, res) => {
+    try{
+        const {_id: user} = req.user
+        const { amount, email, phoneNumber, currency } = req.body;
+
+    } catch (error) {
+        console.error('Error creating payment link:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
+    }
+}

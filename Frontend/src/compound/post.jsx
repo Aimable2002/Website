@@ -131,7 +131,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
-import MessageSkeleton from '../skeleton/skeleton';
+import ImageSkeleton from '../skeleton/imageSkeleton'
+import VideoSkeleton from '../skeleton/videoSkeleton'
 
 const Post = ({ post }) => {
   const [muted, setMuted] = useState(true);
@@ -212,7 +213,7 @@ const Post = ({ post }) => {
     <figure>
       {post.type === 'image' && (
         <>
-          {loading && <MessageSkeleton height="60vh" />}
+          {loading && <ImageSkeleton height="60vh" />}
           <img 
             ref={imgRef} 
             src={post.imageURL} 
@@ -224,7 +225,7 @@ const Post = ({ post }) => {
       )}
       {post.type === 'video' && (
         <div className="w-full relative overflow-hidden cursor-pointer">
-          {loading && <MessageSkeleton height="80vh" />}
+          {loading && <VideoSkeleton height="80vh" />}
           <video 
             ref={videoRef} 
             autoPlay 
@@ -247,107 +248,3 @@ const Post = ({ post }) => {
 };
 
 export default Post;
-
-
-
-
-// import React, { useRef, useEffect, useState } from 'react';
-// import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-// import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-
-// const post = ({ post }) => {
-//   const [muted, setMuted] = useState(true);
-//   const videoRef = useRef(null);
-
-//   useEffect(() => {
-//     const video = videoRef.current;
-//     const img = imgRef.current;
-
-//     const adjustHeight = (element) => {
-//       if (element) {
-//         const naturalHeight = element.videoHeight || element.naturalHeight;
-//         if (naturalHeight > window.innerHeight * 0.6) {
-//           element.style.height = '60vh';
-//         } else {
-//           element.style.height = 'auto';
-//         }
-//       }
-//     };
-
-//     if (post.type === 'image' && img) {
-//       adjustHeight(img);
-//     }
-
-//     if (post.type === 'video' && video) {
-//       adjustHeight(video);
-//     const handleIntersection = (entries) => {
-//       entries.forEach((entry) => {
-//         if (entry.isIntersecting && video.paused) {
-//           video.play();
-//         } else if (!entry.isIntersecting && !video.paused) {
-//           video.pause();
-//         }
-//       });
-//     };
-
-//     const observer = new IntersectionObserver(handleIntersection, {
-//       threshold: 0.5, // Trigger when at least 50% of the video is in the viewport
-//     });
-
-//     if (video) {
-//       observer.observe(video);
-//     }
-
-//     return () => {
-//       if (video) {
-//         observer.unobserve(video);
-//       }
-//     };
-//   }, []);
-
-//   const handleVideoClick = () => {
-//     const video = videoRef.current;
-//     if (video.paused) {
-//       video.play();
-//     } else {
-//       video.pause();
-//     }
-//   };
-
-//   const handleVideoMute = () => {
-//     setMuted(!muted);
-//     videoRef.current.muted = !muted;
-//   };
-
-//   return (
-//     <>
-//       <figure>
-//         {post.type === 'image' && <img src={post.imageURL} alt="" />}
-//         {post.type === 'video' && (
-//           <div className="w-full relative overflow-hidden cursor-pointer">
-//             <video ref={videoRef} autoPlay loop muted={muted} onClick={handleVideoClick}>
-//               <source src={post.videoURL} type="video/mp4" />
-//               Your browser does not support the video tag.
-//             </video>
-//             <button onClick={handleVideoMute}>{muted ? <VolumeOffIcon /> : <VolumeUpIcon />}</button>
-//           </div>
-//         )}
-//       </figure>
-//     </>
-//   );
-// };
-
-// // Debounce function
-// const debounce = (func, delay) => {
-//   let timeoutId;
-//   return function (...args) {
-//     const context = this;
-//     clearTimeout(timeoutId);
-//     timeoutId = setTimeout(() => func.apply(context, args), delay);
-//   };
-// };
-
-// export default post;
-
-
-//controls

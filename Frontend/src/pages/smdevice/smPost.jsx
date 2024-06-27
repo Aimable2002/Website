@@ -40,6 +40,8 @@ import SmPoster from '../../compound/smPost';
 import useSendMessage from '../../hook/useSendMessage';
 
 import MessageSkeleton from '../../skeleton/skeleton';
+import ImageSkeleton from '../../skeleton/imageSkeleton';
+import videoSkeleton from '../../skeleton/videoSkeleton';
 
 const smPost = ({user, post}) => {
 
@@ -413,7 +415,7 @@ const handleSubmit = async (e) => {
                         </div>
                     </div>
             ))}
-            {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+            {loading && [...Array(3)].map((_, idx) => <ImageSkeleton key={idx} />)}
             {!loading && initialValue.length === 0 && (
 				<p className='text-center'></p>
 			)}
