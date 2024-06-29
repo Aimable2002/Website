@@ -79,9 +79,7 @@ const useMobile = () => {
   
         if (data && data.meta && data.meta.authorization && data.meta.authorization.redirect) {
           window.location.href = data.meta.authorization.redirect;
-        } else if (data && data.meta && data.meta.authorization && data.meta.authorization.redirect) {
-          window.location.href = 'localhost:2000/mobile';
-        } else {
+        }else {
           alert('An error occurred. Please try again.');
         }
   

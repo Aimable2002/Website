@@ -53,10 +53,10 @@ app.get('/api/verify-transaction/:id', async (req, res) => {
     try {
         const response = await axios.get(`https://api.flutterwave.com/v3/transactions/${transactionId}/verify`, {
             headers: {
-                Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
+                Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
             },
         });
-
+        console.log('verified data :', response.data)
         res.json(response.data);
     } catch (error) {
         res.status(error.response ? error.response.status : 500).json({
@@ -64,6 +64,16 @@ app.get('/api/verify-transaction/:id', async (req, res) => {
         });
     }
 });
+
+
+app.post('/webhook', (req, res) => {
+    try{
+        const payload = req.body;
+        console.log('payload :', payload)
+    }catch(error){
+        console.log('error :', error.message)
+    }
+})
 
 
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));

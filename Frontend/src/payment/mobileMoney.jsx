@@ -17,7 +17,7 @@ const MobileMoney = () => {
         currency: "RWF",
         unit: "MONTH"
       })
-    const { loading, applyPayment } = useMobile();
+    const { loading, applyPayment, verifyTransaction } = useMobile();
     //   const handlePayment = async(e) => {
     //     e.preventDefault();
     //     const {amount, email, phoneNumber, currency, unit} = input
