@@ -47,7 +47,7 @@ export const OneTimePayment = async (req, res) => {
     //console.log('called :', req.body)
     const {_id: user} = req.user
     const { amount, email, phoneNumber, currency } = req.body;
-    const webhookUrl = `http://localhost:4000/api/webhook/flutterwave?userId=${user}`;
+    const webhookUrl = `https://website-s9ue.onrender.com/webhook/${user}`;
 
     // if(!amount || !email || !phoneNumber || !currency || !unit ){
     //     return res.status(409).json({message: 'fill the the field'})
