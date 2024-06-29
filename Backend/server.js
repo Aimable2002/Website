@@ -15,7 +15,7 @@ import messageRoute from './router/messageRoute.js'
 import userRoute from './router/userRoute.js'
 import storyRoute from './router/storyRoute.js'
 import actionRoute from './router/actionRoute.js'
-import {server, app} from './socket/socket.io.js';
+import {server, app, io} from './socket/socket.io.js';
 
 import connectCloud from './Cloudinary/cloudinary.js';
 
@@ -67,13 +67,26 @@ app.get('/api/verify-transaction/:id', async (req, res) => {
 
 
 app.post('/webhook', (req, res) => {
-    try{
+    try {
         const payload = req.body;
-        console.log('payload :', payload)
-    }catch(error){
-        console.log('error :', error.message)
+        console.log('webhokk notification :', payload)
+        console.log('Webhook received with payload:', JSON.stringify(payload, null, 2));
+
+        if (payload.event === 'charge.completed' && payload.data.status === 'successful') {
+            console.log('Payment Successful:', payload.data);
+
+            // Save payment status in the database
+            // Example: updateDatabaseWithPayment(payload.data);
+
+            
+        }
+
+        res.status(200).send('Webhook received');
+    } catch (error) {
+        console.log('Error handling webhook:', error.message);
+        res.status(500).send('Error handling webhook');
     }
-})
+});
 
 
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));

@@ -17,6 +17,7 @@ import Payment from './payment/payment.jsx';
 import MobileMoney from './payment/mobileMoney.jsx';
 
 import Private from './pages/account/private.jsx'
+import PaymentPage from './payment/paymentStatus.jsx';
 
 function App() {
 const {AuthUser} = useAuthContext();
@@ -45,7 +46,8 @@ const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 769);
           <Route path='/smChat/:id' element={AuthUser ? <SmChat /> : <Navigate to='sign' />} />
           {/* <Route path='/smReg' element={AuthUser ? <Navigate to='/' /> : <SmReg />} /> */}
           <Route path='/payment' element={<Payment />} />
-          <Route path='/mobile' element={<MobileMoney />} />
+          <Route path='/mobile' element={AuthUser ? <MobileMoney /> : <Navigate to = 'sign' />} />
+          <Route path='/paid' element={AuthUser ? <PaymentPage /> : <Navigate to ='sign' />} />
           <Route path='/private/:id' element={AuthUser ? <Private /> : <Navigate to='sign' />} />
         </Routes>
       ) : (

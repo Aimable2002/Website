@@ -81,7 +81,7 @@ export const OneTimePayment = async (req, res) => {
         });
 
         const paymentStatus = response.data.status;
-        console.log('payment status :', response)
+        //console.log('payment status :', response)
         if (paymentStatus === "success"){
             // const { start_date } = response.data.created_at;
         const start_date = new Date();
@@ -96,7 +96,7 @@ export const OneTimePayment = async (req, res) => {
         } else if (amount === '300') {
             expiration_date.setDate(expiration_date.getDate() + 2);
         }
-        console.log('response :', response.data)
+        //console.log('response :', response.data)
         const transactionId = response.data.id;
         console.log('transactionId :', transactionId)
         res.json({transactionId, ...response.data});

@@ -17,26 +17,25 @@ const MobileMoney = () => {
         currency: "RWF",
         unit: "MONTH"
       })
-    const { loading, applyPayment, verifyTransaction } = useMobile();
-    //   const handlePayment = async(e) => {
-    //     e.preventDefault();
-    //     const {amount, email, phoneNumber, currency, unit} = input
-    //     console.log('inputs :', input)
-    //     await applyPayment(input)
-    //     console.log(response.data)
-    //   }
-
-
-    const handlePayment = async (e) => {
+    const { loading, applyPayment } = useMobile();
+      const handlePayment = async(e) => {
         e.preventDefault();
-        const { amount, email, phoneNumber, currency, unit } = input;
-        console.log('inputs:', input);
-        const transactionId = await applyPayment(input);
-        if (transactionId) {
-          const verificationData = await verifyTransaction(transactionId);
-          console.log('Verification Data:', verificationData);
-        }
-      };
+        const {amount, email, phoneNumber, currency, unit} = input
+        console.log('inputs :', input)
+        await applyPayment(input)
+      }
+
+
+    // const handlePayment = async (e) => {
+    //     e.preventDefault();
+    //     const { amount, email, phoneNumber, currency, unit } = input;
+    //     console.log('inputs:', input);
+    //     const transactionId = await applyPayment(input);
+    //     if (transactionId) {
+    //       const verificationData = await verifyTransaction(transactionId);
+    //       console.log('Verification Data:', verificationData);
+    //     }
+    //   };
 
     // return (
     //   <div>
