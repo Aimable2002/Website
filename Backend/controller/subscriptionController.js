@@ -54,9 +54,7 @@ export const OneTimePayment = async (req, res) => {
     // }
 
     try {
-        // const response = await axios.post('https://api.flutterwave.com/v3/charges', {
         const response = await axios.post('https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda', {
-            // const response = await axios.post('https://api.flutterwave.com/v3/subscriptions', {
 
             tx_ref: `hooli-tx-${Date.now()}`,
             amount: amount,
@@ -72,7 +70,7 @@ export const OneTimePayment = async (req, res) => {
                 title: 'Payment for items in cart',
                 description: 'Payment for items in cart',
             },
-            webhook_url: webhookUrl,
+            // webhook_url: webhookUrl,
         }, {
             headers: {
                 Authorization: `Bearer ${FLW_SECRET_KEY}`,
