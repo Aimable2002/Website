@@ -66,7 +66,7 @@ app.get('/api/verify-transaction/:id', async (req, res) => {
 });
 
 
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async(req, res) => {
     try {
         const payload = req.body;
         console.log('webhokk notification :', payload)
@@ -77,7 +77,7 @@ app.post('/webhook', (req, res) => {
 
             // Save payment status in the database
             // Example: updateDatabaseWithPayment(payload.data);
-
+            
             
         }
 

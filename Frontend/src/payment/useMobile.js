@@ -1,9 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import { io } from 'socket.io-client';
-import { useSocketContext } from '../context/socketContext';
 
-const useMobile = (AuthUser) => {
+const useMobile = () => {
   const [loading, setLoading] = useState('')
 
  
